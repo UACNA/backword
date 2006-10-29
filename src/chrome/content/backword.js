@@ -29,8 +29,8 @@
 // Functions are derived from GPL code originally by mozilla Inc:
 // For the original source, see: http://www.koders.com/javascript/fidFEF1093F08C9BDE750ABD0ED1863319D8179449A.aspx
 ////////////////////////////////////////////////////////////////////////////
-//const BW_debugOutput = false;	
-const BW_debugOutput = true;
+const BW_debugOutput = false;	
+//const BW_debugOutput = true;
 function BW_ddump(text) {
 	if (BW_debugOutput) {
 		dump(text + "\n");
@@ -977,7 +977,6 @@ BW_Layout.prototype.getCurrentWord = function (parent, offset, target) {
 	var text = str.substring(start, end);
 	if (text) {
 		var textContent = target.textContent.replace(/\s+/g, " ");
-		BW_ddump(textContent);
 		if (textContent.length > str.length) {
 			var index = textContent.indexOf(str);
 			if (index != -1) {
@@ -994,7 +993,6 @@ BW_Layout.prototype.getCurrentWord = function (parent, offset, target) {
 			if (!ret) s += ch.length;
 			while(!ret && s >= ch.length && str.charAt(s) != " "){
 				s = str.lastIndexOf(ch, s-ch.length-1) + ch.length;
-				BW_ddump("s"+s);
 			}
 			if (s > start) {
 				start = s;
@@ -1005,7 +1003,6 @@ BW_Layout.prototype.getCurrentWord = function (parent, offset, target) {
 			if (!ret) s += ch.length;
 			while(!ret && s < str.length && s >= ch.length && str.charAt(s) != " "){
 				s = str.indexOf(ch, s+1) + ch.length;
-				BW_ddump("e"+s);
 			}
 			if (s < end && s >= ch.length) {
 				end = s;
