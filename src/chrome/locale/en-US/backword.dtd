@@ -1,4 +1,4 @@
-<!ENTITY version "1.2.061022">
+<!ENTITY version "1.2.061030">
 <!ENTITY status.tooltip "Backword Enabled">
 <!ENTITY options.windowtitle "Options">
 <!ENTITY options.settingstab "Settings">
@@ -25,6 +25,7 @@
 <!ENTITY options.api.password "Password:">
 <!ENTITY options.groupbox.layout "Layout">
 <!ENTITY options.layout.showpronunciation "Show Pronunciation Flash (uncheck if interface broken)">
+<!ENTITY options.layout.quotesentence "Auto-selelct current senetence as context">
 <!ENTITY options.layout.size "Font Size">
 <!ENTITY options.layout.quotes "Quotes Count">
 <!ENTITY options.layout.mouseout "Mouse Out">
@@ -58,4 +59,4 @@
 <!ENTITY options.help.link.group "http://groups.google.com/group/backword">
 <!ENTITY options.help.link.blog "http://blog.gneheix.com">
 <!ENTITY options.help.operation "Left click turns on/off. Right click turns API on/off. If API enabled middle click opens admin page otherwise opens forum page.">
-<!ENTITY options.help.layout "Show Pronunciation Flash: Uncheck if other ad-blocking extensions break the interface. Font Size: font size of layout, minimum value is 13. Quotes Count: max number of quotes to be shown, minimum value is 2. Mouse Out: the interface will be hidden when mouse out of it more than this in pix, minimum value is 5. Popup Delay: popup delay in millisecond, minimum value is 100.">
+<!ENTITY options.help.layout "Show Pronunciation Flash: Uncheck if other ad-blocking extensions break the interface. Auto-selelct current senetence as context: Use current sentence as context by select it automatically. Font Size: font size of layout, minimum value is 13. Quotes Count: max number of quotes to be shown, minimum value is 2. Mouse Out: the interface will be hidden when mouse out of it more than this in pix, minimum value is 5. Popup Delay: popup delay in millisecond, minimum value is 100.">

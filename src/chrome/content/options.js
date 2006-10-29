@@ -11,6 +11,7 @@ BW_Setting.prototype.init = function() {
 	document.getElementById("searchweburl").setAttribute("value", this._pref.getCharPref("backword.searchweburl"));
 	document.getElementById("usingapi").checked = this._pref.getBoolPref("backword.usingapi");
 	document.getElementById("showpronunciation").checked = this._pref.getBoolPref("backword.showpronunciation");
+	document.getElementById("quotesentence").checked = this._pref.getBoolPref("backword.quotesentence");
 	document.getElementById("usinglocalapi").checked = this._pref.getBoolPref("backword.usinglocalapi");
 	document.getElementById("apiurl").setAttribute("value", this._pref.getCharPref("backword.apiurl"));
 	document.getElementById("apiweburl").setAttribute("value", this._pref.getCharPref("backword.apiweburl"));
@@ -22,12 +23,13 @@ BW_Setting.prototype.init = function() {
 	document.getElementById("layoutpopdelay").setAttribute("value", this._pref.getCharPref("backword.layout.popdelay"));
 	this.usingApi(this._pref.getBoolPref("backword.usingapi"));
 };
-  
+
 BW_Setting.prototype.save = function() {
 	this._pref.setCharPref("backword.translator", document.getElementById("translator").value);
 	this._pref.setCharPref("backword.searchweburl", document.getElementById("searchweburl").value);
 	this._pref.setBoolPref("backword.usingapi", document.getElementById("usingapi").checked);
 	this._pref.setBoolPref("backword.showpronunciation", document.getElementById("showpronunciation").checked);
+	this._pref.setBoolPref("backword.quotesentence", document.getElementById("quotesentence").checked);
 	this._pref.setBoolPref("backword.usinglocalapi", document.getElementById("usinglocalapi").checked);
 	this._pref.setCharPref("backword.apiurl", document.getElementById("apiurl").value);
 	this._pref.setCharPref("backword.apiweburl", document.getElementById("apiweburl").value);
