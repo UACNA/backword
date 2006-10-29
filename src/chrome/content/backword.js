@@ -29,8 +29,8 @@
 // Functions are derived from GPL code originally by mozilla Inc:
 // For the original source, see: http://www.koders.com/javascript/fidFEF1093F08C9BDE750ABD0ED1863319D8179449A.aspx
 ////////////////////////////////////////////////////////////////////////////
-const BW_debugOutput = false;	
-//const BW_debugOutput = true;
+//const BW_debugOutput = false;	
+const BW_debugOutput = true;
 function BW_ddump(text) {
 	if (BW_debugOutput) {
 		dump(text + "\n");
@@ -168,7 +168,7 @@ function BW_setElementStyle(obj) {
 	obj.style.fontSizeAdjust = "none!important";
 	obj.style.fontStretch = "normal!important";
 	obj.style.fontVariant = "normal!important";
-	obj.style.float = "none!important"; 
+	obj.style["float"] = "none!important"; 
 	obj.style.overflow = "hidden!important";
 	obj.style.margin = "0px 0px 0px 0px!important";
 	obj.style.padding = "0px 0px 0px 0px!important";
@@ -951,7 +951,6 @@ BW_Layout.prototype.getCurrentWord = function (parent, offset, target) {
 	var range = parent.ownerDocument.createRange();
 	range.selectNode(parent);
 	var str = range.toString();
-//	BW_ddump("range in getCurrentWord:" + str);
 	if (offset < 0 || offset >= str.length) {
 		return null;
 	}
@@ -976,9 +975,9 @@ BW_Layout.prototype.getCurrentWord = function (parent, offset, target) {
 		}
 	}
 	var text = str.substring(start, end);
-//	BW_ddump("Current word:" + text);
 	if (text) {
 		var textContent = target.textContent.replace(/\s+/g, " ");
+		BW_ddump(textContent);
 		if (textContent.length > str.length) {
 			var index = textContent.indexOf(str);
 			if (index != -1) {
@@ -986,24 +985,41 @@ BW_Layout.prototype.getCurrentWord = function (parent, offset, target) {
 				offset += index;
 			}
 		}
-		start = str.lastIndexOf(".", offset) + 1;
-		var s = str.lastIndexOf("?", offset) + 1;
-		if (s > start) {
-			start = s;
+		
+		var s;
+		start = 0;
+		end = str.length;
+		function getStart(ch, ret){
+			s = str.lastIndexOf(ch, offset);
+			if (!ret) s += ch.length;
+			while(!ret && s >= ch.length && str.charAt(s) != " "){
+				s = str.lastIndexOf(ch, s-ch.length-1) + ch.length;
+				BW_ddump("s"+s);
+			}
+			if (s > start) {
+				start = s;
+			}
 		}
-		s = str.lastIndexOf("!", offset) + 1;
-		if (s > start) {
-			start = s;
+		function getEnd(ch, ret){
+			s = str.indexOf(ch, offset);
+			if (!ret) s += ch.length;
+			while(!ret && s < str.length && s >= ch.length && str.charAt(s) != " "){
+				s = str.indexOf(ch, s+1) + ch.length;
+				BW_ddump("e"+s);
+			}
+			if (s < end && s >= ch.length) {
+				end = s;
+			}
 		}
-		end = str.indexOf(".", offset) + 1;
-		s = str.indexOf("?", offset) + 1;
-		if (s < end && s > 0) {
-			end = s;
-		}
-		s = str.indexOf("!", offset) + 1;
-		if (s < end && s > 0) {
-			end = s;
-		}
+		getStart(".");
+		getStart("?");
+		getStart("!");
+		getStart("\n", true);
+		getEnd(".");
+		getEnd("?");
+		getEnd("!");
+		getEnd("\n", true);
+
 		if (start < 0) {
 			start = 0;
 		}
