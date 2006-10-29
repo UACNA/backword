@@ -81,31 +81,33 @@
  			        <hbox align="center">
 	 			        <checkbox id="showpronunciation" label="&options.layout.showpronunciation;" />
  			        </hbox>
- 			        <separator class="thin" />
+ 			        <hbox align="center">
+	 			        <checkbox id="quotesentence" label="&options.layout.quotesentence;" />
+ 			        </hbox>
  			        <hbox>
-					<vbox>
- 			        <hbox align="center">
- 			        	<label value="&options.layout.size;" />
- 			        	<textbox id="layoutsize" size="5"/>
+								<vbox>
+		 			        <hbox align="center">
+		 			        	<label value="&options.layout.size;" />
+		 			        	<textbox id="layoutsize" size="5"/>
+		 			        </hbox>
+		 			        <hbox align="center">
+		 			        	<label value="&options.layout.quotes;" />
+		 			        	<textbox id="layoutquotes" size="5"/>
+		 			        </hbox>
+	 			        </vbox>
+	 			        <separator class="thin" />
+	 			        <vbox>
+		 			        <hbox align="center">
+		 			        	<label value="&options.layout.mouseout;" />
+		 			        	<textbox id="layoutmouseout" size="5"/>
+		 			        </hbox>
+		 			        <hbox align="center">
+		 			        	<label value="&options.layout.popdelay;" />
+		 			        	<textbox id="layoutpopdelay" size="5"/>
+		 			        </hbox>
+	 			        </vbox>
  			        </hbox>
- 			        <hbox align="center">
- 			        	<label value="&options.layout.quotes;" />
- 			        	<textbox id="layoutquotes" size="5"/>
- 			        </hbox>
- 			        </vbox>
- 			        <separator class="thin" />
- 			        <vbox>
- 			        <hbox align="center">
- 			        	<label value="&options.layout.mouseout;" />
- 			        	<textbox id="layoutmouseout" size="5"/>
- 			        </hbox>
- 			        <hbox align="center">
- 			        	<label value="&options.layout.popdelay;" />
- 			        	<textbox id="layoutpopdelay" size="5"/>
- 			        </hbox>
- 			        </vbox>
- 			        </hbox>
- 			        </vbox>
+ 			     </vbox>
 				</groupbox>
 			</vbox>
 		</tabpanel>
