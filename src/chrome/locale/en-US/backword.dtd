@@ -1,4 +1,4 @@
-<!ENTITY version "1.2.061030">
+<!ENTITY version "1.2.061107">
 <!ENTITY status.tooltip "Backword Enabled">
 <!ENTITY options.windowtitle "Options">
 <!ENTITY options.settingstab "Settings">
@@ -25,7 +25,7 @@
 <!ENTITY options.api.password "Password:">
 <!ENTITY options.groupbox.layout "Layout">
 <!ENTITY options.layout.showpronunciation "Show Pronunciation Flash (uncheck if interface broken)">
-<!ENTITY options.layout.quotesentence "Auto-selelct current senetence as context">
+<!ENTITY options.layout.quotesentence "Auto-select current senetence as context">
 <!ENTITY options.layout.size "Font Size">
 <!ENTITY options.layout.quotes "Quotes Count">
 <!ENTITY options.layout.mouseout "Mouse Out">
