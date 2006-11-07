@@ -130,6 +130,115 @@ function BW_isLetter(string) {
 	var valid_chars = /\w/;
 	return valid_chars.test(string);
 }
+function BW_parseWord(str, offset){
+	var start = offset;
+	var end = offset + 1;
+	var valid_chars = /\w/;
+	if (!valid_chars.test(str.substring(start, start + 1))) {
+		return null;
+	}
+	while (start > 0) {
+		if (valid_chars.test(str.substring(start - 1, start))) {
+			start--;
+		} else {
+			break;
+		}
+	}
+	while (end < str.length) {
+		if (valid_chars.test(str.substring(end, end + 1))) {
+			end++;
+		} else {
+			break;
+		}
+	}
+	var word = str.substring(start, end);
+	if (!word)
+		return null;
+	return word.toLowerCase();
+}
+function BW_getSelectionText(target){
+	var select = BW_getPage().getSelection();
+	var selectedRanges = new Array;
+	for (var i = 0; i < select.rangeCount; i++) {
+		selectedRanges[i] = select.getRangeAt(i);
+	}
+	select.removeAllRanges();
+	var range = target.ownerDocument.createRange();
+	range.selectNode(target);
+	select.addRange(range);
+	var selection = select.toString();
+	select.removeAllRanges();
+	for (var i = 0; i < selectedRanges.length; i++) {
+		select.addRange(selectedRanges[i]);
+	}
+	return selection;
+}
+function BW_parseSentence(selection, textContent, offsetTC){
+	var ReSp=/\s/g;
+	var spSL = [];
+	var spTC = [];
+	while (ReSp.exec(selection) != undefined) {
+	  spSL[spSL.length] = ReSp.lastIndex;
+	}
+	while (ReSp.exec(textContent) != undefined) {
+	  spTC[spTC.length] = ReSp.lastIndex;
+	}
+	function relatedOffset(ar, offset, ar2){
+		var offset2 = offset;
+		for (var i=0; i<ar.length; i++)
+			if (ar[i] <= offset) offset2--;
+		for (var i=0; i<ar2.length; i++)
+			if (ar2[i] <= offset2) offset2++;
+		return offset2;
+	}
+	var offsetSL = relatedOffset(spTC, offsetTC, spSL);
+	
+	var s;
+	var start = 0;
+	var end = selection.length;
+	function getStart(ch, ret){
+		s = selection.lastIndexOf(ch, offsetSL);
+		if (!ret) s += ch.length;
+		while(!ret && s >= ch.length && selection.charAt(s) != " "){
+			s = selection.lastIndexOf(ch, s-ch.length-1) + ch.length;
+		}
+		if (s > start) {
+			start = s;
+		}
+	}
+	function getEnd(ch, ret){
+		s = selection.indexOf(ch, offsetSL);
+		if (!ret) s += ch.length;
+		while(!ret && s < selection.length && s >= ch.length && selection.charAt(s) != " "){
+			s = selection.indexOf(ch, s+1) + ch.length;
+		}
+		if (s < end && s >= ch.length) {
+			end = s;
+		}
+	}
+	getStart(".");
+	getStart("?");
+	getStart("!");
+	getStart("\n", true);
+	getEnd(".");
+	getEnd("?");
+	getEnd("!");
+	getEnd("\n", true);
+	
+	if (start < 0) {
+		start = 0;
+	}
+	else{
+		start = relatedOffset(spSL, start, spTC);
+	}
+	if (end <= 0) {
+		end = textContent.length;
+	}	
+	else{
+		end = relatedOffset(spSL, end, spTC);
+	}
+	return BW_trim(textContent.substring(start, end));
+}
 function BW_makeShortString(src, key, len) {
 	if (src.length <= len) {
 		return src;
@@ -380,7 +489,6 @@ BW_Layout.prototype.resetData = function () {
 	this._quotes = [];
 	this._currentWordId = null;
 	this._currentParagraph = null;
-	this._currentSentence = null;
 	this._translate = null;
 	this._paraphrase = " ";
 	this._toReset = false;
@@ -586,12 +694,38 @@ BW_Layout.prototype.maybeShowTooltip = function (tipElement) {
 			this.hide(this._currentDoc);
 		}
 	}
-	var word = this.getCurrentWord(parent, offset, tipElement);
-	if (word) {
-		this._currentElement = tipElement;
-		this._currentOffset = offset;
-		this.showTooltip(word);
+	if (parent.parentNode != tipElement) {
+		return;
 	}
+	if (parent.nodeType != Node.TEXT_NODE) {
+		return;
+	}
+	var container = parent.parentNode;
+	if (container) {
+		var foundNode = false;
+		for (var c = container.firstChild; c != null; c = c.nextSibling) {
+			if (c == parent) {
+				foundNode = true;
+				break;
+			}
+		}
+		if (!foundNode) {
+			return;
+		}
+	}
+	if (tipElement.tagName.toLowerCase() == "a"){
+		parent = tipElement;
+		tipElement = tipElement.parentNode;
+	}
+	this._currentDoc = tipElement.ownerDocument;
+	this._currentWindow = this._currentDoc.defaultView;
+	this._currentElement = tipElement;
+	this._currentOffset = offset;
+	this._currentCursorX = this._cursorX;
+	this._currentCursorY = this._cursorY;
+	var word = this.getCurrentWord(parent, offset, tipElement);
+	if (word)
+		this.showTooltip(word);
 	return;
 };
 BW_Layout.prototype.showTooltip = function (word) {
@@ -599,11 +733,6 @@ BW_Layout.prototype.showTooltip = function (word) {
 	try {
 		this.loadPref();
 		this._originalWord = this._currentWord = word;
-		this._currentDoc = tipElement.ownerDocument;
-		this._currentParagraph = BW_plainText(BW_trim(tipElement.textContent));
-		this._currentWindow = this._currentDoc.defaultView;
-		this._currentCursorX = this._cursorX;
-		this._currentCursorY = this._cursorY;
 		this._untense = "";
 		var select = BW_trim(BW_getPage().getSelection().toString()).toLowerCase();
 		if (select.length > 3 && this._currentWord.indexOf(select) != -1) {
@@ -929,111 +1058,50 @@ BW_Layout.prototype.updatePosition = function () {
 	this.getDiv().style.left = left;
 };*/
 BW_Layout.prototype.getCurrentWord = function (parent, offset, target) {
-	if (parent.parentNode != target) {
+//	var range = parent.ownerDocument.createRange();
+//	range.selectNode(parent);
+//	var str = range.toString();
+	var str = parent.textContent;
+	var word = BW_parseWord(str, offset);
+	if (!word)
 		return null;
-	}
-	if (parent.nodeType != Node.TEXT_NODE) {
-		return null;
-	}
-	var container = parent.parentNode;
-	if (container) {
-		var foundNode = false;
-		for (var c = container.firstChild; c != null; c = c.nextSibling) {
-			if (c == parent) {
-				foundNode = true;
-				break;
-			}
-		}
-		if (!foundNode) {
-			return null;
-		}
-	}
-	var range = parent.ownerDocument.createRange();
-	range.selectNode(parent);
-	var str = range.toString();
-	if (offset < 0 || offset >= str.length) {
-		return null;
-	}
-	var start = offset;
-	var end = offset + 1;
-	var valid_chars = /\w/;
-	if (!valid_chars.test(str.substring(start, start + 1))) {
-		return null;
-	}
-	while (start > 0) {
-		if (valid_chars.test(str.substring(start - 1, start))) {
-			start--;
-		} else {
-			break;
-		}
-	}
-	while (end < str.length) {
-		if (valid_chars.test(str.substring(end, end + 1))) {
-			end++;
-		} else {
-			break;
-		}
-	}
-	var text = str.substring(start, end);
-	if (text) {
-		var textContent = target.textContent.replace(/\s+/g, " ");
-		if (textContent.length > str.length) {
-			var index = textContent.indexOf(str);
-			if (index != -1) {
-				str = textContent;
-				offset += index;
-			}
-		}
-		
-		var s;
-		start = 0;
-		end = str.length;
-		function getStart(ch, ret){
-			s = str.lastIndexOf(ch, offset);
-			if (!ret) s += ch.length;
-			while(!ret && s >= ch.length && str.charAt(s) != " "){
-				s = str.lastIndexOf(ch, s-ch.length-1) + ch.length;
-			}
-			if (s > start) {
-				start = s;
-			}
-		}
-		function getEnd(ch, ret){
-			s = str.indexOf(ch, offset);
-			if (!ret) s += ch.length;
-			while(!ret && s < str.length && s >= ch.length && str.charAt(s) != " "){
-				s = str.indexOf(ch, s+1) + ch.length;
-			}
-			if (s < end && s >= ch.length) {
-				end = s;
-			}
-		}
-		getStart(".");
-		getStart("?");
-		getStart("!");
-		getStart("\n", true);
-		getEnd(".");
-		getEnd("?");
-		getEnd("!");
-		getEnd("\n", true);
 
-		if (start < 0) {
-			start = 0;
-		}
-		if (end <= 0) {
-			end = str.length;
-		}
-		this._currentSentence = BW_plainText(BW_trim(str.substring(start, end)));
+	if (this.isSelected()){
+		this._currentParagraph = BW_plainText(BW_trim(BW_getPage().getSelection().toString()));
 	}
-	return text.toLowerCase();
+	else {
+		var selection = BW_getSelectionText(target);
+		if (this._quoteSentence){
+			var textContent = target.textContent;
+			var children = target.childNodes;
+			var pre = 0;
+			var offsetTC = 0;
+			for (var i=0; i<children.length; i++){
+				if (children[i] == parent)
+					break;
+				else{
+					offsetTC += children[i].textContent.length;
+				}
+			}
+			offsetTC += offset;
+		
+			this._currentParagraph = BW_parseSentence(selection, textContent, offsetTC);
+		}
+		else{
+			this._currentParagraph = BW_trim(selection);
+		}
+	}
+	return word;
 };
-BW_Layout.prototype.getParagraph = function () {
-	if (BW_getPage().getSelection().rangeCount > 0
-		&& BW_getPage().getSelection().getRangeAt(0).isPointInRange(this._currentElement, this._currentOffset)) {
+BW_Layout.prototype.getParagraph = function(){
+	if (this.isSelected())
 		return BW_plainText(BW_trim(BW_getPage().getSelection().toString()));
-	}
 	return this._currentParagraph;
 };
+BW_Layout.prototype.isSelected = function(){
+	return BW_getPage().getSelection().rangeCount > 0
+		&& BW_getPage().getSelection().getRangeAt(0).isPointInRange(this._currentElement, this._currentOffset);
+}
 BW_Layout.prototype.checkCurrentParagraph = function () {
 	if (this._quotes.length == 0) {
 		this._currentQuoteId = null;
@@ -1148,10 +1216,18 @@ BW_Layout.prototype.mouseOverBackWord = function (button) {
 	}
 };
 BW_Layout.prototype.highlightQuote = function () {
-	if (this.getParagraph() == this._currentParagraph) {
-		if (this._quoteSentence && this._currentSentence != this._currentParagraph) {
-			if (this.highlight(BW_getPage(), this._currentSentence, true))
-				return;
+	if (!this.isSelected()) {
+		if (this._quoteSentence) {
+			if (this._currentParagraph == BW_trim(this._currentElement.textContent)){
+				var select = BW_getPage().getSelection();
+				select.removeAllRanges();
+				var range = this._currentDoc.createRange();
+				range.selectNode(this._currentElement);
+				select.addRange(range);
+			}
+			else
+				this.highlight(BW_getPage(), this._currentParagraph, true);
+			return;
 		}
 		this._currentElement.style.border = "1px dashed blue";
 	}
@@ -1656,7 +1732,6 @@ BW_Layout.prototype.untenseSpan = function () {
 		var win = BW_LayoutOverlay._currentWindow;
 		var para = BW_LayoutOverlay._currentParagraph;
 		var element = BW_LayoutOverlay._currentElement;
-		var sentence = BW_LayoutOverlay._currentSentence;
 		var offset = BW_LayoutOverlay._currentOffset;
 		var untense = BW_LayoutOverlay._untense;
 		BW_LayoutOverlay.hide();
@@ -1670,7 +1745,6 @@ BW_Layout.prototype.untenseSpan = function () {
 		BW_LayoutOverlay._currentParagraph = para;
 		BW_LayoutOverlay._currentWindow = win;
 		BW_LayoutOverlay._currentElement = element;
-		BW_LayoutOverlay._currentSentence = sentence;
 		BW_LayoutOverlay._currentOffset = offset;
 		if (this.id == "e") {
 			BW_LayoutOverlay._untense = untense;
