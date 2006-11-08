@@ -29,8 +29,8 @@
 // Functions are derived from GPL code originally by mozilla Inc:
 // For the original source, see: http://www.koders.com/javascript/fidFEF1093F08C9BDE750ABD0ED1863319D8179449A.aspx
 ////////////////////////////////////////////////////////////////////////////
-const BW_debugOutput = false;	
-//const BW_debugOutput = true;
+//const BW_debugOutput = false;	
+const BW_debugOutput = true;
 function BW_ddump(text) {
 	if (BW_debugOutput) {
 		dump(text + "\n");
@@ -84,6 +84,7 @@ function BW_dumpError(text) {
 ////////////////////////////////////////////////////////////////////////////
 function BW_plainText(text_) {
 	var text = BW_HTMLEncode(text_);
+	text = text.replace(new RegExp(getLineBreak(), "g"), "<BR />");
 	text = text.replace(/\n/g, "<BR />");
 	return text;
 }
@@ -700,6 +701,8 @@ BW_Layout.prototype.maybeShowTooltip = function (tipElement) {
 	if (parent.nodeType != Node.TEXT_NODE) {
 		return;
 	}
+	this.loadPref();
+	this._currentParent = parent;
 	var container = parent.parentNode;
 	if (container) {
 		var foundNode = false;
@@ -731,7 +734,6 @@ BW_Layout.prototype.maybeShowTooltip = function (tipElement) {
 BW_Layout.prototype.showTooltip = function (word) {
 	var tipElement = this._currentElement;
 	try {
-		this.loadPref();
 		this._originalWord = this._currentWord = word;
 		this._untense = "";
 		var select = BW_trim(BW_getPage().getSelection().toString()).toLowerCase();
@@ -1071,8 +1073,8 @@ BW_Layout.prototype.getCurrentWord = function (parent, offset, target) {
 	}
 	else {
 		var selection = BW_getSelectionText(target);
+		var textContent = target.textContent;
 		if (this._quoteSentence){
-			var textContent = target.textContent;
 			var children = target.childNodes;
 			var pre = 0;
 			var offsetTC = 0;
@@ -1088,30 +1090,25 @@ BW_Layout.prototype.getCurrentWord = function (parent, offset, target) {
 			this._currentParagraph = BW_parseSentence(selection, textContent, offsetTC);
 		}
 		else{
-			this._currentParagraph = BW_trim(selection);
+			this._currentParagraph = BW_plainText(BW_trim(textContent));
 		}
 	}
 	return word;
 };
-BW_Layout.prototype.getParagraph = function(){
-	if (this.isSelected())
-		return BW_plainText(BW_trim(BW_getPage().getSelection().toString()));
-	return this._currentParagraph;
-};
 BW_Layout.prototype.isSelected = function(){
 	return BW_getPage().getSelection().rangeCount > 0
-		&& BW_getPage().getSelection().getRangeAt(0).isPointInRange(this._currentElement, this._currentOffset);
+		&& BW_getPage().getSelection().getRangeAt(0).isPointInRange(this._currentParent, this._currentOffset);
 }
 BW_Layout.prototype.checkCurrentParagraph = function () {
 	if (this._quotes.length == 0) {
 		this._currentQuoteId = null;
 		return false;
 	}
-	var para = this.getParagraph();
-//	BW_ddump("---{n"+para+"n}---");
+	var para = this._currentParagraph;
+	BW_ddump("para:"+para);
 	var url = BW_getPage().top.document.URL;
 	for (var i = 0; i < this._quotes.length; i++) {
-//		BW_ddump("---{n"+this._quotes[i].paragraph+"n}---");
+		BW_ddump("---{n"+this._quotes[i].paragraph+"n}---");
 		if (this._quotes[i].paragraph == para && this._quotes[i].url == url) {
 			this._currentQuoteId = this._quotes[i].id;
 			return true;
@@ -1247,7 +1244,7 @@ BW_Layout.prototype.clickBackWord = function () {
 		if (this._currentWordId == null) {
 			this._api.backWord(this._currentWord, this._paraphrase);
 		} else {
-			this._api.backQuote(this._currentWordId, BW_getPage().top.document.URL, BW_getPage().top.document.title, this.getParagraph());
+			this._api.backQuote(this._currentWordId, BW_getPage().top.document.URL, BW_getPage().top.document.title, this._currentParagraph);
 		}
 	}
 };
@@ -1865,7 +1862,7 @@ BW_Layout.prototype.highlight = function (wnd, para, noscroll) {
 	var finder = Components.classes["@mozilla.org/embedcomp/rangefind;1"].createInstance().QueryInterface(Components.interfaces.nsIFind);
 	finder.caseSensitive = false;
 	if (!(retRange = finder.Find(para, searchRange, startPt, endPt))) {
-		var paras = para.split("\n");
+		var paras = para.split(getLineBreak());
 		retRange = finder.Find(paras[0], searchRange, startPt, endPt);
 	}
 	if (!retRange) return false;
@@ -1917,7 +1914,7 @@ BW_Layout.prototype.callbackGetQuotes = function (theObject) {
 BW_Layout.prototype.callbackBackWord = function (theObject) {
 	if (this._currentWordId == null && this._paraphrase == " ") {
 		this._currentWordId = theObject;
-		this._api.backQuote(this._currentWordId, BW_getPage().top.document.URL, BW_getPage().top.document.title, this.getParagraph());
+		this._api.backQuote(this._currentWordId, BW_getPage().top.document.URL, BW_getPage().top.document.title, this._currentParagraph);
 	} else {
 		this._currentWordId = theObject;
 	}
