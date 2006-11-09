@@ -29,8 +29,8 @@
 // Functions are derived from GPL code originally by mozilla Inc:
 // For the original source, see: http://www.koders.com/javascript/fidFEF1093F08C9BDE750ABD0ED1863319D8179449A.aspx
 ////////////////////////////////////////////////////////////////////////////
-const BW_debugOutput = false;	
-//const BW_debugOutput = true;
+//const BW_debugOutput = false;	
+const BW_debugOutput = true;
 function BW_ddump(text) {
 	if (BW_debugOutput) {
 		dump(text + "\n");
@@ -184,7 +184,10 @@ function BW_parseSentence(selection, textContent, offsetTC){
 	while (ReSp.exec(textContent) != undefined) {
 	  spTC[spTC.length] = ReSp.lastIndex;
 	}
+	var diff = (selection.replace(ReSp, "") != textContent.replace(ReSp, ""));
+	if (diff) selection = textContent;
 	function relatedOffset(ar, offset, ar2){
+		if (diff) return offset;
 		var offset2 = offset;
 		for (var i=0; i<ar.length; i++)
 			if (ar[i] <= offset) offset2--;
@@ -309,7 +312,7 @@ function BW_defaultStyle() {
 	style += "border: 0px!important;";
 //	style += "vertical-align: middle!important;";
 	style += "line-height: " + (BW_LayoutOverlay._size) + "px!important;";
-	style += "display:inline!important;";
+	style += "display: inline!important;";
 	return style;
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -656,7 +659,7 @@ BW_Layout.prototype.updateLayout = function () {
 			if (this._usingAPI) {
 				this.paraphraseSpan();
 				var bar = BW_createElement("SPAN");
-				bar.innerHTML = "|";
+				bar.textContent = "|";
 				bar.style.color = "#002864";
 				this.getDiv().appendChild(bar);
 			}
@@ -1086,7 +1089,8 @@ BW_Layout.prototype.getCurrentWord = function (parent, offset, target) {
 				}
 			}
 			offsetTC += offset;
-		
+			BW_ddump("selection:"+selection);
+			BW_ddump("textContent:"+textContent);
 			this._currentParagraph = BW_parseSentence(selection, textContent, offsetTC);
 		}
 		else{
@@ -1426,17 +1430,13 @@ BW_Layout.prototype.showQuotes = function () {
 		div.style.left = this.getDiv().style.left;
 		div.style.top = (BW_getTop(this.getDiv()) + this._size + 1) + "px";
 		var divWidth = this.getDiv().clientWidth;
-		if (divWidth > 400) {
-			div.style.width = divWidth - 198 + "px";
-			this._showQuoteDetailLeft = false;
-		} else {
-			div.style.width = divWidth + "px";
-			this._showQuoteDetailLeft = true;
-		}
+		this._showQuoteDetailLeft = divWidth < 400;
+		if (!this._showQuoteDetailLeft) divWidth -= 198;
+		div.style.width = divWidth + "px";
 		div.style.zIndex = "32714";
 		div.style.border = "1px solid #517abf";
 		div.style.lineHeight = this._size + "px!important";
-		div.style.overflow = "hidden!important";
+//		div.style.overflow = "hidden!important";
 		div.setAttribute("align", "left");
 		div.id = this._nameQuotesDiv;
 		BW_getDoc().body.appendChild(div);
@@ -1483,6 +1483,7 @@ BW_Layout.prototype.showQuote = function (index) {
 	var div = BW_createElement("DIV");
 	div.style.height = this._size + "px";
 	div.style.color = "#002864";
+//	div.style.overflow = "hidden";
 	var img = BW_createElement("IMG");
 	if (index % 2 == 0) {
 		img.setAttribute("src", "chrome://backword/skin/quoteItemB.gif");
@@ -1492,14 +1493,17 @@ BW_Layout.prototype.showQuote = function (index) {
 		img.setAttribute("src", "chrome://backword/skin/quoteItemG.gif");
 	}
 	img.style.verticalAlign = "top";
+	img.style.cursor = "auto";
+	img.setAttribute("title", " ");
+	img.addEventListener("click", function(e){e.stopPropagation();}, true);
+	img.addEventListener("mouseover", function(e){e.stopPropagation(); window.content.status = null;}, true);
 	img.style.backgroundColor = "";
 	div.appendChild(img);
+	div.style.cursor = "pointer";
+	div.addEventListener("click", clickQuote, false);
+	div.addEventListener("mouseover", mouseOverQuote, false);
+	div.addEventListener("mouseout", mouseOutQuote, false);
 	var span = BW_createElement("SPAN");
-	span.style.cursor = "pointer";
-	span.addEventListener("click", clickQuote, false);
-	span.addEventListener("mouseover", mouseOverQuote, false);
-	span.addEventListener("mouseout", mouseOutQuote, false);
-	span.id = index;
 	function clickQuote(e) {
 		window.content.status = null;
 		if (e.ctrlKey && !BW_LayoutOverlay.is_tbird) {
@@ -1517,27 +1521,11 @@ BW_Layout.prototype.showQuote = function (index) {
 		}
 	}
 	function mouseOverQuote() {
-		if (gBrowser) {
+		var url = BW_LayoutOverlay._quotes[parseInt(this.id)].url;
+		if (url == BW_getPage().top.document.URL)
+			window.content.status = BW_LayoutOverlay.getString("statusbar.highlight");
+		else
 			window.content.status = BW_LayoutOverlay.getString("statusbar.openpage") + BW_LayoutOverlay._quotes[parseInt(this.id)].url;
-		} else {
-			window.content.status = BW_LayoutOverlay._quotes[parseInt(this.id)].url;
-		}
-	}
-	function mouseOutQuote() {
-		window.content.status = null;
-	}
-	var quotesDiv = BW_getDoc().getElementById(this._nameQuotesDiv);
-	if (quote.title.length > 0) {
-		span.innerHTML = "<u>" + quote.title + "</u>";
-		span.setAttribute("title", quote.title);
-	} else {
-		span.innerHTML = "<u>" + quote.paragraph + "</u>";
-		span.setAttribute("title", quote.paragraph);
-	}
-	div.appendChild(span);
-	div.addEventListener("mouseover", mouseOver, false);
-	div.id = index;
-	function mouseOver(e) {
 		var detail = BW_getDoc().getElementById(BW_LayoutOverlay._nameQuoteDetailDiv);
 		if (!detail) {
 			detail = BW_createElement("div");
@@ -1555,6 +1543,20 @@ BW_Layout.prototype.showQuote = function (index) {
 		detail.innerHTML = BW_LayoutOverlay.showQuoteDetail(BW_LayoutOverlay._quotes[parseInt(this.id)].paragraph, BW_LayoutOverlay._currentWord);
 		BW_LayoutOverlay.updateQuoteDetail();
 	}
+	function mouseOutQuote() {
+		window.content.status = null;
+	}
+	var quotesDiv = BW_getDoc().getElementById(this._nameQuotesDiv);
+	if (quote.title.length > 0) {
+		span.textContent = quote.title;
+		div.setAttribute("title", quote.title);
+	} else {
+		span.textContent = quote.paragraph;
+		div.setAttribute("title", quote.paragraph);
+	}
+	span.style.textDecoration = "underline";
+	div.appendChild(span);
+	div.id = index;
 	return div;
 };
 BW_Layout.prototype.showNextQuote = function () {
