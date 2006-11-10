@@ -29,8 +29,8 @@
 // Functions are derived from GPL code originally by mozilla Inc:
 // For the original source, see: http://www.koders.com/javascript/fidFEF1093F08C9BDE750ABD0ED1863319D8179449A.aspx
 ////////////////////////////////////////////////////////////////////////////
-//const BW_debugOutput = false;	
-const BW_debugOutput = true;
+const BW_debugOutput = false;	
+//const BW_debugOutput = true;
 function BW_ddump(text) {
 	if (BW_debugOutput) {
 		dump(text + "\n");
@@ -820,7 +820,7 @@ BW_Layout.prototype.doLoad = function (event) {
 };
 BW_Layout.prototype.doLoadImpl = function (event) {
 	this.loadPref();
-	BW_ddump("load" + this._id);
+//	BW_ddump("load" + this._id);
 	if ("nsIAdblockPlus" in Components.interfaces) { //if Adblock Plus 0.7
 	}
 	var abp = Components.classes["@mozilla.org/adblockplus;1"].createInstance(Components.interfaces.nsIAdblockPlus);
@@ -835,7 +835,7 @@ BW_Layout.prototype.doUnload = function (event) {
 	BW_LayoutOverlay.doUnloadImpl(event);
 };
 BW_Layout.prototype.doUnloadImpl = function (event) {
-	BW_ddump("unload" + this._id);
+//	BW_ddump("unload" + this._id);
 	if (this._id != null) {
 		var currentInstaceList = this._pref.getCharPref(this._namePrefCurrentInstanceList);
 		var cil = currentInstaceList.split(",");
@@ -1105,10 +1105,10 @@ BW_Layout.prototype.checkCurrentParagraph = function () {
 		return false;
 	}
 	var para = this._currentParagraph;
-	BW_ddump("para:"+para);
+//	BW_ddump("para:"+para);
 	var url = BW_getPage().top.document.URL;
 	for (var i = 0; i < this._quotes.length; i++) {
-		BW_ddump("---{n"+this._quotes[i].paragraph+"n}---");
+//		BW_ddump("---{n"+this._quotes[i].paragraph+"n}---");
 		if (this._quotes[i].paragraph == para && this._quotes[i].url == url) {
 			this._currentQuoteId = this._quotes[i].id;
 			return true;
@@ -1509,7 +1509,6 @@ BW_Layout.prototype.showQuote = function (index) {
 			gBrowser.selectedTab = gBrowser.addTab(quote.url);
 			BW_LayoutOverlay._lastWindow = gBrowser.getBrowserForTab(gBrowser.selectedTab);
 			BW_LayutOverlay._lastWindow.addEventListener("load", function () {
-				BW_ddump("load");
 				BW_LayoutOverlay.highlight(this, BW_LayoutOverlay._lastParagraph);
 			}, false);
 			BW_LayoutOverlay.hide();
@@ -2563,7 +2562,6 @@ BW_LocalAPI.prototype.getEndOffset = function (stream) {
 	return seek.tell();
 };
 BW_LocalAPI.prototype.close = function () {
-	BW_ddump("close");
 	try {
 		this._outWords.close();
 		this._outWords = null;
@@ -2699,7 +2697,6 @@ BW_LocalAPI.prototype.appendQuote = function (quote) {
 	this._outQuotes.write(buf, buf.length);
 };
 BW_LocalAPI.prototype.writeLineWords = function (str, offset) {
-	BW_ddump("write word (" + offset + "):" + str);
 	try {
 		this.writeLine(str, offset, this._outWords);
 	}
@@ -2708,7 +2705,6 @@ BW_LocalAPI.prototype.writeLineWords = function (str, offset) {
 	}
 };
 BW_LocalAPI.prototype.writeLineQuotes = function (str, offset) {
-	BW_ddump("write quote (" + offset + "):" + str);
 	try {
 		this.writeLine(str, offset, this._outQuotes);
 	}
@@ -2814,7 +2810,7 @@ BW_LocalAPI.prototype.getOutputStream = function (file) {
 //		stream = null;
 //	 }
 	}
-	BW_ddump(stream);
+//	BW_ddump(stream);
 	return stream;
 };
 BW_LocalAPI.prototype.getFile = function (path) {
@@ -2945,7 +2941,7 @@ function gMakeXMLCall(theURL, message, theAction, additionalInfo) {
 		xmlhttp.overrideMimeType("text/xml");
 	}
 	catch (e) {
-		BW_ddump(e);
+//		BW_ddump(e);
 		BW_LayoutOverlay.apiError(e.name);
 		return;
 	}
@@ -2966,7 +2962,7 @@ bfXMLRPC.makeXML = function (method, myParams) {
 		str += "<param><value>" + bfXMLRPC.convertToXML(myParams[i]).toXMLString() + "</value></param>";
 	}
 	str += "</params></methodCall>";
-	BW_ddump(str);
+//	BW_ddump(str);
 		//"<?xml version="1.0"?>"
 //		BW_ddump("XML:n " + xml.toXMLString());
 		//var theBlogCharType = gbackwordUtil.getCharType();
@@ -3165,8 +3161,8 @@ BW_XMLCall.processData = function (theXML, theAction, additionalInfo) {
 	}
 };
 BW_XMLCall.processReturnData = function (theObject, theAction, additionalInfo, theXML) {
-	BW_ddump(theXML);
-	BW_ddump(theAction + ":");
+//	BW_ddump(theXML);
+//	BW_ddump(theAction + ":");
 	BW_ddumpObject(theObject, "theObject", 3);
 	if (theObject.faultString) {
 		BW_LayoutOverlay.apiError(theObject.faultString);
