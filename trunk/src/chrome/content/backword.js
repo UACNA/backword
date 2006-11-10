@@ -1960,7 +1960,7 @@ BW_Layout.prototype.callbackModifyQuotes = function (theObject) {
 ////////////////////////////////////////////////////////////////////////////
 BW_Layout.prototype.clickStatus = function (e) {
 	if (e.button == 1 && !this.is_tbird) { //middle click
-		if (this._enabled && this._usingAPI) {
+		if (this._enabled && this._usingAPI && !this._usingLocalAPI) {
 			gBrowser.selectedTab = gBrowser.addTab(this._apiWebUrl);
 		} else {
 			gBrowser.selectedTab = gBrowser.addTab("http://groups.google.com/group/backword");
