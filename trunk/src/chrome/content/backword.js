@@ -1497,10 +1497,14 @@ BW_Layout.prototype.showQuote = function (index) {
 	img.style.backgroundColor = "";
 	div.appendChild(img);
 	div.style.cursor = "pointer";
+	div.style.textOverflow = "ellipsis";
+	div.style.wordWrap = "break-word";
 	div.addEventListener("click", clickQuote, false);
 	div.addEventListener("mouseover", mouseOverQuote, false);
 	div.addEventListener("mouseout", mouseOutQuote, false);
 	var span = BW_createElement("SPAN");
+	span.style.textOverflow = "ellipsis";
+	span.style.wordWrap = "break-word";
 	function clickQuote(e) {
 		window.content.status = null;
 		if (e.ctrlKey && !BW_LayoutOverlay.is_tbird) {
