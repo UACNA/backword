@@ -277,19 +277,25 @@ function BW_setElementStyle(obj) {
 	obj.style.fontSize = (BW_LayoutOverlay._size - 4) + "px!important";
 	obj.style.fontWeight = "normal!important";
 	obj.style.fontStyle = "normal!important";
-	obj.style.fontFamily = "verdana,sans-srif";
+	obj.style.fontFamily = "tahoma,arial,verdana,sans-serif";
 	obj.style.fontSizeAdjust = "none!important";
 	obj.style.fontStretch = "normal!important";
 	obj.style.fontVariant = "normal!important";
 	obj.style["float"] = "none!important"; 
-	obj.style.overflow = "hidden!important";
 	obj.style.margin = "0px 0px 0px 0px!important";
 	obj.style.padding = "0px 0px 0px 0px!important";
+//	obj.style.wordWrap = "break-word";
 	obj.style.border = "0px !important";
 	obj.style.lineHeight = BW_LayoutOverlay._size + "px!important";
 //	obj.style.verticalAlign = "middle!important";
+//	if (obj.tagName.toUpperCase() != "SPAN") {
+//	}
 	if (obj.tagName.toUpperCase() != "DIV") {
 		obj.style.display = "inline!important";
+	}
+	else{
+		obj.style.overflow = "hidden !important";
+		obj.style.whiteSpace = "nowrap !important";
 	}
 	if (obj.tagName.toUpperCase() == "IMG") {
 		obj.style.maxWidth = "15px";
@@ -868,15 +874,7 @@ BW_Layout.prototype.doMouseMoveImpl = function (event) {
 //		}
 	} else {
 		if (this._enabled) {
-			if (this._timerShow) {
-				clearTimeout(this._timerShow);
-				this._timerShow = null;
-			}
-			if (this._timerStatus) {
-				clearTimeout(this._timerStatus);
-				BW_LayoutOverlay.updateStatusIcon();
-				this._timerStatus = null;
-			}
+			this.killTimer();
 			var element = event.target;
 			if (!this._mouseDown) {
 				this._timerShow = setTimeout(function (element) {
@@ -890,11 +888,28 @@ BW_Layout.prototype.doMouseMoveImpl = function (event) {
 		}
 	}
 };
+BW_Layout.prototype.killTimer = function(){
+	if (this._timerShow) {
+		clearTimeout(this._timerShow);
+		this._timerShow = null;
+	}
+	if (this._timerStatus) {
+		clearTimeout(this._timerStatus);
+		BW_LayoutOverlay.updateStatusIcon();
+		this._timerStatus = null;
+	}
+}
 BW_Layout.prototype.doMouseDown = function (e) {
 	BW_LayoutOverlay.doMouseDownImpl(e);
 };
 BW_Layout.prototype.doMouseDownImpl = function (e) {
 	this._mouseDown = true;
+};
+BW_Layout.prototype.doMouseOut = function (e) {
+	BW_LayoutOverlay.doMouseOutImpl(e);
+};
+BW_Layout.prototype.doMouseOutImpl = function (e) {
+	this.killTimer();
 };
 BW_Layout.prototype.doMouseUp = function (e) {
 	BW_LayoutOverlay.doMouseUpImpl(e);
@@ -906,6 +921,7 @@ BW_Layout.prototype.doScroll = function () {
 	BW_LayoutOverlay.doScrollImpl();
 };
 BW_Layout.prototype.doScrollImpl = function () {
+	this.killTimer();
 	if (this._display && !this._visitingPreview) {
 		this.hide();
 	}
@@ -914,6 +930,7 @@ BW_Layout.prototype.doBlur = function () {
 	BW_LayoutOverlay.doBlurImpl();
 };
 BW_Layout.prototype.doBlurImpl = function () {
+	this.killTimer();
 	if (this._display && !this._visitingPreview) {
 		this.hide();
 	}
@@ -1244,7 +1261,7 @@ BW_Layout.prototype.clickBackWord = function () {
 		if (this._currentWordId == null) {
 			this._api.backWord(this._currentWord, this._paraphrase);
 		} else {
-			this._api.backQuote(this._currentWordId, BW_getPage().top.document.URL, BW_getPage().top.document.title, this._currentParagraph);
+			this._api.backQuote(this._currentWordId, BW_getPage().top.document.URL, BW_getPage().top.document.title || BW_getPage().top.document.URL, this._currentParagraph);
 		}
 	}
 };
@@ -1490,21 +1507,13 @@ BW_Layout.prototype.showQuote = function (index) {
 		img.setAttribute("src", "chrome://backword/skin/quoteItemG.gif");
 	}
 	img.style.verticalAlign = "top";
-	img.style.cursor = "auto";
-	img.setAttribute("title", " ");
-	img.addEventListener("click", function(e){e.stopPropagation();}, true);
-	img.addEventListener("mouseover", function(e){e.stopPropagation(); window.content.status = null;}, true);
 	img.style.backgroundColor = "";
 	div.appendChild(img);
-	div.style.cursor = "pointer";
-	div.style.textOverflow = "ellipsis";
-	div.style.wordWrap = "break-word";
-	div.addEventListener("click", clickQuote, false);
-	div.addEventListener("mouseover", mouseOverQuote, false);
-	div.addEventListener("mouseout", mouseOutQuote, false);
 	var span = BW_createElement("SPAN");
-	span.style.textOverflow = "ellipsis";
-	span.style.wordWrap = "break-word";
+	span.style.cursor = "pointer";
+	span.addEventListener("click", clickQuote, false);
+	span.addEventListener("mouseover", mouseOverQuote, false);
+	span.addEventListener("mouseout", mouseOutQuote, false);
 	function clickQuote(e) {
 		window.content.status = null;
 		if (e.ctrlKey && !BW_LayoutOverlay.is_tbird) {
@@ -1526,6 +1535,11 @@ BW_Layout.prototype.showQuote = function (index) {
 			window.content.status = BW_LayoutOverlay.getString("statusbar.highlight");
 		else
 			window.content.status = BW_LayoutOverlay.getString("statusbar.openpage") + BW_LayoutOverlay._quotes[parseInt(this.id)].url;
+	}
+	function mouseOutQuote() {
+		window.content.status = null;
+	}
+	function mouseOverDiv(){
 		var detail = BW_getDoc().getElementById(BW_LayoutOverlay._nameQuoteDetailDiv);
 		if (!detail) {
 			detail = BW_createElement("div");
@@ -1543,20 +1557,18 @@ BW_Layout.prototype.showQuote = function (index) {
 		BW_LayoutOverlay.showQuoteDetail(BW_LayoutOverlay._quotes[parseInt(this.id)].paragraph, BW_LayoutOverlay._currentWord);
 		BW_LayoutOverlay.updateQuoteDetail();
 	}
-	function mouseOutQuote() {
-		window.content.status = null;
-	}
 	var quotesDiv = BW_getDoc().getElementById(this._nameQuotesDiv);
 	if (quote.title.length > 0) {
 		span.textContent = quote.title;
-		div.setAttribute("title", quote.title);
+		span.setAttribute("title", quote.title);
 	} else {
 		span.textContent = quote.paragraph;
-		div.setAttribute("title", quote.paragraph);
+		span.setAttribute("title", quote.paragraph);
 	}
 	span.style.textDecoration = "underline";
 	div.appendChild(span);
-	div.id = index;
+	span.id = div.id = index;
+	div.addEventListener("mouseover", mouseOverDiv, false);
 	return div;
 };
 BW_Layout.prototype.showNextQuote = function () {
@@ -1933,7 +1945,7 @@ BW_Layout.prototype.callbackGetQuotes = function (theObject) {
 BW_Layout.prototype.callbackBackWord = function (theObject) {
 	if (this._currentWordId == null && this._paraphrase == " ") {
 		this._currentWordId = theObject;
-		this._api.backQuote(this._currentWordId, BW_getPage().top.document.URL, BW_getPage().top.document.title, this._currentParagraph);
+		this._api.backQuote(this._currentWordId, BW_getPage().top.document.URL, BW_getPage().top.document.title || BW_getPage().top.document.URL, this._currentParagraph);
 	} else {
 		this._currentWordId = theObject;
 	}
