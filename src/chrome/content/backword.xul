@@ -19,16 +19,19 @@
 			src="chrome://backword/content/backword.js" />
 
 <script>
-    var BW_LayoutOverlay = new BW_Layout();
-    addEventListener("load",
-                     BW_LayoutOverlay.doLoad,
-                     false);
-    addEventListener("unload",
-                     BW_LayoutOverlay.doUnload,
-                     false);
-    addEventListener("mousemove",
-                     BW_LayoutOverlay.doMouseMove,
-                     false);
+	var BW_LayoutOverlay = new BW_Layout();
+	addEventListener("load",
+	         BW_LayoutOverlay.doLoad,
+	         false);
+	addEventListener("unload",
+	         BW_LayoutOverlay.doUnload,
+	         false);
+	addEventListener("mousemove",
+	         BW_LayoutOverlay.doMouseMove,
+	         false);
+	addEventListener("mouseout",
+	         BW_LayoutOverlay.doMouseOut,
+	         false);
 	addEventListener("mousedown",
 					 BW_LayoutOverlay.doMouseDown,
 					 false);				 
@@ -39,7 +42,7 @@
 					 BW_LayoutOverlay.doScroll,
 					 false);
 	addEventListener("blur", 
-					BW_LayoutOverlay.doBlur, false);
+						BW_LayoutOverlay.doBlur, false);
 </script>
   <stringbundleset id="stringbundleset">
   <stringbundle id="backwordstrings" src="chrome://backword/locale/backword.properties"/>
