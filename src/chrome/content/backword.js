@@ -241,7 +241,7 @@ function BW_parseSentence(selection, textContent, offsetTC){
 	else{
 		end = relatedOffset(spSL, end, spTC);
 	}
-	return BW_trim(textContent.substring(start, end));
+	return BW_plainText(BW_trim(textContent.substring(start, end)));
 }
 function BW_makeShortString(src, key, len) {
 	if (src.length <= len) {
@@ -652,7 +652,7 @@ BW_Layout.prototype.updateLayout = function () {
 				}
 			}
 			this.searchWebButton();
-			if (this._showPronunciation) {
+			if (this._showPronunciation && this._isHTML) {
 				this.cibaFlash();
 			}
 			this.untenseSpan();
@@ -724,6 +724,7 @@ BW_Layout.prototype.maybeShowTooltip = function (tipElement) {
 		tipElement = tipElement.parentNode;
 	}
 	this._currentDoc = tipElement.ownerDocument;
+	this._isHTML = (this._currentDoc.contentType == "text/html");
 	this._currentWindow = this._currentDoc.defaultView;
 	this._currentElement = tipElement;
 	this._currentOffset = offset;
@@ -1063,9 +1064,6 @@ BW_Layout.prototype.updatePosition = function () {
 	this.getDiv().style.left = left;
 };*/
 BW_Layout.prototype.getCurrentWord = function (parent, offset, target) {
-//	var range = parent.ownerDocument.createRange();
-//	range.selectNode(parent);
-//	var str = range.toString();
 	var str = parent.textContent;
 	var word = BW_parseWord(str, offset);
 	if (!word)
@@ -1089,8 +1087,6 @@ BW_Layout.prototype.getCurrentWord = function (parent, offset, target) {
 				}
 			}
 			offsetTC += offset;
-			BW_ddump("selection:"+selection);
-			BW_ddump("textContent:"+textContent);
 			this._currentParagraph = BW_parseSentence(selection, textContent, offsetTC);
 		}
 		else{
@@ -1295,16 +1291,11 @@ BW_Layout.prototype.paraphraseSpan = function () {
 	span.id = this._nameParaphrase;
 	span.style.color = "#002864";
 	span.setAttribute("title", this.getString("tooltip.paraphrase"));
-	span.innerHTML = BW_HTMLEncode(this._paraphrase);
+	span.textContent = this._paraphrase;
 	this.getDiv().appendChild(span);
 	this.initParaphrase(span);
 };
 BW_Layout.prototype.translate = function () {
-	if (this._untense) {
-		return "<span style='color:#002864; " + BW_defaultStyle().replace("font-weight: normal", "font-weight: bold") + "' title='" + this.getString("tooltip.untense") + "'>" + this._currentWord + "</span>:" + this._translate;
-	} else {
-		return this._translate;
-	}
 };
 BW_Layout.prototype.initParaphrase = function (span) {
 	span.addEventListener("mouseover", this.mouseOverParaphrase, true);
@@ -1346,14 +1337,14 @@ BW_Layout.prototype.clickParaphrase = function () {
 	input.style.backgroundColor = "#ECF3FF";
 	BW_setElementStyle(input);
 	input.setAttribute("title", BW_LayoutOverlay.getString("tooltip.enterparaphrase"));
-	this.innerHTML = "";
+	this.textContent = "";
 	this.appendChild(input);
 	var div = BW_createElement("DIV");
 	div.style.overflow = "hidden";
 	div.style.width = "0px";
 	div.style.height = "0px";
 	var span = BW_createElement("SPAN");
-	span.innerHTML = "<nobr>" + BW_LayoutOverlay._paraphrase + "</nobr>";
+	span.textContent = BW_LayoutOverlay._paraphrase;
 	span.id = BW_LayoutOverlay._nameParaphraseWidth;
 	div.appendChild(span);
 	BW_getDoc().body.appendChild(div);
@@ -1371,7 +1362,7 @@ BW_Layout.prototype.clickParaphrase = function () {
 	}
 	function onInput(e) {
 		var span = BW_getDoc().getElementById(BW_LayoutOverlay._nameParaphraseWidth);
-		span.innerHTML = "<nobr>" + BW_HTMLEncode(this.value) + "</nobr>";
+		span.textContent = this.value;
 		var len = span.offsetWidth;
 		var max = BW_LayoutOverlay.maxLengthInput();
 		if (len + 5 < max) {
@@ -1389,9 +1380,8 @@ BW_Layout.prototype.clickParaphrase = function () {
 			BW_LayoutOverlay._paraphrase = this.value;
 			BW_LayoutOverlay._api.backWord(BW_LayoutOverlay._currentWord, this.value);
 		}
-		var value = BW_HTMLEncode(this.value);
 		BW_LayoutOverlay.initParaphrase(this.parentNode);
-		this.parentNode.innerHTML = value;
+		this.parentNode.textContent = this.value;
 		BW_LayoutOverlay._editingParaphrase = false;
 	}
 };
@@ -1413,7 +1403,14 @@ BW_Layout.prototype.translateSpan = function () {
 	var span = BW_createElement("SPAN");
 	span.id = this._nameTranslate;
 	span.style.color = "#002864";
-	span.innerHTML = this.translate();
+	if (this._untense) {
+		var bSpan =  BW_createElement("SPAN");
+		bSpan.style.fontWeight = "bold";
+		bSpan.setAttribute("title", this.getString("tooltip.untense"));
+		bSpan.textContent = this._currentWord;
+		span.appendChild(bSpan);
+	}
+	span.appendChild(BW_getDoc().createTextNode(this._translate));
 	this.getDiv().appendChild(span);
 };
 BW_Layout.prototype.showQuotes = function () {
@@ -1540,7 +1537,7 @@ BW_Layout.prototype.showQuote = function (index) {
 			detail.setAttribute("align", "left");
 			BW_getDoc().body.appendChild(detail);
 		}
-		detail.innerHTML = BW_LayoutOverlay.showQuoteDetail(BW_LayoutOverlay._quotes[parseInt(this.id)].paragraph, BW_LayoutOverlay._currentWord);
+		BW_LayoutOverlay.showQuoteDetail(BW_LayoutOverlay._quotes[parseInt(this.id)].paragraph, BW_LayoutOverlay._currentWord);
 		BW_LayoutOverlay.updateQuoteDetail();
 	}
 	function mouseOutQuote() {
@@ -1598,6 +1595,8 @@ BW_Layout.prototype.showPrevQuote = function () {
 	}
 };
 BW_Layout.prototype.showQuoteDetail = function (para, keyword) {
+	var detail = BW_getDoc().getElementById(BW_LayoutOverlay._nameQuoteDetailDiv);
+	detail.textContent = "";
 	var re;
 	if (new RegExp("[^aieouy]$").test(keyword)) {
 		re = keyword + "{1,2}(s|es|ies|d|ed|ied|ing){0,2}";
@@ -1608,10 +1607,25 @@ BW_Layout.prototype.showQuoteDetail = function (para, keyword) {
 			re = keyword + "(s|es|ies|d|ed|ied|ing){0,2}";
 		}
 	}
-//	BW_ddump(re);
-	return para.replace(new RegExp(re, "gi"), function ($) {
-		return "<span style='background: #ffb483;" + BW_defaultStyle() + "'>" + $ + "</span>";
-	});
+	para = BW_HTMLDecode(para);
+	var paras = para.split("\n");
+	var Reg = new RegExp(re, "gi");
+	var arr = [];
+	for (var i=0; i<paras.length; i++){
+		if (i>0) detail.appendChild(BW_getDoc().createElement("BR"));
+		para = paras[i];
+		var start = 0;
+		while((arr = Reg.exec(para)) != undefined){
+			var hl = BW_createElement("SPAN");
+			hl.style.background = "#ffb483";
+			var wd = arr[0];
+			hl.textContent = wd;
+			detail.appendChild(BW_getDoc().createTextNode(para.substring(start, Reg.lastIndex - wd.length)));
+			start = Reg.lastIndex;
+			detail.appendChild(hl);
+		}
+		detail.appendChild(BW_getDoc().createTextNode(para.substring(start, para.length)));
+	}
 };
 BW_Layout.prototype.updateQuoteDetail = function () {
 	var list = BW_getDoc().getElementById(this._nameQuotesDiv);
@@ -1681,7 +1695,7 @@ BW_Layout.prototype.untenseSpan = function () {
 		var spanE = BW_createElement("SPAN");
 		spanE.style.color = "#308040";
 		spanE.style.cursor = "pointer";
-		spanE.innerHTML = "-e";
+		spanE.textContent = "-e";
 		spanE.setAttribute("title", this.getString("tooltip.appende"));
 		spanE.addEventListener("mouseover", mouseover, false);
 		spanE.addEventListener("mouseout", mouseout, false);
@@ -1692,7 +1706,7 @@ BW_Layout.prototype.untenseSpan = function () {
 	var span = BW_createElement("SPAN");
 	span.style.color = "#308040";
 	span.style.cursor = "pointer";
-	span.innerHTML = "-" + this._untense;
+	span.textContent = "-" + this._untense;
 	span.setAttribute("title", this.getString("tooltip.originalword"));
 	span.addEventListener("mouseover", mouseover, false);
 	span.addEventListener("mouseout", mouseout, false);
@@ -1701,11 +1715,11 @@ BW_Layout.prototype.untenseSpan = function () {
 	this.getDiv().appendChild(span);
 	function mouseover(e) {
 		this.stylecolor = "#803040";
-		this.innerHTML = "+" + this.id;
+		this.textContent = "+" + this.id;
 	}
 	function mouseout(e) {
 		this.style.color = "#308040";
-		this.innerHTML = "-" + this.id;
+		this.textContent = "-" + this.id;
 	}
 	function click(e) {
 		var div = BW_LayoutOverlay.getDiv();
@@ -1762,7 +1776,7 @@ BW_Layout.prototype.untenseSpan = function () {
 		BW_LayoutOverlay._api.getWord(BW_LayoutOverlay._currentWord);
 	}
 	var bar = BW_createElement("SPAN");
-	bar.innerHTML = "|";
+	bar.textContent = "|";
 	bar.style.color = "#002864";
 	this.getDiv().appendChild(bar);
 };
@@ -1893,7 +1907,7 @@ BW_Layout.prototype.callbackGetWord = function (theObject) {
 		if (this._display) {
 			if (this._currentWordId != "" && !this._editParaphrase) {
 				var span = BW_getDoc().getElementById(this._nameParaphrase);
-				span.innerHTML = this._paraphrase;
+				span.textContent = this._paraphrase;
 			}
 		}
 		this.updateLayout();
