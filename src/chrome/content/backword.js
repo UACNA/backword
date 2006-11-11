@@ -1236,7 +1236,11 @@ BW_Layout.prototype.highlightQuote = function () {
 				var select = BW_getPage().getSelection();
 				select.removeAllRanges();
 				var range = this._currentDoc.createRange();
-				range.selectNode(this._currentElement);
+				var element = this._currentElement;
+				while(element.childNodes == 1){
+					element = element.childNodes[0];
+				}
+				range.selectNode(element);
 				select.addRange(range);
 			}
 			else
@@ -1865,13 +1869,15 @@ BW_Layout.prototype.mouseOverPreview = function () {
 BW_Layout.prototype.mouseOutPreview = function () {
 	BW_LayoutOverlay._visitingPreview = false;
 };
-BW_Layout.prototype.highlight = function (wnd, para, noscroll) {
+BW_Layout.prototype.highlight = function (wnd, para, currentPage) {
 	if (!wnd) {
 		return false;
 	}
-	for (var i = 0; wnd.frames && i < wnd.frames.length; i++) {
-		if (this.highlight(wnd.frames[i], para, noscroll))
-			return true;
+	if (!currentPage){
+		for (var i = 0; wnd.frames && i < wnd.frames.length; i++) {
+			if (this.highlight(wnd.frames[i], para, currentPage))
+				return true;
+		}
 	}
 	var body = wnd.document.body;
 	if (body == null) {
@@ -1897,12 +1903,20 @@ BW_Layout.prototype.highlight = function (wnd, para, noscroll) {
 		retRange = finder.Find(paras[0], searchRange, startPt, endPt);
 	}
 	if (!retRange) return false;
+	if (currentPage){
+		var firstRange = retRange;
+		while(retRange && !retRange.isPointInRange(this._currentParent, this._currentOffset)){
+			retRange.collapse(false);
+			retRange = finder.Find(para, searchRange, retRange, endPt);
+		}
+		if (!retRange) retRange = firstRange;
+	}
 	wnd.focus();
 	var select = wnd.getSelection();
 	select.removeAllRanges();
 	select.addRange(retRange);
-	var node = retRange.startContainer;
-	if (!noscroll) {
+	if (!currentPage) {
+		var node = retRange.startContainer;
 		while (!node.scrollIntoView) {
 			node = node.parentNode;
 		}
