@@ -290,12 +290,12 @@ function BW_setElementStyle(obj) {
 //	obj.style.verticalAlign = "middle!important";
 //	if (obj.tagName.toUpperCase() != "SPAN") {
 //	}
-	if (obj.tagName.toUpperCase() != "DIV") {
-		obj.style.display = "inline!important";
-	}
-	else{
+	if (obj.tagName.toUpperCase() == "DIV") {
 		obj.style.overflow = "hidden !important";
 		obj.style.whiteSpace = "nowrap !important";
+	}
+	else{
+		obj.style.display = "inline!important";
 	}
 	if (obj.tagName.toUpperCase() == "IMG") {
 		obj.style.maxWidth = "15px";
@@ -1237,7 +1237,7 @@ BW_Layout.prototype.highlightQuote = function () {
 				select.removeAllRanges();
 				var range = this._currentDoc.createRange();
 				var element = this._currentElement;
-				while(element.childNodes == 1){
+				while(element.childNodes.length == 1){
 					element = element.childNodes[0];
 				}
 				range.selectNode(element);
@@ -1554,6 +1554,10 @@ BW_Layout.prototype.showQuote = function (index) {
 			detail.style.border = "1px solid #517abf";
 			detail.style.display = "block";
 			detail.style.color = "#002864";
+			detail.style.overflow = "visible !important";
+			detail.style.whiteSpace = "normal !important";
+			detail.style.wordBreak = "break-all";
+			detail.style.wordWrap = "break-word";
 			detail.style.backgroundColor = "#f1f7ff";
 			detail.setAttribute("align", "left");
 			BW_getDoc().body.appendChild(detail);
