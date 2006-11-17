@@ -29,9 +29,8 @@
 // Functions are derived from GPL code originally by mozilla Inc:
 // For the original source, see: http://www.koders.com/javascript/fidFEF1093F08C9BDE750ABD0ED1863319D8179449A.aspx
 ////////////////////////////////////////////////////////////////////////////
-//const BW_debugOutput = false;	
-const BW_debugOutput = true;
-
+const BW_debugOutput = false;	
+//const BW_debugOutput = true;
 function BW_ddump(text) {
 	if (BW_debugOutput) {
 		dump(text + "\n");
@@ -46,17 +45,17 @@ function BW_ddumpObject(obj, name, maxDepth, curDepth) {
 	if (!BW_debugOutput) {
 		return;
 	}
-	if (curDepth === undefined) {
+	if (curDepth == undefined) {
 		curDepth = 0;
 	}
-	if (maxDepth !== undefined && curDepth > maxDepth) {
+	if (maxDepth != undefined && curDepth > maxDepth) {
 		return;
 	}
 	var i = 0;
 	for (prop in obj) {
-		i += 1;
+		i++;
 		if (typeof (obj[prop]) == "object") {
-			if (obj[prop] && obj[prop].length !== undefined) {
+			if (obj[prop] && obj[prop].length != undefined) {
 				BW_ddump(name + "." + prop + "=[probably array, length " + obj[prop].length + "]");
 			} else {
 				BW_ddump(name + "." + prop + "=[" + typeof (obj[prop]) + "]");
@@ -85,7 +84,7 @@ function BW_dumpError(text) {
 ////////////////////////////////////////////////////////////////////////////
 function BW_plainText(text_) {
 	var text = BW_HTMLEncode(text_);
-	text = text.replace(new RegExp(BW_getLineBreak(), "g"), "<BR />");
+	text = text.replace(new RegExp(getLineBreak(), "g"), "<BR />");
 	text = text.replace(/\n/g, "<BR />");
 	return text;
 }
@@ -121,7 +120,7 @@ function BW_trim(string) {
 }
 function BW_isAWord(string) {
 	var i = 0;
-	for (; i < string.length; i += 1) {
+	for (; i < string.length; i++) {
 		if (!BW_isLetter(string.substr(i, 1))) {
 			return false;
 		}
@@ -132,7 +131,7 @@ function BW_isLetter(string) {
 	var valid_chars = /\w/;
 	return valid_chars.test(string);
 }
-function BW_parseWord(str, offset) {
+function BW_parseWord(str, offset){
 	var start = offset;
 	var end = offset + 1;
 	var valid_chars = /\w/;
@@ -141,29 +140,27 @@ function BW_parseWord(str, offset) {
 	}
 	while (start > 0) {
 		if (valid_chars.test(str.substring(start - 1, start))) {
-			start -= 1;
+			start--;
 		} else {
 			break;
 		}
 	}
 	while (end < str.length) {
 		if (valid_chars.test(str.substring(end, end + 1))) {
-			end += 1;
+			end++;
 		} else {
 			break;
 		}
 	}
 	var word = str.substring(start, end);
-	if (word !== null) {
+	if (!word)
 		return null;
-	}
 	return word.toLowerCase();
 }
-function BW_getSelectionText(target) {
+function BW_getSelectionText(target){
 	var select = BW_getPage().getSelection();
 	var selectedRanges = new Array;
-	var i = 0;
-	for (; i < select.rangeCount; i += 1) {
+	for (var i = 0; i < select.rangeCount; i++) {
 		selectedRanges[i] = select.getRangeAt(i);
 	}
 	select.removeAllRanges();
@@ -172,66 +169,52 @@ function BW_getSelectionText(target) {
 	select.addRange(range);
 	var selection = select.toString();
 	select.removeAllRanges();
-	for (i = 0; i < selectedRanges.length; i += 1) {
+	for (var i = 0; i < selectedRanges.length; i++) {
 		select.addRange(selectedRanges[i]);
 	}
 	return selection;
 }
-function BW_parseSentence(selection, textContent, offsetTC) {
-	var ReSp = /\s/g;
+function BW_parseSentence(selection, textContent, offsetTC){
+	var ReSp=/\s/g;
 	var spSL = [];
 	var spTC = [];
-	while (ReSp.exec(selection) !== undefined) {
-		spSL[spSL.length] = ReSp.lastIndex;
+	while (ReSp.exec(selection) != undefined) {
+	  spSL[spSL.length] = ReSp.lastIndex;
 	}
-	while (ReSp.exec(textContent) !== undefined) {
-		spTC[spTC.length] = ReSp.lastIndex;
+	while (ReSp.exec(textContent) != undefined) {
+	  spTC[spTC.length] = ReSp.lastIndex;
 	}
 	var diff = (selection.replace(ReSp, "") != textContent.replace(ReSp, ""));
-	if (diff) {
-		selection = textContent;
-	}
-	function relatedOffset(ar, offset, ar2) {
-		if (diff) {
-			return offset;
-		}
+	if (diff) selection = textContent;
+	function relatedOffset(ar, offset, ar2){
+		if (diff) return offset;
 		var offset2 = offset;
-		var i = 0;
-		for (; i < ar.length; i += 1) {
-			if (ar[i] <= offset) {
-				offset2 -= 1;
-			}
-		}
-		for (i = 0; i < ar2.length; i += 1) {
-			if (ar2[i] <= offset2) {
-				offset2 += 1;
-			}
-		}
+		for (var i=0; i<ar.length; i++)
+			if (ar[i] <= offset) offset2--;
+		for (var i=0; i<ar2.length; i++)
+			if (ar2[i] <= offset2) offset2++;
 		return offset2;
 	}
 	var offsetSL = relatedOffset(spTC, offsetTC, spSL);
+	
 	var s;
 	var start = 0;
 	var end = selection.length;
-	function getStart(ch, ret) {
+	function getStart(ch, ret){
 		s = selection.lastIndexOf(ch, offsetSL);
-		if (!ret) {
-			s += ch.length;
-		}
-		while (!ret && s >= ch.length && selection.charAt(s) != " ") {
-			s = selection.lastIndexOf(ch, s - ch.length - 1) + ch.length;
+		if (!ret) s += ch.length;
+		while(!ret && s >= ch.length && selection.charAt(s) != " "){
+			s = selection.lastIndexOf(ch, s-ch.length-1) + ch.length;
 		}
 		if (s > start) {
 			start = s;
 		}
 	}
-	function getEnd(ch, ret) {
+	function getEnd(ch, ret){
 		s = selection.indexOf(ch, offsetSL);
-		if (!ret) {
-			s += ch.length;
-		}
-		while (!ret && s < selection.length && s >= ch.length && selection.charAt(s) != " ") {
-			s = selection.indexOf(ch, s + 1) + ch.length;
+		if (!ret) s += ch.length;
+		while(!ret && s < selection.length && s >= ch.length && selection.charAt(s) != " "){
+			s = selection.indexOf(ch, s+1) + ch.length;
 		}
 		if (s < end && s >= ch.length) {
 			end = s;
@@ -245,14 +228,17 @@ function BW_parseSentence(selection, textContent, offsetTC) {
 	getEnd("?");
 	getEnd("!");
 	getEnd("\n", true);
+	
 	if (start < 0) {
 		start = 0;
-	} else {
+	}
+	else{
 		start = relatedOffset(spSL, start, spTC);
 	}
 	if (end <= 0) {
 		end = textContent.length;
-	} else {
+	}	
+	else{
 		end = relatedOffset(spSL, end, spTC);
 	}
 	return BW_plainText(BW_trim(textContent.substring(start, end)));
@@ -295,7 +281,7 @@ function BW_setElementStyle(obj) {
 	obj.style.fontSizeAdjust = "none!important";
 	obj.style.fontStretch = "normal!important";
 	obj.style.fontVariant = "normal!important";
-	obj.style["float"] = "none!important";
+	obj.style["float"] = "none!important"; 
 	obj.style.margin = "0px 0px 0px 0px!important";
 	obj.style.padding = "0px 0px 0px 0px!important";
 //	obj.style.wordWrap = "break-word";
@@ -307,7 +293,8 @@ function BW_setElementStyle(obj) {
 	if (obj.tagName.toUpperCase() == "DIV") {
 		obj.style.overflow = "hidden !important";
 		obj.style.whiteSpace = "nowrap !important";
-	} else {
+	}
+	else{
 		obj.style.display = "inline!important";
 	}
 	if (obj.tagName.toUpperCase() == "IMG") {
@@ -359,7 +346,6 @@ function BW_stemWord(w) {
 	var re2;
 	var re3;
 	var re4;
-	var fp;
 
 	// -s
 	re = /^(.+?)(ss|i|ch|sh|x|o|v)es$/;
@@ -377,7 +363,7 @@ function BW_stemWord(w) {
 			re = /^(.+?)eed$/;
 			re2 = /^(.+?)(ed|ing)$/;
 			if (re.test(w)) {
-				fp = re.exec(w);
+				var fp = re.exec(w);
 				re = new RegExp(mgr0);
 				if (re.test(fp[1])) {
 					re = /.$/;
@@ -385,7 +371,7 @@ function BW_stemWord(w) {
 				}
 			} else {
 				if (re2.test(w)) {
-					fp = re2.exec(w);
+					var fp = re2.exec(w);
 					stem = fp[1];
 					re2 = new RegExp(s_v);
 					if (re2.test(stem)) {
@@ -416,7 +402,7 @@ function BW_stemWord(w) {
 	// i to y & v to f
 	re = /^(.+?)i$/;
 	if (re.test(w)) {
-		fp = re.exec(w);
+		var fp = re.exec(w);
 		stem = fp[1];
 		w = stem + "y";
 	} else {
@@ -424,7 +410,7 @@ function BW_stemWord(w) {
 		//v to f
 			re = /^(.+?)v$/;
 			if (re.test(w)) {
-				fp = re.exec(w);
+				var fp = re.exec(w);
 				stem = fp[1];
 				w = stem + "f";
 			}
@@ -590,7 +576,7 @@ BW_Layout.prototype.loadPref = function () {
 			}
 		}
 	}
-	if (this._id === undefined) {
+	if (this._id == null) {
 		this._id = id + 1;
 		cil.push(this._id.toString());
 		this._pref.setCharPref(this._namePrefCurrentInstanceList, cil.join(","));
@@ -691,7 +677,7 @@ BW_Layout.prototype.updateLayout = function () {
 		if (this._quotes.length > 0 && !this._showQuotesButton) {
 			this.showQuotesButton();
 		} else {
-			if (this._quotes.length === 0 && this._showQuotesButton) {
+			if (this._quotes.length == 0 && this._showQuotesButton) {
 				this.getDiv().removeChild(this.getDiv().firstChild);
 				this._showQuotesButton = false;
 			}
@@ -729,7 +715,7 @@ BW_Layout.prototype.maybeShowTooltip = function (tipElement) {
 	var container = parent.parentNode;
 	if (container) {
 		var foundNode = false;
-		for (var c = container.firstChild; c !== null; c = c.nextSibling) {
+		for (var c = container.firstChild; c != null; c = c.nextSibling) {
 			if (c == parent) {
 				foundNode = true;
 				break;
@@ -739,7 +725,7 @@ BW_Layout.prototype.maybeShowTooltip = function (tipElement) {
 			return;
 		}
 	}
-	if (tipElement.tagName.toLowerCase() == "a") {
+	if (tipElement.tagName.toLowerCase() == "a"){
 		parent = tipElement;
 		tipElement = tipElement.parentNode;
 	}
@@ -751,9 +737,8 @@ BW_Layout.prototype.maybeShowTooltip = function (tipElement) {
 	this._currentCursorX = this._cursorX;
 	this._currentCursorY = this._cursorY;
 	var word = this.getCurrentWord(parent, offset, tipElement);
-	if (word !== null) {
+	if (word)
 		this.showTooltip(word);
-	}
 	return;
 };
 BW_Layout.prototype.showTooltip = function (word) {
@@ -841,23 +826,27 @@ BW_Layout.prototype.doLoad = function (event) {
 };
 BW_Layout.prototype.doLoadImpl = function (event) {
 	this.loadPref();
+//	BW_ddump("load" + this._id);
 	if ("nsIAdblockPlus" in Components.interfaces) { //if Adblock Plus 0.7
 		var abp = Components.classes["@mozilla.org/adblockplus;1"].createInstance(Components.interfaces.nsIAdblockPlus);
 		abp.updateExternalSubscription("Backword", "Backword [www.gneheix.com]", ["@@|http://www.iciba.com/resource/a/en/*.swf"], 1);
 	}
-//	this.is_tbird = (navigator.userAgent.search(/Thunderbird/d+/) != -1);
-	gBrowser.addEventListener("load", this.doPageLoad, true);
+	this.is_tbird = (navigator.userAgent.search(/Thunderbird\/\d+/) != -1);
+	if (!this.is_tbird) {
+		gBrowser.addEventListener("load", this.doPageLoad, true);
+	}
+	this._version = this._pref.getCharPref(this._namePrefVersion);
 };
 BW_Layout.prototype.doUnload = function (event) {
 	BW_LayoutOverlay.doUnloadImpl(event);
 };
 BW_Layout.prototype.doUnloadImpl = function (event) {
 //	BW_ddump("unload" + this._id);
-	if (this._id !== null) {
+	if (this._id != null) {
 		var currentInstaceList = this._pref.getCharPref(this._namePrefCurrentInstanceList);
 		var cil = currentInstaceList.split(",");
 		var id = 0;
-		for (var i = 0; i < cil.length; i += 1) {
+		for (var i = 0; i < cil.length; i++) {
 			try {
 				id = parseInt(cil[i]);
 				if (id == this._id) {
@@ -899,7 +888,7 @@ BW_Layout.prototype.doMouseMoveImpl = function (event) {
 		}
 	}
 };
-BW_Layout.prototype.killTimer = function () {
+BW_Layout.prototype.killTimer = function(){
 	if (this._timerShow) {
 		clearTimeout(this._timerShow);
 		this._timerShow = null;
@@ -909,7 +898,7 @@ BW_Layout.prototype.killTimer = function () {
 		BW_LayoutOverlay.updateStatusIcon();
 		this._timerStatus = null;
 	}
-};
+}
 BW_Layout.prototype.doMouseDown = function (e) {
 	BW_LayoutOverlay.doMouseDownImpl(e);
 };
@@ -956,6 +945,13 @@ BW_Layout.prototype.doPageLoadImpl = function (event) {
 			this.highlight(doc.defaultView, this._lastParagraph);
 		}
 	}
+	if (this._version != this.getString("version")) {
+		if (!this._version) {
+			alert(this.getString("alert.firsttime"));
+		}
+		this._version = this.getString("version");
+		this._pref.setCharPref(this._namePrefVersion, this._version);
+	}
 };
 BW_Layout.prototype.getBrowser = function (doc) {
 	var win = doc && doc.defaultView;
@@ -965,7 +961,7 @@ BW_Layout.prototype.getBrowser = function (doc) {
 	win = win.top;
 	var browsers = gBrowser.browsers;
 	var browser = null;
-	for (var b = 0; b < browsers.length; b += 1) {
+	for (var b = 0; b < browsers.length; ++b) {
 		if (browsers[b].contentWindow == win) {
 			browser = browsers[b];
 			break;
@@ -1087,46 +1083,49 @@ BW_Layout.prototype.updatePosition = function () {
 BW_Layout.prototype.getCurrentWord = function (parent, offset, target) {
 	var str = parent.textContent;
 	var word = BW_parseWord(str, offset);
-	if (word === null) {
+	if (!word)
 		return null;
-	}
-	if (this.isSelected()) {
+
+	if (this.isSelected()){
 		this._currentParagraph = BW_plainText(BW_trim(BW_getPage().getSelection().toString()));
-	} else {
+	}
+	else {
 		var selection = BW_getSelectionText(target);
 		var textContent = target.textContent;
-		if (this._quoteSentence) {
+		if (this._quoteSentence){
 			var children = target.childNodes;
 			var pre = 0;
 			var offsetTC = 0;
-			for (var i = 0; i < children.length; i += 1) {
-				if (children[i] == parent) {
+			for (var i=0; i<children.length; i++){
+				if (children[i] == parent)
 					break;
-				} else {
+				else{
 					offsetTC += children[i].textContent.length;
 				}
 			}
 			offsetTC += offset;
 			this._currentParagraph = BW_parseSentence(selection, textContent, offsetTC);
-		} else {
+		}
+		else{
 			this._currentParagraph = BW_plainText(BW_trim(textContent));
 		}
 	}
 	return word;
 };
-BW_Layout.prototype.isSelected = function () {
-	return (BW_getPage().getSelection().rangeCount > 0 && BW_getPage().getSelection().getRangeAt(0).isPointInRange(this._currentParent, this._currentOffset));
-};
+BW_Layout.prototype.isSelected = function(){
+	return BW_getPage().getSelection().rangeCount > 0
+		&& BW_getPage().getSelection().getRangeAt(0).isPointInRange(this._currentParent, this._currentOffset);
+}
 BW_Layout.prototype.checkCurrentParagraph = function () {
-	if (this._quotes.length === 0) {
+	if (this._quotes.length == 0) {
 		this._currentQuoteId = null;
 		return false;
 	}
 	var para = this._currentParagraph;
 //	BW_ddump("para:"+para);
 	var url = BW_getPage().top.document.URL;
-	for (var i = 0; i < this._quotes.length; i += 1) {
-//		BW_ddump("--=1{n"+this._quotes[i].paragraph+"n}--=1");
+	for (var i = 0; i < this._quotes.length; i++) {
+//		BW_ddump("---{n"+this._quotes[i].paragraph+"n}---");
 		if (this._quotes[i].paragraph == para && this._quotes[i].url == url) {
 			this._currentQuoteId = this._quotes[i].id;
 			return true;
@@ -1153,7 +1152,7 @@ BW_Layout.prototype.apiReturn = function () {
 };
 BW_Layout.prototype.apiError = function (reason) {
 	this._apiError = true;
-	this._apiErrorCount += 1;
+	this._apiErrorCount++;
 	if (this._apiErrorCount > this._maxAPIErrorCount) {
 		this.disableAPI();
 	}
@@ -1233,19 +1232,19 @@ BW_Layout.prototype.mouseOverBackWord = function (button) {
 BW_Layout.prototype.highlightQuote = function () {
 	if (!this.isSelected()) {
 		if (this._quoteSentence) {
-			if (this._currentParagraph == BW_trim(this._currentElement.textContent)) {
+			if (this._currentParagraph == BW_trim(this._currentElement.textContent)){
 				var select = BW_getPage().getSelection();
 				select.removeAllRanges();
 				var range = this._currentDoc.createRange();
 				var element = this._currentElement;
-				while (element.childNodes.length == 1) {
+				while(element.childNodes.length == 1){
 					element = element.childNodes[0];
 				}
 				range.selectNode(element);
 				select.addRange(range);
-			} else {
-				this.highlight(BW_getPage(), this._currentParagraph, true);
 			}
+			else
+				this.highlight(BW_getPage(), this._currentParagraph, true);
 			return;
 		}
 		this._currentElement.style.border = "1px dashed blue";
@@ -1263,7 +1262,7 @@ BW_Layout.prototype.clickBackWord = function () {
 	if (this._currentQuoteId) {
 		this._api.deleteQuote(this._currentWordId, this._currentQuoteId);
 	} else {
-		if (this._currentWordId === null) {
+		if (this._currentWordId == null) {
 			this._api.backWord(this._currentWord, this._paraphrase);
 		} else {
 			this._api.backQuote(this._currentWordId, BW_getPage().top.document.URL, BW_getPage().top.document.title || BW_getPage().top.document.URL, this._currentParagraph);
@@ -1395,7 +1394,7 @@ BW_Layout.prototype.clickParaphrase = function () {
 	}
 	function onblur(e) {
 		this.value = BW_trim(this.value);
-		if (this.value === "") {
+		if (this.value == "") {
 			this.value = " ";
 		}
 		if (this.value != BW_LayoutOverlay._paraphrase && !BW_LayoutOverlay._apiCalling && !BW_LayoutOverlay._apiError) {
@@ -1408,7 +1407,7 @@ BW_Layout.prototype.clickParaphrase = function () {
 	}
 };
 BW_Layout.prototype.maxLengthInput = function () {
-	if (this._maxInputLength === 0) {
+	if (this._maxInputLength == 0) {
 		var innerWidth = BW_getPage().innerWidth;
 		if (BW_getPage().scrollMaxY > 0) {
 			innerWidth -= 16;
@@ -1426,13 +1425,13 @@ BW_Layout.prototype.translateSpan = function () {
 	span.id = this._nameTranslate;
 	span.style.color = "#002864";
 	if (this._untense) {
-		var bSpan = BW_createElement("SPAN");
+		var bSpan =  BW_createElement("SPAN");
 		bSpan.style.fontWeight = "bold";
 		bSpan.setAttribute("title", this.getString("tooltip.untense"));
 		bSpan.textContent = this._currentWord;
 		span.appendChild(bSpan);
 	}
-	var trans = BW_getDoc().createTextNode("");
+	var trans = BW_createElement("SPAN");
 	trans.innerHTML = this._translate;
 	span.appendChild(trans);
 	this.getDiv().appendChild(span);
@@ -1452,9 +1451,7 @@ BW_Layout.prototype.showQuotes = function () {
 		div.style.top = (BW_getTop(this.getDiv()) + this._size + 1) + "px";
 		var divWidth = this.getDiv().clientWidth;
 		this._showQuoteDetailLeft = divWidth < 400;
-		if (!this._showQuoteDetailLeft) {
-			divWidth -= 198;
-		}
+		if (!this._showQuoteDetailLeft) divWidth -= 198;
 		div.style.width = divWidth + "px";
 		div.style.zIndex = "32714";
 		div.style.border = "1px solid #517abf";
@@ -1469,7 +1466,7 @@ BW_Layout.prototype.showQuotes = function () {
 	}
 	var i = 0;
 	//if the buttons shown
-	for (; i < this._quotes.length && i < this._listQuotesLimit; i += 1) {
+	for (; i < this._quotes.length && i < this._listQuotesLimit; i++) {
 		div.appendChild(this.showQuote(i));
 	}
 	if (this._quotes.length > this._listQuotesLimit) {
@@ -1508,7 +1505,7 @@ BW_Layout.prototype.showQuote = function (index) {
 	div.style.color = "#002864";
 //	div.style.overflow = "hidden";
 	var img = BW_createElement("IMG");
-	if (index % 2 === 0) {
+	if (index % 2 == 0) {
 		img.setAttribute("src", "chrome://backword/skin/quoteItemB.gif");
 		div.style.backgroundColor = "#e5f0ff";
 	} else {
@@ -1540,17 +1537,15 @@ BW_Layout.prototype.showQuote = function (index) {
 	}
 	function mouseOverQuote() {
 		var url = BW_LayoutOverlay._quotes[parseInt(this.id)].url;
-		if (url == BW_getPage().top.document.URL){
+		if (url == BW_getPage().top.document.URL)
 			window.content.status = BW_LayoutOverlay.getString("statusbar.highlight");
-		}
-		else{
+		else
 			window.content.status = BW_LayoutOverlay.getString("statusbar.openpage") + BW_LayoutOverlay._quotes[parseInt(this.id)].url;
-		}
 	}
 	function mouseOutQuote() {
 		window.content.status = null;
 	}
-	function mouseOverDiv() {
+	function mouseOverDiv(){
 		var detail = BW_getDoc().getElementById(BW_LayoutOverlay._nameQuoteDetailDiv);
 		if (!detail) {
 			detail = BW_createElement("div");
@@ -1588,10 +1583,10 @@ BW_Layout.prototype.showQuote = function (index) {
 };
 BW_Layout.prototype.showNextQuote = function () {
 	if (BW_LayoutOverlay._currentQuoteIndex < BW_LayoutOverlay._quotes.length - BW_LayoutOverlay._listQuotesLimit) {
-		BW_LayoutOverlay._currentQuoteIndex += 1;
+		BW_LayoutOverlay._currentQuoteIndex++;
 		var quotes = BW_getDoc().getElementById(BW_LayoutOverlay._nameQuotesDiv);
 		quotes.removeChild(quotes.firstChild);
-		quotes.lastChild.firstChild.setAttribute("src", "chrome://backword/skin/quoteItem" + ((parseInt(quotes.lastChild.id) % 2 === 0) ? "B" : "G") + ".gif");
+		quotes.lastChild.firstChild.setAttribute("src", "chrome://backword/skin/quoteItem" + ((parseInt(quotes.lastChild.id) % 2 == 0) ? "B" : "G") + ".gif");
 		quotes.lastChild.firstChild.setAttribute("title", "");
 		quotes.firstChild.firstChild.setAttribute("src", "chrome://backword/skin/quoteItemP.gif");
 		quotes.firstChild.firstChild.setAttribute("title", BW_LayoutOverlay.getString("tooltip.prevquote"));
@@ -1607,10 +1602,10 @@ BW_Layout.prototype.showNextQuote = function () {
 };
 BW_Layout.prototype.showPrevQuote = function () {
 	if (BW_LayoutOverlay._currentQuoteIndex > 0) {
-		BW_LayoutOverlay._currentQuoteIndex -= 1;
+		BW_LayoutOverlay._currentQuoteIndex--;
 		var quotes = BW_getDoc().getElementById(BW_LayoutOverlay._nameQuotesDiv);
 		quotes.removeChild(quotes.lastChild);
-		quotes.firstChild.firstChild.setAttribute("src", "chrome://backword/skin/quoteItem" + ((parseInt(quotes.firstChild.id) % 2 === 0) ? "B" : "G") + ".gif");
+		quotes.firstChild.firstChild.setAttribute("src", "chrome://backword/skin/quoteItem" + ((parseInt(quotes.firstChild.id) % 2 == 0) ? "B" : "G") + ".gif");
 		quotes.firstChild.firstChild.setAttribute("title", "");
 		quotes.lastChild.firstChild.setAttribute("src", "chrome://backword/skin/quoteItemN.gif");
 		quotes.lastChild.firstChild.setAttribute("title", BW_LayoutOverlay.getString("tooltip.nextquote"));
@@ -1641,13 +1636,11 @@ BW_Layout.prototype.showQuoteDetail = function (para, keyword) {
 	var paras = para.split("\n");
 	var Reg = new RegExp(re, "gi");
 	var arr = [];
-	for (var i = 0; i < paras.length; i += 1) {
-		if (i > 0) {
-			detail.appendChild(BW_getDoc().createElement("BR"));
-		}
+	for (var i=0; i<paras.length; i++){
+		if (i>0) detail.appendChild(BW_getDoc().createElement("BR"));
 		para = paras[i];
 		var start = 0;
-		while ((arr = Reg.exec(para)) !== undefined) {
+		while((arr = Reg.exec(para)) != undefined){
 			var hl = BW_createElement("SPAN");
 			hl.style.background = "#ffb483";
 			var wd = arr[0];
@@ -1720,7 +1713,7 @@ BW_Layout.prototype.untenseSpan = function () {
 	}
 	this._selectedRanges = new Array;
 	var select = BW_getPage().getSelection();
-	for (var i = 0; i < select.rangeCount; i += 1) {
+	for (var i = 0; i < select.rangeCount; i++) {
 		this._selectedRanges[i] = select.getRangeAt(i);
 	}
 	if (this._untense != "s" && new RegExp("[^aeiouy]$").test(this._currentWord) && !(new RegExp("([^aeiouylsz])\\1(ed|ing)$").test(this._originalWord))) {
@@ -1797,7 +1790,7 @@ BW_Layout.prototype.untenseSpan = function () {
 		BW_LayoutOverlay._translate = BW_LayoutOverlay.getTranslate(BW_LayoutOverlay._currentWord);
 		if (BW_LayoutOverlay._selectedRanges) {
 			var select = BW_getPage().getSelection();
-			for (var i = 0; i < BW_LayoutOverlay._selectedRanges.length; i += 1) {
+			for (var i = 0; i < BW_LayoutOverlay._selectedRanges.length; i++) {
 				select.addRange(BW_LayoutOverlay._selectedRanges[i]);
 			}
 			if (this.id != "e") {
@@ -1886,15 +1879,14 @@ BW_Layout.prototype.highlight = function (wnd, para, currentPage) {
 	if (!wnd) {
 		return false;
 	}
-	if (!currentPage) {
-		for (var i = 0; wnd.frames && i < wnd.frames.length; i += 1) {
-			if (this.highlight(wnd.frames[i], para, currentPage)) {
+	if (!currentPage){
+		for (var i = 0; wnd.frames && i < wnd.frames.length; i++) {
+			if (this.highlight(wnd.frames[i], para, currentPage))
 				return true;
-			}
 		}
 	}
 	var body = wnd.document.body;
-	if (body === null) {
+	if (body == null) {
 		return false;
 	}
 	para = BW_HTMLDecode(para);
@@ -1913,21 +1905,17 @@ BW_Layout.prototype.highlight = function (wnd, para, currentPage) {
 	var finder = Components.classes["@mozilla.org/embedcomp/rangefind;1"].createInstance().QueryInterface(Components.interfaces.nsIFind);
 	finder.caseSensitive = false;
 	if (!(retRange = finder.Find(para, searchRange, startPt, endPt))) {
-		var paras = para.split(BW_getLineBreak());
+		var paras = para.split(getLineBreak());
 		retRange = finder.Find(paras[0], searchRange, startPt, endPt);
 	}
-	if (retRange === null) {
-		return false;
-	}
-	if (currentPage) {
+	if (!retRange) return false;
+	if (currentPage){
 		var firstRange = retRange;
-		while (retRange && !retRange.isPointInRange(this._currentParent, this._currentOffset)) {
+		while(retRange && !retRange.isPointInRange(this._currentParent, this._currentOffset)){
 			retRange.collapse(false);
 			retRange = finder.Find(para, searchRange, retRange, endPt);
 		}
-		if (!retRange) {
-			retRange = firstRange;
-		}
+		if (!retRange) retRange = firstRange;
 	}
 	wnd.focus();
 	var select = wnd.getSelection();
@@ -1952,7 +1940,7 @@ BW_Layout.prototype.callbackGetWord = function (theObject) {
 			this._paraphrase = theObject.paraphrase;
 		}
 		if (this._display) {
-			if (this._currentWordId !== "" && !this._editParaphrase) {
+			if (this._currentWordId != "" && !this._editParaphrase) {
 				var span = BW_getDoc().getElementById(this._nameParaphrase);
 				span.textContent = this._paraphrase;
 			}
@@ -1975,7 +1963,7 @@ BW_Layout.prototype.callbackGetQuotes = function (theObject) {
 	this.updateLayout();
 };
 BW_Layout.prototype.callbackBackWord = function (theObject) {
-	if (this._currentWordId === null && this._paraphrase == " ") {
+	if (this._currentWordId == null && this._paraphrase == " ") {
 		this._currentWordId = theObject;
 		this._api.backQuote(this._currentWordId, BW_getPage().top.document.URL, BW_getPage().top.document.title || BW_getPage().top.document.URL, this._currentParagraph);
 	} else {
@@ -1998,7 +1986,7 @@ BW_Layout.prototype.clickStatus = function (e) {
 			gBrowser.selectedTab = gBrowser.addTab("http://groups.google.com/group/backword");
 		}
 	} else {
-		if (e.button === 0) { //left click
+		if (e.button == 0) { //left click
 			this._enabled = !this._enabled;
 			this._pref.setBoolPref(this._namePrefEnable, this._enabled);
 			if (this._display) {
@@ -2055,9 +2043,9 @@ BW_Layout.prototype.disableAPI = function () {
 // start of pref utility function
 ////////////////////////////////////////////////////////////////////////////
 var BW_PrefHandler = {isExists:function (prefName, type) {
-	type = (type === null) ? "char" : type;
+	type = (type == null) ? "char" : type;
 	if (type == "char") {
-		if (BW_LayoutOverlay._pref.getPrefType(prefName) == BW_LayoutOverlay._pref.PREF_STRING && jsUtils.trimWhitespace(BW_LayoutOverlay._pref.getCharPref(prefName).toString()) !== "") {
+		if (BW_LayoutOverlay._pref.getPrefType(prefName) == BW_LayoutOverlay._pref.PREF_STRING && jsUtils.trimWhitespace(BW_LayoutOverlay._pref.getCharPref(prefName).toString()) != "") {
 			return true;
 		} else {
 			return false;
@@ -2074,7 +2062,7 @@ var BW_PrefHandler = {isExists:function (prefName, type) {
 		}
 	}
 }, getPref:function (prefName, type) {
-	type = (type === null) ? "char" : type;
+	type = (type == null) ? "char" : type;
 	if (type == "char") {
 		return BW_LayoutOverlay._pref.getCharPref(prefName).toString();
 	} else {
@@ -2083,7 +2071,7 @@ var BW_PrefHandler = {isExists:function (prefName, type) {
 		}
 	}
 }, setPref:function (prefName, value, type) {
-	type = (type === null) ? "char" : type;
+	type = (type == null) ? "char" : type;
 	if (type == "char") {
 		BW_LayoutOverlay._pref.setCharPref(prefName, value);
 	} else {
@@ -2092,9 +2080,9 @@ var BW_PrefHandler = {isExists:function (prefName, type) {
 		}
 	}
 }, setPrefIfNotExists:function (prefName, value, type) {
-	type = (type === null) ? "char" : type;
+	type = (type == null) ? "char" : type;
 	if (type == "char") {
-		if (BW_LayoutOverlay._pref.getPrefType(prefName) != BW_LayoutOverlay._pref.PREF_STRING || (BW_LayoutOverlay._pref.getPrefType(prefName) == BW_LayoutOverlay._pref.PREF_STRING && jsUtils.trimWhitespace(BW_LayoutOverlay._pref.getCharPref(prefName).toString()) === "")) {
+		if (BW_LayoutOverlay._pref.getPrefType(prefName) != BW_LayoutOverlay._pref.PREF_STRING || (BW_LayoutOverlay._pref.getPrefType(prefName) == BW_LayoutOverlay._pref.PREF_STRING && jsUtils.trimWhitespace(BW_LayoutOverlay._pref.getCharPref(prefName).toString()) == "")) {
 			BW_LayoutOverlay._pref.setCharPref(prefName, value);
 		}
 	} else {
@@ -2114,7 +2102,7 @@ var BW_PrefHandler = {isExists:function (prefName, type) {
 // all using of this part functions are not autherized
 ////////////////////////////////////////////////////////////////////////////
 function BW_GoogleTranslate() {
-	this._GTAvaliable = (Components.classes["@google.com/autotranslate;1"] !== null);
+	this._GTAvaliable = (Components.classes["@google.com/autotranslate;1"] != null);
 	if (this._GTAvaliable) {
 		var dirsvc = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties);
 		this.dictFileLocation = dirsvc.get("ProfD", Components.interfaces.nsIFile);
@@ -2153,7 +2141,7 @@ BW_GoogleTranslate.prototype.getTranslate = function (text) {
 					if (translation) {
 						return translation;
 					} else {
-						if (autotrans.getTranslation("test", langpair) === null) {
+						if (autotrans.getTranslation("test", langpair) == null) {
 							this.downloadToLangDict(tolang);
 						} else {
 							return "";
@@ -2231,33 +2219,33 @@ function BW_DictionaryUrl(host, text, lang, hl) {
 	queryParts.push("text=" + text);
 	queryParts.push("langpair=" + lang);
 	queryParts.push("hl=" + hl);
-	queryParts.push("sig=8" + BW_awesomeHash(text));
+	queryParts.push("sig=8" + GPR_awesomeHash(text));
 	return BW_ComposeUrl("www", host, "tbproxy/dictionary", queryParts);
 }
-var BW_GPR_HASH_SEED = "Mining PageRank is AGAINST GOOGLE'S TERMS OF SERVICE. Yes, I'm talking to you, scammer.";
-function BW_awesomeHash(value) {
+var GPR_HASH_SEED = "Mining PageRank is AGAINST GOOGLE'S TERMS OF SERVICE. Yes, I'm talking to you, scammer.";
+function GPR_awesomeHash(value) {
 	var kindOfThingAnIdiotWouldHaveOnHisLuggage = 16909125;
-	for (var i = 0; i < value.length; i += 1) {
-		kindOfThingAnIdiotWouldHaveOnHisLuggage ^= BW_GPR_HASH_SEED.charCodeAt(i % BW_GPR_HASH_SEED.length) ^ value.charCodeAt(i);
+	for (var i = 0; i < value.length; i++) {
+		kindOfThingAnIdiotWouldHaveOnHisLuggage ^= GPR_HASH_SEED.charCodeAt(i % GPR_HASH_SEED.length) ^ value.charCodeAt(i);
 		kindOfThingAnIdiotWouldHaveOnHisLuggage = kindOfThingAnIdiotWouldHaveOnHisLuggage >>> 23 | kindOfThingAnIdiotWouldHaveOnHisLuggage << 9;
 	}
-	return BW_hexEncodeU32(kindOfThingAnIdiotWouldHaveOnHisLuggage);
+	return GPR_hexEncodeU32(kindOfThingAnIdiotWouldHaveOnHisLuggage);
 }
-function BW_hexEncodeU32(num) {
-	var result = BW_toHex8(num >>> 24);
-	result += BW_toHex8(num >>> 16 & 255);
-	result += BW_toHex8(num >>> 8 & 255);
-	return result + BW_toHex8(num & 255);
+function GPR_hexEncodeU32(num) {
+	var result = GPR_toHex8(num >>> 24);
+	result += GPR_toHex8(num >>> 16 & 255);
+	result += GPR_toHex8(num >>> 8 & 255);
+	return result + GPR_toHex8(num & 255);
 }
-function BW_toHex8(num) {
+function GPR_toHex8(num) {
 	return (num < 16 ? "0" : "") + num.toString(16);
 }
-function BW_DictFileDownloadObserver(translator) {
+function DictFileDownloadObserver(translator) {
 	this.translator = translator;
 }
-BW_DictFileDownloadObserver.prototype = {onDownloadComplete:function (downloader, request, ctxt, status, result) {
+DictFileDownloadObserver.prototype = {onDownloadComplete:function (downloader, request, ctxt, status, result) {
 	this.translator.dictFileDownloading = false;
-	this.translator.dictFileDownloads += 1;
+	this.translator.dictFileDownloads++;
 	var failure = null;
 	if (!Components.isSuccessCode(status)) {
 		failure = "unable to download dict file!";
@@ -2270,7 +2258,7 @@ BW_DictFileDownloadObserver.prototype = {onDownloadComplete:function (downloader
 			}
 		}
 	}
-	if (failure === null) {
+	if (failure == null) {
 		try {
 			this.translator.dictFileTmpLocation.copyTo(null, this.translator.dictFileLocation.leafName);
 		}
@@ -2298,13 +2286,14 @@ BW_DictcnTranslate.prototype.getTranslate = function (text) {
 		var request = new XMLHttpRequest();
 		request.open("GET", "http://dict.cn/ws.php?q=" + text, false);
 		request.send(null);
+		var response = "";
 		if (request.status == 200) {
 			text = request.responseText.replace(/&(?!(amp;))/g, "&amp;");
 			var re = /(\<\?\xml[0-9A-Za-z\D]*\?\>)/;
 			text = text.replace(re, "");
 			var dict = new XML(text);
 			var children = dict.children();
-			for (var i = 0; i < children.length(); i += 1) {
+			for (var i = 0; i < children.length(); i++) {
 				var child = children[i];
 				if (child.name().toString() == "pron") {
 					var pron = child.text().toString();
@@ -2344,17 +2333,17 @@ function BW_Simp_to_Trad(strIn) {
 ////////////////////////////////////////////////////////////////////////////
 // start of local api function
 ////////////////////////////////////////////////////////////////////////////
-var BW_dirService = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties);
-var BW_unicodeConverter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
-BW_unicodeConverter.charset = "UTF-8";
-var BW_lineBreak = null;
-function BW_getLineBreak() {
-	if (BW_lineBreak === null) {
+var dirService = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties);
+var unicodeConverter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+unicodeConverter.charset = "UTF-8";
+var lineBreak = null;
+function getLineBreak() {
+	if (lineBreak == null) {
 	// HACKHACK: Gecko doesn't expose NS_LINEBREAK, try to determine
 	// plattform's line breaks by reading prefs.js
-		BW_lineBreak = "\n";
+		lineBreak = "\n";
 		try {
-			var prefFile = BW_dirService.get("PrefF", Components.interfaces.nsIFile);
+			var prefFile = dirService.get("PrefF", Components.interfaces.nsIFile);
 			var inputStream = Components.classes["@mozilla.org/network/file-input-stream;1"].createInstance(Components.interfaces.nsIFileInputStream);
 			inputStream.init(prefFile, 1, 292, 0);
 			var scriptableStream = Components.classes["@mozilla.org/scriptableinputstream;1"].createInstance(Components.interfaces.nsIScriptableInputStream);
@@ -2362,16 +2351,22 @@ function BW_getLineBreak() {
 			var data = scriptableStream.read(1024);
 			scriptableStream.close();
 			if (/(\r\n?|\n\r?)/.test(data)) {
-				BW_lineBreak = RegExp.$1;
+				lineBreak = RegExp.$1;
 			}
 		}
 		catch (e) {
 		}
 	}
-	return BW_lineBreak;
+	return lineBreak;
 }
-const BW_verWords = "1.0";
-const BW_verQuotes = "1.0";
+function getLineBreakLen() {
+	if (lineBreak == null) {
+		return getLineBreak().length;
+	}
+	return lineBreak.length;
+}
+const verWords = "1.0";
+const verQuotes = "1.0";
 function BW_word(val) {
 	this.error = false;
 	this.id = "";
@@ -2383,7 +2378,7 @@ function BW_word(val) {
 			return;
 		}
 		try {
-			val = BW_unicodeConverter.ConvertToUnicode(val);
+			val = unicodeConverter.ConvertToUnicode(val);
 			var contents = val.split("\t");
 			if (contents.length < 2) {
 				this.error = true;
@@ -2400,11 +2395,11 @@ function BW_word(val) {
 	this.init(val);
 	this.toString = function () {
 		var contents = new Array(this.id, this.paraphrase);
-		return BW_unicodeConverter.ConvertFromUnicode(contents.join("\t"));
+		return unicodeConverter.ConvertFromUnicode(contents.join("\t"));
 	};
 	this.addQuote = function (quote, localAPI) {
-		for (var i = 0; i < this.quotes.length; i += 1) {
-			localAPI._refQuotes[this.quotes[i].idxRef]._idxQuote += 1;
+		for (var i = 0; i < this.quotes.length; i++) {
+			localAPI._refQuotes[this.quotes[i].idxRef]._idxQuote++;
 		}
 		this.quotes.unshift(quote);
 	};
@@ -2418,12 +2413,12 @@ function BW_quote(val, id) {
 	this.id = id;
 	this.idxRef = -1;
 	this.init = function (val) {
-		if (val === null || this.id === null) {
+		if (val == null || this.id == null) {
 			this.error = true;
 			return;
 		}
 		try {
-			val = BW_unicodeConverter.ConvertToUnicode(val);
+			val = unicodeConverter.ConvertToUnicode(val);
 			var contents = val.split("\t");
 			if (contents.length < 4) {
 				this.error = true;
@@ -2442,7 +2437,7 @@ function BW_quote(val, id) {
 	this.init(val);
 	this.toString = function () {
 		var contents = new Array(this.word, this.url, this.title, this.paragraph);
-		return BW_unicodeConverter.ConvertFromUnicode(contents.join("\t"));
+		return unicodeConverter.ConvertFromUnicode(contents.join("\t"));
 	};
 }
 function BW_refQuote(idxWord, idxQuote) {
@@ -2470,7 +2465,7 @@ function BW_fill(str, len) {
 	}
 }
 function BW_space(len) {
-	var str = "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t ";
+	var str = "																															 ";
 	while (str.length < len) {
 		str = str + str;
 	}
@@ -2492,10 +2487,10 @@ function BW_LocalAPI() {
 	this.init();
 	if (!this._errWrite) {
 		if (this._errReadWords) {
-			this.writeLineWords(BW_verWords, 0);
+			this.writeLineWords(verWords, 0);
 		}
 		if (this._errReadQuotes) {
-			this.writeLineQuotes(BW_verQuotes, 0);
+			this.writeLineQuotes(verQuotes, 0);
 		}
 	}
 }
@@ -2518,7 +2513,7 @@ BW_LocalAPI.prototype.backWord = function (wrd, paraphrase) {
 		word.id = wrd;
 		word.paraphrase = paraphrase;
 		word.error = false;
-		idxWord = this._words.push(word) - 1;
+		var idxWord = this._words.push(word) - 1;
 		var refWord = new BW_refWord(word.id, idxWord);
 		this._refWords.push(refWord);
 		this._refWords.sort(this.sortWord);
@@ -2536,7 +2531,7 @@ BW_LocalAPI.prototype.backQuote = function (wrd, url, title, paragraph) {
 		quote.url = url;
 		quote.title = title;
 		quote.paragraph = paragraph;
-		quote.id = this._lastQuoteId += 1;
+		quote.id = this._lastQuoteId++;
 		word.addQuote(quote, this);
 		var refQuote = new BW_refQuote(idxWord, 0);
 		quote.idxRef = this._refQuotes.push(refQuote) - 1;
@@ -2569,7 +2564,7 @@ BW_LocalAPI.prototype.deleteQuote = function (wrd, id) {
 		while (a <= b) {
 			h = parseInt((a + b) / 2);
 			var m = word.quotes[h].id - id;
-			if (m === 0) {
+			if (m == 0) {
 				quote = word.quotes[h];
 				break;
 			} else {
@@ -2583,13 +2578,12 @@ BW_LocalAPI.prototype.deleteQuote = function (wrd, id) {
 		if (quote) {
 			var index = quote.idxRef;
 			var offsetDecrease = quote.toString().length + 1;
-			var i = h + 1;
-			for (; i < word.quotes.length; i += 1) {
-				this._refQuotes[word.quotes[i].idxRef]._idxQuote -= 1;
+			for (var i = h + 1; i < word.quotes.length; i++) {
+				this._refQuotes[word.quotes[i].idxRef]._idxQuote--;
 			}
-			for (i = index + 1; i < this._refQuotes.length; i += 1) {
+			for (var i = index + 1; i < this._refQuotes.length; i++) {
 				var q = this._words[this._refQuotes[i]._idxWord].quotes[this._refQuotes[i]._idxQuote];
-				q.idxRef -= 1;
+				q.idxRef--;
 			}
 			word.quotes = word.quotes.slice(0, h).concat(word.quotes.slice(h + 1));
 			this._refQuotes = this._refQuotes.slice(0, index).concat(this._refQuotes.slice(index + 1));
@@ -2620,7 +2614,7 @@ BW_LocalAPI.prototype.close = function () {
 BW_LocalAPI.prototype.init = function () {
 	this._outWords = this.getOutputStream(this.getFile(this._path + "words"));
 	this._outQuotes = this.getOutputStream(this.getFile(this._path + "quotes"));
-	if (this._outWords === null || this._outQuotes === null) {
+	if (this._outWords == null || this._outQuotes == null) {
 		this._errWrite = true;
 		this.close();
 	}
@@ -2652,7 +2646,7 @@ BW_LocalAPI.prototype.loadWords = function (stream) {
 		this._verWords = line.value;
 		while (stream.readLine(line)) {
 			var val = line.value;
-			if (val !== null) {
+			if (val != null) {
 				var word = new BW_word(val);
 				if (!word.error) {
 					var idxWord = this._words.push(word) - 1;
@@ -2686,8 +2680,8 @@ BW_LocalAPI.prototype.loadQuotes = function (stream) {
 		this._verQuotes = line.value;
 		while (stream.readLine(line)) {
 			var val = line.value;
-			if (val !== null && val.length > 0) {
-				var quote = new BW_quote(val, this._lastQuoteId += 1);
+			if (val != null && val.length > 0) {
+				var quote = new BW_quote(val, this._lastQuoteId++);
 				if (!quote.error) {
 					var idxWord = this.findWordIdx(quote.word);
 					if (idxWord >= 0) {
@@ -2709,10 +2703,10 @@ BW_LocalAPI.prototype.loadQuotes = function (stream) {
 BW_LocalAPI.prototype.saveWords = function () {
 	var buf = [];
 	buf.push(this._verWords);
-	for (var i = 0; i < this._words.length; i += 1) {
+	for (var i = 0; i < this._words.length; i++) {
 		buf.push(this._words[i].toString());
 	}
-	buf = buf.join(BW_getLineBreak()) + BW_getLineBreak();
+	buf = buf.join(getLineBreak()) + getLineBreak();
 	var seek = this._outWords.QueryInterface(Components.interfaces.nsISeekableStream);
 	seek.seek(0, 0);
 	seek.setEOF();
@@ -2721,21 +2715,21 @@ BW_LocalAPI.prototype.saveWords = function () {
 BW_LocalAPI.prototype.saveQuotes = function () {
 	var buf = [];
 	buf.push(this._verQuotes);
-	for (var i = 0; i < this._refQuotes.length; i += 1) {
+	for (var i = 0; i < this._refQuotes.length; i++) {
 		buf.push(this._words[this._refQuotes[i]._idxWord].quotes[this._refQuotes[i]._idxQuote].toString());
 	}
-	buf = buf.join(BW_getLineBreak()) + BW_getLineBreak();
+	buf = buf.join(getLineBreak()) + getLineBreak();
 	var seek = this._outQuotes.QueryInterface(Components.interfaces.nsISeekableStream);
 	seek.seek(0, 0);
 	seek.setEOF();
 	this._outQuotes.write(buf, buf.length);
 };
 BW_LocalAPI.prototype.appendWord = function (word) {
-	var buf = word.toString() + BW_getLineBreak();
+	var buf = word.toString() + getLineBreak();
 	this._outWords.write(buf, buf.length);
 };
 BW_LocalAPI.prototype.appendQuote = function (quote) {
-	var buf = quote.toString() + BW_getLineBreak();
+	var buf = quote.toString() + getLineBreak();
 	this._outQuotes.write(buf, buf.length);
 };
 BW_LocalAPI.prototype.writeLineWords = function (str, offset) {
@@ -2762,7 +2756,7 @@ BW_LocalAPI.prototype.writeLine = function (str, offset, stream) {
 		seek.seek(2, 0);
 	}
 	seek.setEOF();
-	str = BW_unicodeConverter.ConvertFromUnicode(str + BW_getLineBreak());
+	str = unicodeConverter.ConvertFromUnicode(str + getLineBreak());
 	stream = seek.QueryInterface(Components.interfaces.nsIFileOutputStream);
 	stream.write(str, str.length);
 };
@@ -2780,7 +2774,7 @@ BW_LocalAPI.prototype.findWordRefIdx = function (word) {
 	while (a <= b) {
 		h = parseInt((a + b) / 2);
 		var m = BW_strCompare(this._refWords[h]._word, word);
-		if (m === 0) {
+		if (m == 0) {
 			return h;
 		} else {
 			if (m > 0) {
@@ -2834,7 +2828,7 @@ BW_LocalAPI.prototype.getOutputStream = function (file) {
 		}
 		catch (e) {
 		}
-		for (i = parents.length - 1; i >= 0; i -= 1) {
+		for (i = parents.length - 1; i >= 0; i--) {
 			try {
 				parents[i].create(parents[i].DIRECTORY_TYPE, 493);
 			}
@@ -2866,7 +2860,7 @@ BW_LocalAPI.prototype.getFile = function (path) {
 	}
 	try {
 	 // Try relative path now
-		var profileDir = BW_dirService.get("ProfD", Components.interfaces.nsIFile);
+		var profileDir = dirService.get("ProfD", Components.interfaces.nsIFile);
 		file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
 		file.setRelativeDescriptor(profileDir, path);
 		return file;
@@ -2910,10 +2904,10 @@ function BW_API() {
 		BW_XMLCall.sendCommand(BW_LayoutOverlay._apiUrl, BW_APICalls.getQuotes(argArray), "getQuotes", BW_LayoutOverlay._currentWord);
 	};
 	this.getWords = function (numberofwords, offset) {
-		if (numberofwords === null) {
+		if (numberofwords == null) {
 			numberofwords = 50;
 		}
-		if (offset === null) {
+		if (offset == null) {
 			offset = 0;
 		}
 		var argArray = [BW_LayoutOverlay._apiUrl, BW_LayoutOverlay._apiUsername, BW_LayoutOverlay._apiPassword, numberofwords, offset];
@@ -2922,19 +2916,19 @@ function BW_API() {
 }
 var BW_APICalls = new Object();
 BW_APICalls = {getWord:function (myParams) {
-	return BW_bfXMLRPC.makeXML("bw.getWord", myParams);
+	return bfXMLRPC.makeXML("bw.getWord", myParams);
 }, backQuote:function (myParams) {
-	return BW_bfXMLRPC.makeXML("bw.backQuote", myParams);
+	return bfXMLRPC.makeXML("bw.backQuote", myParams);
 }, getQuotes:function (myParams) {
-	return BW_bfXMLRPC.makeXML("bw.getQuotes", myParams);
+	return bfXMLRPC.makeXML("bw.getQuotes", myParams);
 }, backWord:function (myParams) {
-	return BW_bfXMLRPC.makeXML("bw.backWord", myParams);
+	return bfXMLRPC.makeXML("bw.backWord", myParams);
 }, getWords:function (myParams) {
-	return BW_bfXMLRPC.makeXML("bw.getWords", myParams);
+	return bfXMLRPC.makeXML("bw.getWords", myParams);
 }, deleteQuote:function (myParams) {
-	return BW_bfXMLRPC.makeXML("bw.deleteQuote", myParams);
+	return bfXMLRPC.makeXML("bw.deleteQuote", myParams);
 }, deleteWord:function (myParams) {
-	return BW_bfXMLRPC.makeXML("bw.deleteWord", myParams);
+	return bfXMLRPC.makeXML("bw.deleteWord", myParams);
 }};
 
 
@@ -2946,7 +2940,7 @@ var BW_XMLCall = new Object();
 //Send XMLRPC Command
 BW_XMLCall.sendCommand = function (theURL, theXMLString, theAction, additionalInfo) { //Both arguments have to be strings
 	if (BW_LayoutOverlay._usingAPI) {
-		BW_gMakeXMLCall(theURL, theXMLString, theAction, additionalInfo);
+		gMakeXMLCall(theURL, theXMLString, theAction, additionalInfo);
 	}
 };
 BW_XMLCall.replaceText = function (inString, oldText, newText) {
@@ -2956,7 +2950,7 @@ BW_XMLCall.replaceText = function (inString, oldText, newText) {
 unless synchronous, I need to file the bug!*/
 //Function is derived from GPL code originally by performancing Inc:
 //For more informationm See: http://www.performancing.com/
-function BW_gMakeXMLCall(theURL, message, theAction, additionalInfo) {
+function gMakeXMLCall(theURL, message, theAction, additionalInfo) {
 //	BW_ddump(message);
 //	BW_ddump(theURL);
 	BW_LayoutOverlay.apiCall();
@@ -2988,10 +2982,10 @@ function BW_gMakeXMLCall(theURL, message, theAction, additionalInfo) {
 		return;
 	}
 }
-var BW_bfXMLRPC = new Object();
+var bfXMLRPC = new Object();
 //Function is derived from GPL code originally by performancing Inc:
 //For more informationm See: http://www.performancing.com/
-BW_bfXMLRPC.makeXML = function (method, myParams) {
+bfXMLRPC.makeXML = function (method, myParams) {
 	var str = "<methodCall>";
 //	var xml = <methodCall></methodCall>;
 	str += "<methodName>" + method + "</methodName>";
@@ -2999,9 +2993,9 @@ BW_bfXMLRPC.makeXML = function (method, myParams) {
 		//i->0 is the URL
 		//dump("n makeXML Params: " + myParams)
 	str += "<params>";
-	for (var i = 1; i < myParams.length; i += 1) {
-//		xml.params.param += <param> <value> { BW_bfXMLRPC.convertToXML(myParams[i]) }</value> </param>;
-		str += "<param><value>" + BW_bfXMLRPC.convertToXML(myParams[i]).toXMLString() + "</value></param>";
+	for (var i = 1; i < myParams.length; i++) {
+//		xml.params.param += <param> <value> { bfXMLRPC.convertToXML(myParams[i]) }</value> </param>;
+		str += "<param><value>" + bfXMLRPC.convertToXML(myParams[i]).toXMLString() + "</value></param>";
 	}
 	str += "</params></methodCall>";
 //	BW_ddump(str);
@@ -3014,22 +3008,19 @@ BW_bfXMLRPC.makeXML = function (method, myParams) {
 };
 //Function is derived from GPL code originally by performancing Inc:
 //For more informationm See: http://www.performancing.com/
-BW_bfXMLRPC.convertToXML = function (myParams) {
+bfXMLRPC.convertToXML = function (myParams) {
 	//gPFFTempObject = myParams;
 	var paramType = myParams.constructor.name;
 	var paramTemp = null;
-	var tempVal;
-	var theDate;
-	var theErrorString;
 	switch (paramType) {
-	  case "Number"://12, 12.12, etc.
+	 case "Number"://12, 12.12, etc.
 		if (myParams == parseInt(myParams)) {
 			paramTemp = "<int>" + myParams + "</int>";
 		} else {
 			paramTemp = "<double>" + myParams + "</double>";
 		}
 		break;
-	  case "String"://"Some String", etc.
+	 case "String"://"Some String", etc.
 		if (myParams.toString() == "bool1") {
 			paramTemp = "<boolean>1</boolean>";
 		} else {
@@ -3040,40 +3031,40 @@ BW_bfXMLRPC.convertToXML = function (myParams) {
 			}
 		}
 		break;
-	  case "Boolean"://0,1, true, false
+	 case "Boolean"://0,1, true, false
 		paramTemp = "<boolean>" + myParams + "</boolean>";
 		break;
-	  case "Date": //Date Object: var date = new Date();
-		theDate = BW_bfXMLRPC.iso8601Format(myParams).toString();
-		theErrorString = "NaNNaNNaNTNaN:NaN:NaN";
+	 case "Date": //Date Object: var date = new Date();
+		var theDate = bfXMLRPC.iso8601Format(myParams).toString();
+		var theErrorString = "NaNNaNNaNTNaN:NaN:NaN";
 		if (theDate != theErrorString) {
 			paramTemp = "<dateTime.iso8601>" + theDate + "</dateTime.iso8601>";
 		} else {
 			paramTemp = "<dateTime.iso8601></dateTime.iso8601>";
 		}
 		break;
-	  case "Array": //Array Object
-		tempVal = "<array><data>";
-		//for(var i=0;i<myParams.length;+=1i)
-		for (var i = 0; i < myParams.length; i += 1) {
+	 case "Array": //Array Object
+		var tempVal = "<array><data>";
+		//for(var i=0;i<myParams.length;++i)
+		for (var i = 0; i < myParams.length; i++) {
 			//dump("n i: " + i + "n")
-			tempVal += "<value>" + BW_bfXMLRPC.convertToXML(myParams[i]) + "</value>";
+			tempVal += "<value>" + bfXMLRPC.convertToXML(myParams[i]) + "</value>";
 		}
 		tempVal += "</data></array>";
 		paramTemp = tempVal;
 		break;
-	  case "Object": //Array Object
-		tempVal = "<struct>";
-		//for(var i=0;i<myParams.length;+=1i)
+	 case "Object": //Array Object
+		var tempVal = "<struct>";
+		//for(var i=0;i<myParams.length;++i)
 		for (x in myParams) {
 //			BW_ddump("x:"+x);
 //			BW_ddump("value:"+myParams[x]);
 			if (myParams[x].constructor.name == "String") {
-				tempVal += "<member><name>" + x + "</name>" + "<value><string><![CDATA[" + BW_bfXMLRPC.convertToXML(myParams[x]) + "]]></string></value>" + "</member>";
+				tempVal += "<member><name>" + x + "</name>" + "<value><string><![CDATA[" + bfXMLRPC.convertToXML(myParams[x]) + "]]></string></value>" + "</member>";
 			} else {
 				if (myParams[x].constructor.name == "Date") {
-					theDate = BW_bfXMLRPC.iso8601Format(myParams[x]).toString();
-					theErrorString = "NaNNaNNaNTNaN:NaN:NaN";
+					var theDate = bfXMLRPC.iso8601Format(myParams[x]).toString();
+					var theErrorString = "NaNNaNNaNTNaN:NaN:NaN";
 					if (theDate != theErrorString) {
 						tempVal += "<member><name>" + x + "</name>" + "<value>" + "<dateTime.iso8601>" + theDate + "</dateTime.iso8601>" + "</value>" + "</member>";
 					} else {
@@ -3082,12 +3073,12 @@ BW_bfXMLRPC.convertToXML = function (myParams) {
 				} else {
 					if (myParams[x].constructor.name == "Number") {
 						if (myParams[x] == parseInt(myParams[x])) {
-							tempVal += "<member><name>" + x + "</name>" + "<value>" + "<int>" + BW_bfXMLRPC.convertToXML(myParams[x]) + "</int>" + "</value>" + "</member>";
+							tempVal += "<member><name>" + x + "</name>" + "<value>" + "<int>" + bfXMLRPC.convertToXML(myParams[x]) + "</int>" + "</value>" + "</member>";
 						} else {
-							tempVal += "<member><name>" + x + "</name>" + "<value>" + "<double>" + BW_bfXMLRPC.convertToXML(myParams[x]) + "</double>" + "</value>" + "</member>";
+							tempVal += "<member><name>" + x + "</name>" + "<value>" + "<double>" + bfXMLRPC.convertToXML(myParams[x]) + "</double>" + "</value>" + "</member>";
 						}
 					} else {
-						tempVal += "<member><name>" + x + "</name>" + "<value>" + BW_bfXMLRPC.convertToXML(myParams[x]) + "</value>" + "</member>";
+						tempVal += "<member><name>" + x + "</name>" + "<value>" + bfXMLRPC.convertToXML(myParams[x]) + "</value>" + "</member>";
 					}
 				}
 			}
@@ -3096,7 +3087,7 @@ BW_bfXMLRPC.convertToXML = function (myParams) {
 		tempVal += "</struct>";
 		paramTemp = tempVal;
 		break;
-	  default:
+	 default:
 		paramTemp = "<![CDATA[" + myParams + "]]>";
 		break;
 	}
@@ -3108,7 +3099,7 @@ BW_bfXMLRPC.convertToXML = function (myParams) {
 
 //XMLToObject is derived from GPL code originally by Flock Inc:
 //For the original source, see: http://cvs-mirror.flock.com/index.cgi/mozilla/browser/components/flock/xmlrpc/content/xmlrpchelper.js?rev=1.1&content-type=text/vnd.viewcvs-markup
-BW_bfXMLRPC.XMLToObject = function (xml) {
+bfXMLRPC.XMLToObject = function (xml) {
 	try {
 		if (xml.nodeKind()) {
 			//foo
@@ -3124,16 +3115,16 @@ BW_bfXMLRPC.XMLToObject = function (xml) {
 		return xml.toString();
 	}
 	switch (xml.name().toString()) {
-	  case "int":
-	  case "i4":
+	 case "int":
+	 case "i4":
 		return parseInt(xml.text());
-	  case "boolean":
+	 case "boolean":
 		return (parseInt(xml.text()) == 1);
-	  case "string":
+	 case "string":
 		return (xml.text().toString());
-	  case "double":
+	 case "double":
 		return parseFloat(xml.text());
-	  case "dateTime.iso8601":
+	 case "dateTime.iso8601":
 		var val = xml.text().toString();
 			//MSN Spaces hack for dates that look like: 2006-01-26T07:24:20Z
 		val = val.replace(/\-/gi, "");
@@ -3142,20 +3133,19 @@ BW_bfXMLRPC.XMLToObject = function (xml) {
 		var dateutc = Date.UTC(val.slice(0, 4), val.slice(4, 6) - 1, val.slice(6, 8), val.slice(9, 11), val.slice(12, 14), val.slice(15));
 			//alert('Date Val: ' + val + " RealDate: "+ new Date(dateutc));
 		return new Date(dateutc);
-	  case "array":
+	 case "array":
 		var arr = new Array();
-		var i = 0;
-		for (; i < xml.data.value.length(); i += 1) {
-			arr.push(BW_bfXMLRPC.XMLToObject(xml.data.value[i].children()[0]));
+		for (var i = 0; i < xml.data.value.length(); i++) {
+			arr.push(bfXMLRPC.XMLToObject(xml.data.value[i].children()[0]));
 		}
 		return arr;
-	  case "struct":
+	 case "struct":
 		var struct = new Object();
-		for (i = 0; i < xml.member.length(); i += 1) {
-			struct[xml.member[i].name.text()] = BW_bfXMLRPC.XMLToObject(xml.member[i].value.children()[0]);
+		for (var i = 0; i < xml.member.length(); i++) {
+			struct[xml.member[i].name.text()] = bfXMLRPC.XMLToObject(xml.member[i].value.children()[0]);
 		}
 		return struct;
-	  default:
+	 default:
 		BW_ddump("error parsing XML");
 		return null;
 	}
@@ -3163,7 +3153,7 @@ BW_bfXMLRPC.XMLToObject = function (xml) {
 
 //Function is derived from GPL code originally by Flock Inc:
 //For more informationm See:
-BW_bfXMLRPC.iso8601Format = function (date) {
+bfXMLRPC.iso8601Format = function (date) {
 	var datetime = date.getUTCFullYear();
 	var month = String(date.getUTCMonth() + 1);
 	datetime += (month.length == 1 ? "0" + month : month);
@@ -3193,10 +3183,10 @@ BW_XMLCall.processData = function (theXML, theAction, additionalInfo) {
 		alert(BW_LayoutOverlay.getString("alert.apierror"));
 	}
 	if (e4xXMLObject.params.param.value.length() == 1) {
-		ourParsedResponse = BW_bfXMLRPC.XMLToObject(e4xXMLObject.params.param.value.children()[0]);
+		ourParsedResponse = bfXMLRPC.XMLToObject(e4xXMLObject.params.param.value.children()[0]);
 	}
 	if (e4xXMLObject.fault.children().length() > 0) {
-		ourParsedResponse = BW_bfXMLRPC.XMLToObject(e4xXMLObject.fault.value.children()[0]);
+		ourParsedResponse = bfXMLRPC.XMLToObject(e4xXMLObject.fault.value.children()[0]);
 	}
 	this.lastResponseDataObject = ourParsedResponse;
 	try {
@@ -3209,7 +3199,7 @@ BW_XMLCall.processData = function (theXML, theAction, additionalInfo) {
 BW_XMLCall.processReturnData = function (theObject, theAction, additionalInfo, theXML) {
 //	BW_ddump(theXML);
 //	BW_ddump(theAction + ":");
-//	BW_ddumpObject(theObject, "theObject", 3);
+	BW_ddumpObject(theObject, "theObject", 3);
 	if (theObject.faultString) {
 		BW_LayoutOverlay.apiError(theObject.faultString);
 		return;
