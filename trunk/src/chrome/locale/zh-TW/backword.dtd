@@ -60,3 +60,18 @@
 <!ENTITY options.help.operation "左鍵點擊打開/關閉取詞；右鍵點擊打開/關閉後台；使用後台時中鍵點擊打開後台管理頁面，否則打開討論組頁面。">
 <!ENTITY options.help.title.layout "介面">
 <!ENTITY options.help.layout "使用Flash即使發音：當其他廣告遮罩擴展使得介面無法正常顯示時請去除此選項；自動選中當前句子作為上下文：自動使用當前句子而不是整個段落作為上下文；字體大小：設置字體及介面大小，最小值為13；引用個數：設置最多顯示引用個數，最小值為2；隱藏介面：當滑鼠移出介面的圖元值超過此設置時隱藏介面，最小值5；取詞延時：單位毫秒，最小值100。">
+<!ENTITY menu.options.label "選項(O)">
+<!ENTITY menu.options.accesskey "O">
+<!ENTITY menu.dictionary.label "詞典(D)">
+<!ENTITY menu.dictionary.accesskey "D">
+<!ENTITY menu.usingapi.label "使用後臺(S)">
+<!ENTITY menu.usingapi.accesskey "S">
+<!ENTITY menu.usinglocalapi.label "使用本地存儲(L)">
+<!ENTITY menu.usinglocalapi.accesskey "L">
+<!ENTITY menu.showpronunciation.label "使用Flash即使發音(P)">
+<!ENTITY menu.showpronunciation.accesskey "P">
+<!ENTITY menu.quotesentence.label "自動選中當前句子(A)">
+<!ENTITY menu.quotesentence.accesskey "A">
+<!ENTITY menu.enable.label "即時翻譯(E)">
+<!ENTITY menu.enable.accesskey "E">
+

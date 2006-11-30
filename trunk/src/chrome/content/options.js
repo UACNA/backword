@@ -81,14 +81,14 @@ BW_Setting.prototype.usingApi = function(checked){
 	document.getElementById("usinglocalapi").disabled = !checked;
 	var localapi = document.getElementById("usinglocalapi").checked;
 	var readonly = localapi || !checked;
-	document.getElementById("apiurl").readonly = readonly;
-	document.getElementById("apiweburl").readonly = readonly;
-	document.getElementById("apiusername").readonly = readonly;
-	document.getElementById("apipassword").readonly = readonly;
+	document.getElementById("apiurl").setAttribute("readonly", readonly);
+	document.getElementById("apiweburl").setAttribute("readonly", readonly);
+	document.getElementById("apiusername").setAttribute("readonly", readonly);
+	document.getElementById("apipassword").setAttribute("readonly", readonly);
 };
 BW_Setting.prototype.usingLocalApi = function(checked){
-	document.getElementById("apiurl").readonly = checked;
-	document.getElementById("apiweburl").readonly = checked;
-	document.getElementById("apiusername").readonly = checked;
-	document.getElementById("apipassword").readonly = checked;
+	document.getElementById("apiurl").setAttribute("readonly", checked);
+	document.getElementById("apiweburl").setAttribute("readonly", checked);
+	document.getElementById("apiusername").setAttribute("readonly", checked);
+	document.getElementById("apipassword").setAttribute("readonly", checked);
 };

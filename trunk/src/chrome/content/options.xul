@@ -13,7 +13,9 @@
 		persist="screenX screenY"
 		onload="BW_options.init(); sizeToContent();"
 		ondialogaccept="BW_options.save();window.close();"
-        ondialogcancel="window.close();">
+    ondialogcancel="window.close();"
+    windowtype="backword:settings"
+    >
     
 <script type="application/x-javascript" src="chrome://backword/content/options.js"/> 
   
@@ -55,8 +57,8 @@
 				<separator class="thin"/>
 				  <groupbox orient="vertical">
 				    <caption label="&options.groupbox.api;"/>
- 			        <checkbox id="usingapi" label="&options.api.use;" oncommand="BW_options.usingApi(this.checked)" />
- 			        <checkbox id="usinglocalapi" label="&options.api.uselocal;" oncommand="BW_options.usingLocalApi(this.checked)" />
+ 			        <checkbox id="usingapi" label="&options.api.use;" oncommand="BW_options.usingApi(this.hasAttribute('checked'))" />
+ 			        <checkbox id="usinglocalapi" label="&options.api.uselocal;" oncommand="BW_options.usingLocalApi(this.hasAttribute('checked'))" />
  			        <hbox align="center">
  			        	<label value="&options.api.url;" />
  			        	<textbox id="apiurl" size="40"/>
