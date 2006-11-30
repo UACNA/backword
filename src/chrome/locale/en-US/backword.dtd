@@ -17,7 +17,7 @@
 <!ENTITY options.groupbox.search "Search web">
 <!ENTITY options.url "URL:">
 <!ENTITY options.groupbox.api "Storage">
-<!ENTITY options.api.use "Using Storage">
+<!ENTITY options.api.use "Use Storage">
 <!ENTITY options.api.uselocal "Use Local Storage (Uncheck to use web API storage)">
 <!ENTITY options.api.url "API URL:">
 <!ENTITY options.api.weburl "Admin Page:">
@@ -41,7 +41,7 @@
 <!ENTITY options.help.title.layout "Layout">
 <!ENTITY options.help.title.operation "Operations">
 <!ENTITY options.help.title.statusbutton "Status Button">
-<!ENTITY options.help.translator.1 "Dictionarys and Pronuncation Flashes using by Backword are offered by: ">
+<!ENTITY options.help.translator.1 "Dictionarys and Pronunciation Flashes using by Backword are offered by: ">
 <!ENTITY options.help.translator.link.google "http://www.google.com">
 <!ENTITY options.help.translator.2 "(Google Dictionaries)">
 <!ENTITY options.help.translator.link.dictcn "http://www.dict.cn">
@@ -60,3 +60,17 @@
 <!ENTITY options.help.link.blog "http://blog.gneheix.com">
 <!ENTITY options.help.operation "Left click turns on/off. Right click turns API on/off. If API enabled middle click opens admin page otherwise opens forum page.">
 <!ENTITY options.help.layout "Show Pronunciation Flash: Uncheck if other ad-blocking extensions break the interface. Auto-select current sentence as context: Use current sentence as context by select it automatically. Font Size: font size of layout, minimum value is 13. Quotes Count: max number of quotes to be shown, minimum value is 2. Mouse Out: the interface will be hidden when mouse out of it more than this in pix, minimum value is 5. Popup Delay: popup delay in millisecond, minimum value is 100.">
+<!ENTITY menu.options.label "Options">
+<!ENTITY menu.options.accesskey "O">
+<!ENTITY menu.dictionary.label "Dictionaries">
+<!ENTITY menu.dictionary.accesskey "D">
+<!ENTITY menu.usingapi.label "Use Storage">
+<!ENTITY menu.usingapi.accesskey "S">
+<!ENTITY menu.usinglocalapi.label "Use Local Storage">
+<!ENTITY menu.usinglocalapi.accesskey "L">
+<!ENTITY menu.showpronunciation.label "Show Pronuciation">
+<!ENTITY menu.showpronunciation.accesskey "P">
+<!ENTITY menu.quotesentence.label "Auto-select Sentence">
+<!ENTITY menu.quotesentence.accesskey "A">
+<!ENTITY menu.enable.label "Enable Backword">
+<!ENTITY menu.enable.accesskey "E">

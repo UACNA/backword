@@ -29,8 +29,8 @@
 // Functions are derived from GPL code originally by mozilla Inc:
 // For the original source, see: http://www.koders.com/javascript/fidFEF1093F08C9BDE750ABD0ED1863319D8179449A.aspx
 ////////////////////////////////////////////////////////////////////////////
-const BW_debugOutput = false;	
-//const BW_debugOutput = true;
+//const BW_debugOutput = false;	
+const BW_debugOutput = true;
 function BW_ddump(text) {
 	if (BW_debugOutput) {
 		dump(text + "\n");
@@ -110,10 +110,10 @@ function BW_HTMLDecode(text) {
 ////////////////////////////////////////////////////////////////////////////
 //Return the recent frame document object
 function BW_getDoc() {
-	return BW_LayoutOverlay._currentDoc;
+	return backword._currentDoc;
 }
 function BW_getPage() {
-	return BW_LayoutOverlay._currentWindow;
+	return backword._currentWindow;
 }
 function BW_trim(string) {
 	return string.replace(/(^\s+)|(\s+$)/g, "");
@@ -274,7 +274,7 @@ function BW_createElement(type, father) {
 	return BW_setElementStyle(obj);
 }
 function BW_setElementStyle(obj) {
-	obj.style.fontSize = (BW_LayoutOverlay._size - 4) + "px!important";
+	obj.style.fontSize = (backword._size - 4) + "px!important";
 	obj.style.fontWeight = "normal!important";
 	obj.style.fontStyle = "normal!important";
 	obj.style.fontFamily = "tahoma,arial,verdana,sans-serif";
@@ -286,7 +286,7 @@ function BW_setElementStyle(obj) {
 	obj.style.padding = "0px 0px 0px 0px!important";
 //	obj.style.wordWrap = "break-word";
 	obj.style.border = "0px !important";
-	obj.style.lineHeight = BW_LayoutOverlay._size + "px!important";
+	obj.style.lineHeight = backword._size + "px!important";
 //	obj.style.verticalAlign = "middle!important";
 //	if (obj.tagName.toUpperCase() != "SPAN") {
 //	}
@@ -304,7 +304,7 @@ function BW_setElementStyle(obj) {
 	return obj;
 }
 function BW_defaultStyle() {
-	var style = "font-size: " + (BW_LayoutOverlay._size - 4) + "px!important;";
+	var style = "font-size: " + (backword._size - 4) + "px!important;";
 	style += "font-weight: normal!important;";
 	style += "font-style: normal!important;";
 	style += "font-family: verdana,sans-serif;";
@@ -317,7 +317,7 @@ function BW_defaultStyle() {
 	style += "float: none;";
 	style += "border: 0px!important;";
 //	style += "vertical-align: middle!important;";
-	style += "line-height: " + (BW_LayoutOverlay._size) + "px!important;";
+	style += "line-height: " + (backword._size) + "px!important;";
 	style += "display: inline!important;";
 	return style;
 }
@@ -479,7 +479,7 @@ function BW_Layout() {
 	this._currentElementBorder = null;
 	this._lastParagraph = null;
 	this._lastWindow = null;
-	this._enabled = true;
+	this._enable = true;
 	this._usingLocalAPI = true;
 	this._showPronunciation = true;
 	this._disableAPIByMulti = false;
@@ -550,15 +550,15 @@ BW_Layout.prototype.loadPref = function () {
 	}
 	this._usingAPI = this._pref.getBoolPref(this._namePrefUsingAPI);
 	var usingLocalAPI = this._pref.getBoolPref(this._namePrefUsingLocalAPI);
-	if (!BW_LayoutOverlay._api || usingLocalAPI != this._usingLocalAPI) {
+	if (!backword._api || usingLocalAPI != this._usingLocalAPI) {
 		this._usingLocalAPI = usingLocalAPI;
 		if (usingLocalAPI) {
-			BW_LayoutOverlay._api = new BW_LocalAPI();
+			backword._api = new BW_LocalAPI();
 		} else {
-			if (BW_LayoutOverlay._api) {
-				BW_LayoutOverlay._api.close();
+			if (backword._api) {
+				backword._api.close();
 			}
-			BW_LayoutOverlay._api = new BW_API();
+			backword._api = new BW_API();
 		}
 	}
 	var currentInstaceList = this._pref.getCharPref(this._namePrefCurrentInstanceList);
@@ -599,7 +599,7 @@ BW_Layout.prototype.loadPref = function () {
 	this._apiUsername = this._pref.getCharPref(this._namePrefAPIUsername);
 	this._apiPassword = this._pref.getCharPref(this._namePrefAPIPassword);
 	this._size = parseInt(this._pref.getCharPref(this._namePrefLayoutSize));
-	this._enabled = this._pref.getBoolPref(this._namePrefEnable);
+	this._enable = this._pref.getBoolPref(this._namePrefEnable);
 	this._showPronunciation = this._pref.getBoolPref(this._namePrefShowPronunciation);
 	this._quoteSentence = this._pref.getBoolPref(this._namePrefQuoteSentence);
 	this._listQuotesLimit = parseInt(this._pref.getCharPref(this._namePrefLayoutQuotes));
@@ -638,7 +638,7 @@ BW_Layout.prototype.getDiv = function (doc) {
 	if (div) {
 		return div;
 	}
-	BW_LayoutOverlay.appendDiv();
+	backword.appendDiv();
 	return doc.getElementById(this._nameLayout);
 };
 BW_Layout.prototype.getString = function (name) {
@@ -694,7 +694,7 @@ BW_Layout.prototype.maybeShowTooltip = function (tipElement) {
 	if (!parent) {
 		return;
 	}
-	if (!this._enabled || (this._visitingPreview && tipElement.ownerDocument == BW_getDoc().getElementById(this._namePreviewFrame).contentDocument)) {
+	if (!this._enable || (this._visitingPreview && tipElement.ownerDocument == BW_getDoc().getElementById(this._namePreviewFrame).contentDocument)) {
 		return;
 	}
 	if (this._display) {
@@ -822,7 +822,7 @@ BW_Layout.prototype.hide = function (doc) {
 	this._toReset = true;
 };
 BW_Layout.prototype.doLoad = function (event) {
-	BW_LayoutOverlay.doLoadImpl(event);
+	backword.doLoadImpl(event);
 };
 BW_Layout.prototype.doLoadImpl = function (event) {
 	this.loadPref();
@@ -838,7 +838,7 @@ BW_Layout.prototype.doLoadImpl = function (event) {
 	this._version = this._pref.getCharPref(this._namePrefVersion);
 };
 BW_Layout.prototype.doUnload = function (event) {
-	BW_LayoutOverlay.doUnloadImpl(event);
+	backword.doUnloadImpl(event);
 };
 BW_Layout.prototype.doUnloadImpl = function (event) {
 //	BW_ddump("unload" + this._id);
@@ -861,7 +861,7 @@ BW_Layout.prototype.doUnloadImpl = function (event) {
 	}
 };
 BW_Layout.prototype.doMouseMove = function (event) {
-	BW_LayoutOverlay.doMouseMoveImpl(event);
+	backword.doMouseMoveImpl(event);
 };
 BW_Layout.prototype.doMouseMoveImpl = function (event) {
 	this.updateCursorPosition(event);
@@ -873,16 +873,16 @@ BW_Layout.prototype.doMouseMoveImpl = function (event) {
 //			BW_ddumpObject(this, "BW", 0);
 //		}
 	} else {
-		if (this._enabled) {
+		if (this._enable) {
 			this.killTimer();
 			var element = event.target;
 			if (!this._mouseDown) {
 				this._timerShow = setTimeout(function (element) {
-					BW_LayoutOverlay.maybeShowTooltip(element);
-					BW_LayoutOverlay.updateStatusIcon();
+					backword.maybeShowTooltip(element);
+					backword.updateStatusIcon();
 				}, this._popDelay, element);
 				this._timerStatus = setTimeout(function () {
-					BW_LayoutOverlay.updateStatusIcon(true);
+					backword.updateStatusIcon(true);
 				}, 100);
 			}
 		}
@@ -895,30 +895,30 @@ BW_Layout.prototype.killTimer = function(){
 	}
 	if (this._timerStatus) {
 		clearTimeout(this._timerStatus);
-		BW_LayoutOverlay.updateStatusIcon();
+		backword.updateStatusIcon();
 		this._timerStatus = null;
 	}
 }
 BW_Layout.prototype.doMouseDown = function (e) {
-	BW_LayoutOverlay.doMouseDownImpl(e);
+	backword.doMouseDownImpl(e);
 };
 BW_Layout.prototype.doMouseDownImpl = function (e) {
 	this._mouseDown = true;
 };
 BW_Layout.prototype.doMouseOut = function (e) {
-	BW_LayoutOverlay.doMouseOutImpl(e);
+	backword.doMouseOutImpl(e);
 };
 BW_Layout.prototype.doMouseOutImpl = function (e) {
 	this.killTimer();
 };
 BW_Layout.prototype.doMouseUp = function (e) {
-	BW_LayoutOverlay.doMouseUpImpl(e);
+	backword.doMouseUpImpl(e);
 };
 BW_Layout.prototype.doMouseUpImpl = function (e) {
 	this._mouseDown = false;
 };
 BW_Layout.prototype.doScroll = function () {
-	BW_LayoutOverlay.doScrollImpl();
+	backword.doScrollImpl();
 };
 BW_Layout.prototype.doScrollImpl = function () {
 	this.killTimer();
@@ -927,7 +927,7 @@ BW_Layout.prototype.doScrollImpl = function () {
 	}
 };
 BW_Layout.prototype.doBlur = function () {
-	BW_LayoutOverlay.doBlurImpl();
+	backword.doBlurImpl();
 };
 BW_Layout.prototype.doBlurImpl = function () {
 	this.killTimer();
@@ -936,7 +936,7 @@ BW_Layout.prototype.doBlurImpl = function () {
 	}
 };
 BW_Layout.prototype.doPageLoad = function (event) {
-	BW_LayoutOverlay.doPageLoadImpl(event);
+	backword.doPageLoadImpl(event);
 };
 BW_Layout.prototype.doPageLoadImpl = function (event) {
 	if (event.originalTarget instanceof HTMLDocument) {
@@ -1181,7 +1181,7 @@ BW_Layout.prototype.showQuotesButton = function () {
 };
 BW_Layout.prototype.mouseOverShowQuotes = function () {
 	this.setAttribute("src", "chrome://backword/skin/showQuotesL.gif");
-	BW_LayoutOverlay.showQuotes();
+	backword.showQuotes();
 };
 BW_Layout.prototype.backWordButton = function () {
 	var button = BW_createElement("IMG");
@@ -1192,13 +1192,13 @@ BW_Layout.prototype.backWordButton = function () {
 	button.style.cursor = "pointer";
 	this.getDiv().appendChild(button);
 	button.addEventListener("mouseover", function () {
-		BW_LayoutOverlay.mouseOverBackWord(this);
+		backword.mouseOverBackWord(this);
 	}, true);
 	button.addEventListener("mouseout", function () {
-		BW_LayoutOverlay.mouseOutBackword(this);
+		backword.mouseOutBackword(this);
 	}, true);
 	button.addEventListener("click", function () {
-		BW_LayoutOverlay.clickBackWord(this);
+		backword.clickBackWord(this);
 	}, true);
 	this._currentElementBorder = this._currentElement.style.border;
 };
@@ -1283,12 +1283,12 @@ BW_Layout.prototype.openPageButton = function () {
 	button.id = this._nameOpenPage;
 	button.addEventListener("click", openPage, false);
 	function openPage() {
-		if (!BW_LayoutOverlay.is_tbird) {
-			gBrowser.selectedTab = gBrowser.addTab(BW_LayoutOverlay._apiWebUrl);
+		if (!backword.is_tbird) {
+			gBrowser.selectedTab = gBrowser.addTab(backword._apiWebUrl);
 		} else {
-			window.open(BW_LayoutOverlay._apiWebUrl);
+			window.open(backword._apiWebUrl);
 		}
-		BW_LayoutOverlay.hide();
+		backword.hide();
 	}
 	this.getDiv().appendChild(button);
 };
@@ -1302,8 +1302,8 @@ BW_Layout.prototype.searchWebButton = function () {
 	button.id = this._nameSearchWeb;
 	button.addEventListener("click", openPage, false);
 	function openPage() {
-		gBrowser.addTab(BW_LayoutOverlay._searchWebUrl + BW_LayoutOverlay._currentWord);
-		BW_LayoutOverlay.hide();
+		gBrowser.addTab(backword._searchWebUrl + backword._currentWord);
+		backword.hide();
 	}
 	this.getDiv().appendChild(button);
 };
@@ -1324,7 +1324,7 @@ BW_Layout.prototype.initParaphrase = function (span) {
 	span.addEventListener("click", this.clickParaphrase, true);
 };
 BW_Layout.prototype.mouseOverParaphrase = function () {
-	if (BW_LayoutOverlay._apiError || BW_LayoutOverlay._apiCalling) {
+	if (backword._apiError || backword._apiCalling) {
 		return;
 	}
 	this.style.backgroundColor = "#9DC2FF";
@@ -1335,29 +1335,29 @@ BW_Layout.prototype.mouseOutParaphrase = function () {
 	this.style.border = "none";
 };
 BW_Layout.prototype.clickParaphrase = function () {
-	if (BW_LayoutOverlay._apiError || BW_LayoutOverlay._apiCalling) {
+	if (backword._apiError || backword._apiCalling) {
 		return;
 	}
-	this.removeEventListener("click", BW_LayoutOverlay.clickParaphrase, true);
-	this.removeEventListener("mouseover", BW_LayoutOverlay.mouseOverParaphrase, true);
+	this.removeEventListener("click", backword.clickParaphrase, true);
+	this.removeEventListener("mouseover", backword.mouseOverParaphrase, true);
 	this.style.backgroundColor = "transparent";
 	this.style.border = "none";
 	var titleWidth = this.offsetWidth;
-	if (titleWidth > BW_LayoutOverlay.maxLengthInput()) {
-		titleWidth = BW_LayoutOverlay.maxLengthInput();
+	if (titleWidth > backword.maxLengthInput()) {
+		titleWidth = backword.maxLengthInput();
 	}
 	var input = BW_getDoc().createElement("INPUT");
 //	obj.style.verticalAlign = "middle!important";
 	input.setAttribute("type", "text");
 	input.setAttribute("maxlength", "80");
-	input.setAttribute("value", BW_LayoutOverlay._paraphrase);
+	input.setAttribute("value", backword._paraphrase);
 	input.style.width = titleWidth + "px";
-	input.style.height = (BW_LayoutOverlay._size - 2) + "px";
+	input.style.height = (backword._size - 2) + "px";
 	input.style.color = "#002864";
 	input.style.border = "1px solid #0048C1";
 	input.style.backgroundColor = "#ECF3FF";
 	BW_setElementStyle(input);
-	input.setAttribute("title", BW_LayoutOverlay.getString("tooltip.enterparaphrase"));
+	input.setAttribute("title", backword.getString("tooltip.enterparaphrase"));
 	this.textContent = "";
 	this.appendChild(input);
 	var div = BW_createElement("DIV");
@@ -1365,11 +1365,11 @@ BW_Layout.prototype.clickParaphrase = function () {
 	div.style.width = "0px";
 	div.style.height = "0px";
 	var span = BW_createElement("SPAN");
-	span.textContent = BW_LayoutOverlay._paraphrase;
-	span.id = BW_LayoutOverlay._nameParaphraseWidth;
+	span.textContent = backword._paraphrase;
+	span.id = backword._nameParaphraseWidth;
 	div.appendChild(span);
 	BW_getDoc().body.appendChild(div);
-	BW_LayoutOverlay._editingParaphrase = true;
+	backword._editingParaphrase = true;
 	input.focus();
 	input.select();
 	input.addEventListener("keydown", onEnterDown, false);
@@ -1382,10 +1382,10 @@ BW_Layout.prototype.clickParaphrase = function () {
 		}
 	}
 	function onInput(e) {
-		var span = BW_getDoc().getElementById(BW_LayoutOverlay._nameParaphraseWidth);
+		var span = BW_getDoc().getElementById(backword._nameParaphraseWidth);
 		span.textContent = this.value;
 		var len = span.offsetWidth;
-		var max = BW_LayoutOverlay.maxLengthInput();
+		var max = backword.maxLengthInput();
 		if (len + 5 < max) {
 			this.style.width = len + 5 + "px";
 		} else {
@@ -1397,13 +1397,13 @@ BW_Layout.prototype.clickParaphrase = function () {
 		if (this.value == "") {
 			this.value = " ";
 		}
-		if (this.value != BW_LayoutOverlay._paraphrase && !BW_LayoutOverlay._apiCalling && !BW_LayoutOverlay._apiError) {
-			BW_LayoutOverlay._paraphrase = this.value;
-			BW_LayoutOverlay._api.backWord(BW_LayoutOverlay._currentWord, this.value);
+		if (this.value != backword._paraphrase && !backword._apiCalling && !backword._apiError) {
+			backword._paraphrase = this.value;
+			backword._api.backWord(backword._currentWord, this.value);
 		}
-		BW_LayoutOverlay.initParaphrase(this.parentNode);
+		backword.initParaphrase(this.parentNode);
 		this.parentNode.textContent = this.value;
-		BW_LayoutOverlay._editingParaphrase = false;
+		backword._editingParaphrase = false;
 	}
 };
 BW_Layout.prototype.maxLengthInput = function () {
@@ -1522,34 +1522,34 @@ BW_Layout.prototype.showQuote = function (index) {
 	span.addEventListener("mouseout", mouseOutQuote, false);
 	function clickQuote(e) {
 		window.content.status = null;
-		if (e.ctrlKey && !BW_LayoutOverlay.is_tbird) {
-			var quote = BW_LayoutOverlay._quotes[parseInt(this.id)];
-			BW_LayoutOverlay._lastParagraph = quote.paragraph;
+		if (e.ctrlKey && !backword.is_tbird) {
+			var quote = backword._quotes[parseInt(this.id)];
+			backword._lastParagraph = quote.paragraph;
 			gBrowser.selectedTab = gBrowser.addTab(quote.url);
-			BW_LayoutOverlay._lastWindow = gBrowser.getBrowserForTab(gBrowser.selectedTab);
+			backword._lastWindow = gBrowser.getBrowserForTab(gBrowser.selectedTab);
 			BW_LayutOverlay._lastWindow.addEventListener("load", function () {
-				BW_LayoutOverlay.highlight(this, BW_LayoutOverlay._lastParagraph);
+				backword.highlight(this, backword._lastParagraph);
 			}, false);
-			BW_LayoutOverlay.hide();
+			backword.hide();
 		} else {
-			BW_LayoutOverlay.showPreview(parseInt(this.id));
+			backword.showPreview(parseInt(this.id));
 		}
 	}
 	function mouseOverQuote() {
-		var url = BW_LayoutOverlay._quotes[parseInt(this.id)].url;
+		var url = backword._quotes[parseInt(this.id)].url;
 		if (url == BW_getPage().top.document.URL)
-			window.content.status = BW_LayoutOverlay.getString("statusbar.highlight");
+			window.content.status = backword.getString("statusbar.highlight");
 		else
-			window.content.status = BW_LayoutOverlay.getString("statusbar.openpage") + BW_LayoutOverlay._quotes[parseInt(this.id)].url;
+			window.content.status = backword.getString("statusbar.openpage") + backword._quotes[parseInt(this.id)].url;
 	}
 	function mouseOutQuote() {
 		window.content.status = null;
 	}
 	function mouseOverDiv(){
-		var detail = BW_getDoc().getElementById(BW_LayoutOverlay._nameQuoteDetailDiv);
+		var detail = BW_getDoc().getElementById(backword._nameQuoteDetailDiv);
 		if (!detail) {
 			detail = BW_createElement("div");
-			detail.id = BW_LayoutOverlay._nameQuoteDetailDiv;
+			detail.id = backword._nameQuoteDetailDiv;
 			detail.style.position = "absolute";
 			detail.style.width = "197px";
 			detail.style.zIndex = "32715";
@@ -1564,8 +1564,8 @@ BW_Layout.prototype.showQuote = function (index) {
 			detail.setAttribute("align", "left");
 			BW_getDoc().body.appendChild(detail);
 		}
-		BW_LayoutOverlay.showQuoteDetail(BW_LayoutOverlay._quotes[parseInt(this.id)].paragraph, BW_LayoutOverlay._currentWord);
-		BW_LayoutOverlay.updateQuoteDetail();
+		backword.showQuoteDetail(backword._quotes[parseInt(this.id)].paragraph, backword._currentWord);
+		backword.updateQuoteDetail();
 	}
 	var quotesDiv = BW_getDoc().getElementById(this._nameQuotesDiv);
 	if (quote.title.length > 0) {
@@ -1582,45 +1582,45 @@ BW_Layout.prototype.showQuote = function (index) {
 	return div;
 };
 BW_Layout.prototype.showNextQuote = function () {
-	if (BW_LayoutOverlay._currentQuoteIndex < BW_LayoutOverlay._quotes.length - BW_LayoutOverlay._listQuotesLimit) {
-		BW_LayoutOverlay._currentQuoteIndex++;
-		var quotes = BW_getDoc().getElementById(BW_LayoutOverlay._nameQuotesDiv);
+	if (backword._currentQuoteIndex < backword._quotes.length - backword._listQuotesLimit) {
+		backword._currentQuoteIndex++;
+		var quotes = BW_getDoc().getElementById(backword._nameQuotesDiv);
 		quotes.removeChild(quotes.firstChild);
 		quotes.lastChild.firstChild.setAttribute("src", "chrome://backword/skin/quoteItem" + ((parseInt(quotes.lastChild.id) % 2 == 0) ? "B" : "G") + ".gif");
 		quotes.lastChild.firstChild.setAttribute("title", "");
 		quotes.firstChild.firstChild.setAttribute("src", "chrome://backword/skin/quoteItemP.gif");
-		quotes.firstChild.firstChild.setAttribute("title", BW_LayoutOverlay.getString("tooltip.prevquote"));
-		quotes.firstChild.firstChild.addEventListener("click", BW_LayoutOverlay.showPrevQuote, false);
-		var quoteNew = BW_LayoutOverlay.showQuote(BW_LayoutOverlay._currentQuoteIndex + BW_LayoutOverlay._listQuotesLimit - 1);
-		if (BW_LayoutOverlay._currentQuoteIndex < BW_LayoutOverlay._quotes.length - BW_LayoutOverlay._listQuotesLimit) {
+		quotes.firstChild.firstChild.setAttribute("title", backword.getString("tooltip.prevquote"));
+		quotes.firstChild.firstChild.addEventListener("click", backword.showPrevQuote, false);
+		var quoteNew = backword.showQuote(backword._currentQuoteIndex + backword._listQuotesLimit - 1);
+		if (backword._currentQuoteIndex < backword._quotes.length - backword._listQuotesLimit) {
 			quoteNew.firstChild.setAttribute("src", "chrome://backword/skin/quoteItemN.gif");
-			quoteNew.firstChild.setAttribute("title", BW_LayoutOverlay.getString("tooltip.nextquote"));
-			quoteNew.firstChild.addEventListener("click", BW_LayoutOverlay.showNextQuote, false);
+			quoteNew.firstChild.setAttribute("title", backword.getString("tooltip.nextquote"));
+			quoteNew.firstChild.addEventListener("click", backword.showNextQuote, false);
 		}
 		quotes.appendChild(quoteNew);
 	}
 };
 BW_Layout.prototype.showPrevQuote = function () {
-	if (BW_LayoutOverlay._currentQuoteIndex > 0) {
-		BW_LayoutOverlay._currentQuoteIndex--;
-		var quotes = BW_getDoc().getElementById(BW_LayoutOverlay._nameQuotesDiv);
+	if (backword._currentQuoteIndex > 0) {
+		backword._currentQuoteIndex--;
+		var quotes = BW_getDoc().getElementById(backword._nameQuotesDiv);
 		quotes.removeChild(quotes.lastChild);
 		quotes.firstChild.firstChild.setAttribute("src", "chrome://backword/skin/quoteItem" + ((parseInt(quotes.firstChild.id) % 2 == 0) ? "B" : "G") + ".gif");
 		quotes.firstChild.firstChild.setAttribute("title", "");
 		quotes.lastChild.firstChild.setAttribute("src", "chrome://backword/skin/quoteItemN.gif");
-		quotes.lastChild.firstChild.setAttribute("title", BW_LayoutOverlay.getString("tooltip.nextquote"));
-		quotes.lastChild.firstChild.addEventListener("click", BW_LayoutOverlay.showNextQuote, false);
-		var quoteNew = BW_LayoutOverlay.showQuote(BW_LayoutOverlay._currentQuoteIndex);
-		if (BW_LayoutOverlay._currentQuoteIndex > 0) {
+		quotes.lastChild.firstChild.setAttribute("title", backword.getString("tooltip.nextquote"));
+		quotes.lastChild.firstChild.addEventListener("click", backword.showNextQuote, false);
+		var quoteNew = backword.showQuote(backword._currentQuoteIndex);
+		if (backword._currentQuoteIndex > 0) {
 			quoteNew.firstChild.setAttribute("src", "chrome://backword/skin/quoteItemP.gif");
-			quoteNew.firstChild.setAttribute("title", BW_LayoutOverlay.getString("tooltip.prevquote"));
-			quoteNew.firstChild.addEventListener("click", BW_LayoutOverlay.showPrevQuote, false);
+			quoteNew.firstChild.setAttribute("title", backword.getString("tooltip.prevquote"));
+			quoteNew.firstChild.addEventListener("click", backword.showPrevQuote, false);
 		}
 		quotes.insertBefore(quoteNew, quotes.firstChild);
 	}
 };
 BW_Layout.prototype.showQuoteDetail = function (para, keyword) {
-	var detail = BW_getDoc().getElementById(BW_LayoutOverlay._nameQuoteDetailDiv);
+	var detail = BW_getDoc().getElementById(backword._nameQuoteDetailDiv);
 	detail.textContent = "";
 	var re;
 	if (new RegExp("[^aieouy]$").test(keyword)) {
@@ -1747,58 +1747,58 @@ BW_Layout.prototype.untenseSpan = function () {
 		this.textContent = "-" + this.id;
 	}
 	function click(e) {
-		var div = BW_LayoutOverlay.getDiv();
+		var div = backword.getDiv();
 		var child = div.firstChild;
 		while (child.nextSibling) {
 			if (child == this) {
 				div.removeChild(this);
 				if (this.id == "e") {
-					BW_LayoutOverlay._currentWord += "e";
+					backword._currentWord += "e";
 				} else {
-					BW_LayoutOverlay._currentWord = BW_LayoutOverlay._originalWord;
+					backword._currentWord = backword._originalWord;
 				}
 				break;
 			} else {
 				child = child.nextSibling;
 			}
 		}
-		var word = BW_LayoutOverlay._currentWord;
-		var original = BW_LayoutOverlay._originalWord;
-		var X = BW_LayoutOverlay._currentCursorX;
-		var Y = BW_LayoutOverlay._currentCursorY;
-		var doc = BW_LayoutOverlay._currentDoc;
-		var win = BW_LayoutOverlay._currentWindow;
-		var para = BW_LayoutOverlay._currentParagraph;
-		var element = BW_LayoutOverlay._currentElement;
-		var offset = BW_LayoutOverlay._currentOffset;
-		var untense = BW_LayoutOverlay._untense;
-		BW_LayoutOverlay.hide();
-		BW_LayoutOverlay.resetData();
-//		BW_LayoutOverlay.resetStatus();
-		BW_LayoutOverlay._currentWord = word;
-		BW_LayoutOverlay._originalWord = original;
-		BW_LayoutOverlay._currentCursorX = X;
-		BW_LayoutOverlay._currentCursorY = Y;
-		BW_LayoutOverlay._currentDoc = doc;
-		BW_LayoutOverlay._currentParagraph = para;
-		BW_LayoutOverlay._currentWindow = win;
-		BW_LayoutOverlay._currentElement = element;
-		BW_LayoutOverlay._currentOffset = offset;
+		var word = backword._currentWord;
+		var original = backword._originalWord;
+		var X = backword._currentCursorX;
+		var Y = backword._currentCursorY;
+		var doc = backword._currentDoc;
+		var win = backword._currentWindow;
+		var para = backword._currentParagraph;
+		var element = backword._currentElement;
+		var offset = backword._currentOffset;
+		var untense = backword._untense;
+		backword.hide();
+		backword.resetData();
+//		backword.resetStatus();
+		backword._currentWord = word;
+		backword._originalWord = original;
+		backword._currentCursorX = X;
+		backword._currentCursorY = Y;
+		backword._currentDoc = doc;
+		backword._currentParagraph = para;
+		backword._currentWindow = win;
+		backword._currentElement = element;
+		backword._currentOffset = offset;
 		if (this.id == "e") {
-			BW_LayoutOverlay._untense = untense;
+			backword._untense = untense;
 		}
-		BW_LayoutOverlay._translate = BW_LayoutOverlay.getTranslate(BW_LayoutOverlay._currentWord);
-		if (BW_LayoutOverlay._selectedRanges) {
+		backword._translate = backword.getTranslate(backword._currentWord);
+		if (backword._selectedRanges) {
 			var select = BW_getPage().getSelection();
-			for (var i = 0; i < BW_LayoutOverlay._selectedRanges.length; i++) {
-				select.addRange(BW_LayoutOverlay._selectedRanges[i]);
+			for (var i = 0; i < backword._selectedRanges.length; i++) {
+				select.addRange(backword._selectedRanges[i]);
 			}
 			if (this.id != "e") {
-				BW_LayoutOverlay._selectedRanges = null;
+				backword._selectedRanges = null;
 			}
 		}
-		BW_LayoutOverlay.updateLayout();
-		BW_LayoutOverlay._api.getWord(BW_LayoutOverlay._currentWord);
+		backword.updateLayout();
+		backword._api.getWord(backword._currentWord);
 	}
 	var bar = BW_createElement("SPAN");
 	bar.textContent = "|";
@@ -1867,13 +1867,13 @@ BW_Layout.prototype.updatePreviewPosition = function (div) {
 	div.style.display = "";
 };
 BW_Layout.prototype.loadPreview = function () {
-	BW_LayoutOverlay.highlight(this.contentWindow, BW_LayoutOverlay._quotes[parseInt(this.getAttribute("index"))].paragraph);
+	backword.highlight(this.contentWindow, backword._quotes[parseInt(this.getAttribute("index"))].paragraph);
 };
 BW_Layout.prototype.mouseOverPreview = function () {
-	BW_LayoutOverlay._visitingPreview = true;
+	backword._visitingPreview = true;
 };
 BW_Layout.prototype.mouseOutPreview = function () {
-	BW_LayoutOverlay._visitingPreview = false;
+	backword._visitingPreview = false;
 };
 BW_Layout.prototype.highlight = function (wnd, para, currentPage) {
 	if (!wnd) {
@@ -1972,7 +1972,7 @@ BW_Layout.prototype.callbackBackWord = function (theObject) {
 };
 BW_Layout.prototype.callbackModifyQuotes = function (theObject) {
 	if (theObject) {
-		this._api.getQuotes(BW_LayoutOverlay._currentWordId);
+		this._api.getQuotes(backword._currentWordId);
 	}
 };
 ////////////////////////////////////////////////////////////////////////////
@@ -1980,32 +1980,66 @@ BW_Layout.prototype.callbackModifyQuotes = function (theObject) {
 ////////////////////////////////////////////////////////////////////////////
 BW_Layout.prototype.clickStatus = function (e) {
 	if (e.button == 1 && !this.is_tbird) { //middle click
-		if (this._enabled && this._usingAPI && !this._usingLocalAPI) {
+		if (this._enable && this._usingAPI && !this._usingLocalAPI) {
 			gBrowser.selectedTab = gBrowser.addTab(this._apiWebUrl);
 		} else {
 			gBrowser.selectedTab = gBrowser.addTab("http://groups.google.com/group/backword");
 		}
 	} else {
 		if (e.button == 0) { //left click
-			this._enabled = !this._enabled;
-			this._pref.setBoolPref(this._namePrefEnable, this._enabled);
+			this._enable = !this._enable;
+			this._pref.setBoolPref(this._namePrefEnable, this._enable);
 			if (this._display) {
 				this.hide();
 			}
 			this.updateStatusIcon();
-		} else { //right click
-			this._usingAPI = !this._usingAPI;
-			if (this._usingAPI) {
-				if (this._usingLocalAPI && this._disableAPIByMulti) {
-					alert(this.getString("alert.multiwindow"));
-					this._usingAPI = false;
-					return;
-				}
-			}
-			this._pref.setBoolPref(this._namePrefUsingAPI, this._usingAPI);
-			this.updateStatusIcon();
 		}
 	}
+};
+BW_Layout.prototype.updatePref = function (id, value, isChar){
+	if (isChar){
+		this._pref.setCharPref(id, value);
+	}
+	else{
+		this._pref.setBoolPref(id, value);
+	}
+	this.loadPref();
+};
+BW_Layout.prototype.popupMenu= function (menu) {
+	this.loadPref();
+  var elements = {};
+  var list = menu.getElementsByTagName("menuitem");
+  for (var i = 0; i < list.length; i++)
+    elements[list[i].id] = list[i];
+	elements['bw-status-usingapi'].setAttribute('checked', this._usingAPI);
+	elements['bw-status-usinglocalapi'].setAttribute('checked', this._usingLocalAPI);
+	elements['bw-status-showpronunciation'].setAttribute('checked', this._showPronunciation);
+	elements['bw-status-quotesentence'].setAttribute('checked', this._quoteSentence);
+	elements['bw-status-enable'].setAttribute('checked', this._enable);
+	return true;
+};
+BW_Layout.prototype.popupDictionaryMenu= function (menu) {
+  var elements = {};
+  var list = menu.getElementsByTagName("menuitem");
+  for (var i = 0; i < list.length; i++){
+  	list[i].setAttribute('checked', false);
+    elements[list[i].id] = list[i];
+  }
+	var translator = this._pref.getCharPref(this._namePrefTranslator);
+	elements[translator].setAttribute('checked', true);
+	return true;
+};
+BW_Layout.prototype.openOptions= function () {
+  var windowMediator = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                                 .getService(Components.interfaces.nsIWindowMediator);
+  var dlg = windowMediator.getMostRecentWindow("backword:settings");
+  if (dlg){
+  	dlg.focus();
+  }
+  else{
+	  var browser = windowMediator.getMostRecentWindow("navigator:browser");
+	  browser.openDialog("chrome://backword/content/options.xul", "_blank", "chrome,centerscreen");
+  }
 };
 BW_Layout.prototype.updateStatusIcon = function (trans) {
 	var img = document.getElementById(this._nameStatusImg);
@@ -2016,7 +2050,7 @@ BW_Layout.prototype.updateStatusIcon = function (trans) {
 			img.src = "chrome://backword/skin/backWordTransR.gif";
 		}
 	} else {
-		if (this._enabled) {
+		if (this._enable) {
 			if (this._usingAPI) {
 				img.src = "chrome://backword/skin/backWordG.gif";
 			} else {
@@ -2030,8 +2064,8 @@ BW_Layout.prototype.updateStatusIcon = function (trans) {
 	}
 };
 BW_Layout.prototype.disable = function () {
-	this._enabled = false;
-	this._pref.setBoolPref(this._namePrefEnable, this._enabled);
+	this._enable = false;
+	this._pref.setBoolPref(this._namePrefEnable, this._enable);
 	this.updateStatusIcon();
 };
 BW_Layout.prototype.disableAPI = function () {
@@ -2045,7 +2079,7 @@ BW_Layout.prototype.disableAPI = function () {
 var BW_PrefHandler = {isExists:function (prefName, type) {
 	type = (type == null) ? "char" : type;
 	if (type == "char") {
-		if (BW_LayoutOverlay._pref.getPrefType(prefName) == BW_LayoutOverlay._pref.PREF_STRING && jsUtils.trimWhitespace(BW_LayoutOverlay._pref.getCharPref(prefName).toString()) != "") {
+		if (backword._pref.getPrefType(prefName) == backword._pref.PREF_STRING && jsUtils.trimWhitespace(backword._pref.getCharPref(prefName).toString()) != "") {
 			return true;
 		} else {
 			return false;
@@ -2053,7 +2087,7 @@ var BW_PrefHandler = {isExists:function (prefName, type) {
 	} else {
 		if (type == "bool") {
 			try {
-				var tempValue = BW_LayoutOverlay._pref.getBoolPref(prefName);
+				var tempValue = backword._pref.getBoolPref(prefName);
 			}
 			catch (ex) {
 				return false;
@@ -2064,34 +2098,34 @@ var BW_PrefHandler = {isExists:function (prefName, type) {
 }, getPref:function (prefName, type) {
 	type = (type == null) ? "char" : type;
 	if (type == "char") {
-		return BW_LayoutOverlay._pref.getCharPref(prefName).toString();
+		return backword._pref.getCharPref(prefName).toString();
 	} else {
 		if (type == "bool") {
-			return BW_LayoutOverlay._pref.getBoolPref(prefName);
+			return backword._pref.getBoolPref(prefName);
 		}
 	}
 }, setPref:function (prefName, value, type) {
 	type = (type == null) ? "char" : type;
 	if (type == "char") {
-		BW_LayoutOverlay._pref.setCharPref(prefName, value);
+		backword._pref.setCharPref(prefName, value);
 	} else {
 		if (type == "bool") {
-			BW_LayoutOverlay._pref.setBoolPref(prefName, value);
+			backword._pref.setBoolPref(prefName, value);
 		}
 	}
 }, setPrefIfNotExists:function (prefName, value, type) {
 	type = (type == null) ? "char" : type;
 	if (type == "char") {
-		if (BW_LayoutOverlay._pref.getPrefType(prefName) != BW_LayoutOverlay._pref.PREF_STRING || (BW_LayoutOverlay._pref.getPrefType(prefName) == BW_LayoutOverlay._pref.PREF_STRING && jsUtils.trimWhitespace(BW_LayoutOverlay._pref.getCharPref(prefName).toString()) == "")) {
-			BW_LayoutOverlay._pref.setCharPref(prefName, value);
+		if (backword._pref.getPrefType(prefName) != backword._pref.PREF_STRING || (backword._pref.getPrefType(prefName) == backword._pref.PREF_STRING && jsUtils.trimWhitespace(backword._pref.getCharPref(prefName).toString()) == "")) {
+			backword._pref.setCharPref(prefName, value);
 		}
 	} else {
 		if (type == "bool") {
 			try {
-				var boolValue = BW_LayoutOverlay._pref.getBoolPref(prefName);
+				var boolValue = backword._pref.getBoolPref(prefName);
 			}
 			catch (ex) {
-				BW_LayoutOverlay._pref.setBoolPref(prefName, value);
+				backword._pref.setBoolPref(prefName, value);
 			}
 		}
 	}
@@ -2128,7 +2162,7 @@ function BW_GoogleTranslate() {
 BW_GoogleTranslate.prototype.getTranslate = function (text) {
 	var response = "";
 	try {
-		var tolang = BW_LayoutOverlay._tolang;
+		var tolang = backword._tolang;
 		var host = "www.google.cn";
 		var lang = "en|" + tolang;
 		if (this._GTAvaliable) {
@@ -2168,7 +2202,7 @@ BW_GoogleTranslate.prototype.getTranslate = function (text) {
 	}
 	catch (e) {
 		BW_ddump(e);
-		BW_LayoutOverlay.disable();
+		backword.disable();
 		return "";
 	}
 	return response;
@@ -2312,10 +2346,10 @@ BW_DictcnTranslate.prototype.getTranslate = function (text) {
 	}
 	catch (e) {
 		BW_ddump(e);
-		BW_LayoutOverlay.disable();
+		backword.disable();
 		return "";
 	}
-	if (BW_LayoutOverlay._tw) {
+	if (backword._tw) {
 		return BW_Simp_to_Trad(response);
 	} else {
 		return response;
@@ -2472,7 +2506,7 @@ function BW_space(len) {
 	return str.substr(0, len);
 }
 function BW_LocalAPI() {
-	this._path = BW_LayoutOverlay._pref.getCharPref(BW_LayoutOverlay._namePrefLocalAPIPath);
+	this._path = backword._pref.getCharPref(backword._namePrefLocalAPIPath);
 	this._lastQuoteId = 1;
 	this._errReadWords = false;
 	this._errReadQuotes = false;
@@ -2497,7 +2531,7 @@ function BW_LocalAPI() {
 BW_LocalAPI.prototype.getWord = function (wrd) {
 	var word = this.findWord(wrd);
 	if (word) {
-		BW_LayoutOverlay.callbackGetWord(word);
+		backword.callbackGetWord(word);
 	}
 };
 BW_LocalAPI.prototype.backWord = function (wrd, paraphrase) {
@@ -2519,7 +2553,7 @@ BW_LocalAPI.prototype.backWord = function (wrd, paraphrase) {
 		this._refWords.sort(this.sortWord);
 		this.appendWord(word);
 	}
-	BW_LayoutOverlay.callbackBackWord(word.id);
+	backword.callbackBackWord(word.id);
 };
 BW_LocalAPI.prototype.backQuote = function (wrd, url, title, paragraph) {
 	var idxWord = this.findWordIdx(wrd);
@@ -2536,13 +2570,13 @@ BW_LocalAPI.prototype.backQuote = function (wrd, url, title, paragraph) {
 		var refQuote = new BW_refQuote(idxWord, 0);
 		quote.idxRef = this._refQuotes.push(refQuote) - 1;
 		this.appendQuote(quote);
-		BW_LayoutOverlay.callbackModifyQuotes(word);
+		backword.callbackModifyQuotes(word);
 	}
 };
 BW_LocalAPI.prototype.getQuotes = function (wrd) {
 	var word = this.findWord(wrd);
 	if (word) {
-		BW_LayoutOverlay.callbackGetQuotes(word.quotes);
+		backword.callbackGetQuotes(word.quotes);
 	}
 };
 BW_LocalAPI.prototype.deleteWord = function (wrd) {
@@ -2588,7 +2622,7 @@ BW_LocalAPI.prototype.deleteQuote = function (wrd, id) {
 			word.quotes = word.quotes.slice(0, h).concat(word.quotes.slice(h + 1));
 			this._refQuotes = this._refQuotes.slice(0, index).concat(this._refQuotes.slice(index + 1));
 			this.saveQuotes();
-			BW_LayoutOverlay.callbackModifyQuotes(word);
+			backword.callbackModifyQuotes(word);
 		}
 	}
 };
@@ -2875,33 +2909,33 @@ BW_LocalAPI.prototype.getFile = function (path) {
 //This Function is derived from GPL code originally by Flock Inc:
 function BW_API() {
 	this.getWord = function (aWord) {
-		var argArray = [BW_LayoutOverlay._apiUrl, BW_LayoutOverlay._apiUsername, BW_LayoutOverlay._apiPassword, aWord];
-		BW_XMLCall.sendCommand(BW_LayoutOverlay._apiUrl, BW_APICalls.getWord(argArray), "getWord", BW_LayoutOverlay._currentWord);
+		var argArray = [backword._apiUrl, backword._apiUsername, backword._apiPassword, aWord];
+		BW_XMLCall.sendCommand(backword._apiUrl, BW_APICalls.getWord(argArray), "getWord", backword._currentWord);
 	};
 	this.backWord = function (aWord, aParaphrase) {
 		var Word = {"word":aWord, "paraphrase":aParaphrase};
-		var argArray = [BW_LayoutOverlay._apiUrl, BW_LayoutOverlay._apiUsername, BW_LayoutOverlay._apiPassword, Word];
-		BW_XMLCall.sendCommand(BW_LayoutOverlay._apiUrl, BW_APICalls.backWord(argArray), "backWord", BW_LayoutOverlay._currentWord);
+		var argArray = [backword._apiUrl, backword._apiUsername, backword._apiPassword, Word];
+		BW_XMLCall.sendCommand(backword._apiUrl, BW_APICalls.backWord(argArray), "backWord", backword._currentWord);
 	};
 	this.backQuote = function (aWordid, aUrl, aTitle, aParagraph) {
-		if (aParagraph.length <= BW_LayoutOverlay._currentWord.length) {
+		if (aParagraph.length <= backword._currentWord.length) {
 			return;
 		}
 		var Quote = {"url":aUrl, "title":aTitle, "paragraph":aParagraph};
-		var argArray = [BW_LayoutOverlay._apiUrl, aWordid, BW_LayoutOverlay._apiUsername, BW_LayoutOverlay._apiPassword, Quote];
-		BW_XMLCall.sendCommand(BW_LayoutOverlay._apiUrl, BW_APICalls.backQuote(argArray), "backQuote", BW_LayoutOverlay._currentWord);
+		var argArray = [backword._apiUrl, aWordid, backword._apiUsername, backword._apiPassword, Quote];
+		BW_XMLCall.sendCommand(backword._apiUrl, BW_APICalls.backQuote(argArray), "backQuote", backword._currentWord);
 	};
 	this.deleteWord = function (aWordid) {
-		var argArray = [BW_LayoutOverlay._apiUrl, aWordid, BW_LayoutOverlay._apiUsername, BW_LayoutOverlay._apiPassword];
-		BW_XMLCall.sendCommand(BW_LayoutOverlay._apiUrl, BW_APICalls.deleteWord(argArray), "deleteWord", BW_LayoutOverlay._currentWord);
+		var argArray = [backword._apiUrl, aWordid, backword._apiUsername, backword._apiPassword];
+		BW_XMLCall.sendCommand(backword._apiUrl, BW_APICalls.deleteWord(argArray), "deleteWord", backword._currentWord);
 	};
 	this.deleteQuote = function (aWordid, aQuoteid) {
-		var argArray = [BW_LayoutOverlay._apiUrl, aQuoteid, BW_LayoutOverlay._apiUsername, BW_LayoutOverlay._apiPassword];
-		BW_XMLCall.sendCommand(BW_LayoutOverlay._apiUrl, BW_APICalls.deleteQuote(argArray), "deleteQuote", BW_LayoutOverlay._currentWord);
+		var argArray = [backword._apiUrl, aQuoteid, backword._apiUsername, backword._apiPassword];
+		BW_XMLCall.sendCommand(backword._apiUrl, BW_APICalls.deleteQuote(argArray), "deleteQuote", backword._currentWord);
 	};
 	this.getQuotes = function (aWordid) {
-		var argArray = [BW_LayoutOverlay._apiUrl, aWordid, BW_LayoutOverlay._apiUsername, BW_LayoutOverlay._apiPassword];
-		BW_XMLCall.sendCommand(BW_LayoutOverlay._apiUrl, BW_APICalls.getQuotes(argArray), "getQuotes", BW_LayoutOverlay._currentWord);
+		var argArray = [backword._apiUrl, aWordid, backword._apiUsername, backword._apiPassword];
+		BW_XMLCall.sendCommand(backword._apiUrl, BW_APICalls.getQuotes(argArray), "getQuotes", backword._currentWord);
 	};
 	this.getWords = function (numberofwords, offset) {
 		if (numberofwords == null) {
@@ -2910,8 +2944,8 @@ function BW_API() {
 		if (offset == null) {
 			offset = 0;
 		}
-		var argArray = [BW_LayoutOverlay._apiUrl, BW_LayoutOverlay._apiUsername, BW_LayoutOverlay._apiPassword, numberofwords, offset];
-		BW_XMLCall.sendCommand(BW_LayoutOverlay._apiUrl, BW_APICalls.getWords(argArray), "getWords", BW_LayoutOverlay._currentWord);
+		var argArray = [backword._apiUrl, backword._apiUsername, backword._apiPassword, numberofwords, offset];
+		BW_XMLCall.sendCommand(backword._apiUrl, BW_APICalls.getWords(argArray), "getWords", backword._currentWord);
 	};
 }
 var BW_APICalls = new Object();
@@ -2939,7 +2973,7 @@ var BW_XMLCall = new Object();
 
 //Send XMLRPC Command
 BW_XMLCall.sendCommand = function (theURL, theXMLString, theAction, additionalInfo) { //Both arguments have to be strings
-	if (BW_LayoutOverlay._usingAPI) {
+	if (backword._usingAPI) {
 		gMakeXMLCall(theURL, theXMLString, theAction, additionalInfo);
 	}
 };
@@ -2953,7 +2987,7 @@ unless synchronous, I need to file the bug!*/
 function gMakeXMLCall(theURL, message, theAction, additionalInfo) {
 //	BW_ddump(message);
 //	BW_ddump(theURL);
-	BW_LayoutOverlay.apiCall();
+	backword.apiCall();
 	try {
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("POST", theURL, true);
@@ -2961,14 +2995,14 @@ function gMakeXMLCall(theURL, message, theAction, additionalInfo) {
 			try {
 				if (xmlhttp.readyState == 4) {
 					if (xmlhttp.status == 200) { //We actually want to catch bad pages
-						BW_LayoutOverlay.apiSuccess();
+						backword.apiSuccess();
 						BW_XMLCall.processData(xmlhttp.responseText, theAction, additionalInfo);
 					}
 				}
 			}
 			catch (e) {
 				BW_ddump(e);
-				BW_LayoutOverlay.apiError(e.name);
+				backword.apiError(e.name);
 				return;
 			}
 		};
@@ -2978,7 +3012,7 @@ function gMakeXMLCall(theURL, message, theAction, additionalInfo) {
 	}
 	catch (e) {
 //		BW_ddump(e);
-		BW_LayoutOverlay.apiError(e.name);
+		backword.apiError(e.name);
 		return;
 	}
 }
@@ -3180,7 +3214,7 @@ BW_XMLCall.processData = function (theXML, theAction, additionalInfo) {
 	var newstr = theXML.replace(re, "");
 	var e4xXMLObject = new XML(newstr);
 	if (e4xXMLObject.name() != "methodResponse" || !(e4xXMLObject.params.param.value.length() == 1 || e4xXMLObject.fault.value.struct.length() == 1)) {
-		alert(BW_LayoutOverlay.getString("alert.apierror"));
+		alert(backword.getString("alert.apierror"));
 	}
 	if (e4xXMLObject.params.param.value.length() == 1) {
 		ourParsedResponse = bfXMLRPC.XMLToObject(e4xXMLObject.params.param.value.children()[0]);
@@ -3201,26 +3235,26 @@ BW_XMLCall.processReturnData = function (theObject, theAction, additionalInfo, t
 //	BW_ddump(theAction + ":");
 	BW_ddumpObject(theObject, "theObject", 3);
 	if (theObject.faultString) {
-		BW_LayoutOverlay.apiError(theObject.faultString);
+		backword.apiError(theObject.faultString);
 		return;
 	}
-	if (additionalInfo != BW_LayoutOverlay._currentWord) {
+	if (additionalInfo != backword._currentWord) {
 		BW_ddump("outdated api return!");
 		return;
 	} else {
-		BW_LayoutOverlay.apiReturn();
+		backword.apiReturn();
 	}
 	if (theAction == "getWord") {
-		BW_LayoutOverlay.callbackGetWord(theObject);
+		backword.callbackGetWord(theObject);
 	} else {
 		if (theAction == "backWord") {
-			BW_LayoutOverlay.callbackBackWord(theObject);
+			backword.callbackBackWord(theObject);
 		} else {
 			if (theAction == "backQuote" || theAction == "deleteQuote") {
-				BW_LayoutOverlay.callbackModifyQuotes(theObject);
+				backword.callbackModifyQuotes(theObject);
 			} else {
 				if (theAction == "getQuotes") {
-					BW_LayoutOverlay.callbackGetQuotes(theObject);
+					backword.callbackGetQuotes(theObject);
 				}
 			}
 		}
