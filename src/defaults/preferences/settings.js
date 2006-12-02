@@ -7,6 +7,7 @@ pref("backword.usingapi", true);
 pref("backword.usinglocalapi", true);
 pref("backword.showpronunciation", true);
 pref("backword.quotesentence", true);
+pref("backword.showphonetics", false);
 pref("backword.layout.size", "16");
 pref("backword.layout.quotes", "5");
 pref("backword.layout.mouseout", "10");
