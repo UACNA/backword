@@ -474,6 +474,7 @@ function BW_Layout() {
 	this._namePrefCurrentInstanceList = "backword.currentinstancelist";
 	this._namePrefShowPronunciation = "backword.showpronunciation";
 	this._namePrefQuoteSentence = "backword.quotesentence";
+	this._namePrefShowPhonetics = "backword.showphonetics";
 	this._quoteSentence = true;
 	this._stringBundle = null;
 	this._currentElementBorder = null;
@@ -490,6 +491,7 @@ function BW_Layout() {
 	this._tw = false;
 	this._size = 20;
 	this._popDelay = 500;
+	this._showPhonetics = false;
 	this._pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
 }
 BW_Layout.prototype.resetData = function () {
@@ -601,6 +603,7 @@ BW_Layout.prototype.loadPref = function () {
 	this._size = parseInt(this._pref.getCharPref(this._namePrefLayoutSize));
 	this._enable = this._pref.getBoolPref(this._namePrefEnable);
 	this._showPronunciation = this._pref.getBoolPref(this._namePrefShowPronunciation);
+	this._showPhonetics = this._pref.getBoolPref(this._namePrefShowPhonetics);
 	this._quoteSentence = this._pref.getBoolPref(this._namePrefQuoteSentence);
 	this._listQuotesLimit = parseInt(this._pref.getCharPref(this._namePrefLayoutQuotes));
 	this._maxMouseOut = parseInt(this._pref.getCharPref(this._namePrefLayoutMouseOut));
@@ -1123,7 +1126,7 @@ BW_Layout.prototype.checkCurrentParagraph = function () {
 	}
 	var para = this._currentParagraph;
 //	BW_ddump("para:"+para);
-	var url = BW_getPage().top.document.URL;
+	var url = BW_getDoc().URL;
 	for (var i = 0; i < this._quotes.length; i++) {
 //		BW_ddump("---{n"+this._quotes[i].paragraph+"n}---");
 		if (this._quotes[i].paragraph == para && this._quotes[i].url == url) {
@@ -1265,7 +1268,7 @@ BW_Layout.prototype.clickBackWord = function () {
 		if (this._currentWordId == null) {
 			this._api.backWord(this._currentWord, this._paraphrase);
 		} else {
-			this._api.backQuote(this._currentWordId, BW_getPage().top.document.URL, BW_getPage().top.document.title || BW_getPage().top.document.URL, this._currentParagraph);
+			this._api.backQuote(this._currentWordId, BW_getDoc().URL, BW_getDoc().title || BW_getDoc().URL, this._currentParagraph);
 		}
 	}
 };
@@ -1537,7 +1540,7 @@ BW_Layout.prototype.showQuote = function (index) {
 	}
 	function mouseOverQuote() {
 		var url = backword._quotes[parseInt(this.id)].url;
-		if (url == BW_getPage().top.document.URL)
+		if (url == BW_getDoc().URL)
 			window.content.status = backword.getString("statusbar.highlight");
 		else
 			window.content.status = backword.getString("statusbar.openpage") + backword._quotes[parseInt(this.id)].url;
@@ -1806,7 +1809,7 @@ BW_Layout.prototype.untenseSpan = function () {
 	this.getDiv().appendChild(bar);
 };
 BW_Layout.prototype.showPreview = function (index) {
-	if (BW_getPage().top.document.URL == this._quotes[index].url) {
+	if (BW_getDoc().URL == this._quotes[index].url) {
 		this.highlight(BW_getPage(), this._quotes[index].paragraph);
 		return;
 	}
@@ -1965,7 +1968,7 @@ BW_Layout.prototype.callbackGetQuotes = function (theObject) {
 BW_Layout.prototype.callbackBackWord = function (theObject) {
 	if (this._currentWordId == null && this._paraphrase == " ") {
 		this._currentWordId = theObject;
-		this._api.backQuote(this._currentWordId, BW_getPage().top.document.URL, BW_getPage().top.document.title || BW_getPage().top.document.URL, this._currentParagraph);
+		this._api.backQuote(this._currentWordId, BW_getDoc().URL, BW_getDoc().title || BW_getDoc().URL, this._currentParagraph);
 	} else {
 		this._currentWordId = theObject;
 	}
@@ -2205,6 +2208,9 @@ BW_GoogleTranslate.prototype.getTranslate = function (text) {
 		backword.disable();
 		return "";
 	}
+	if (backword._showPhonetics){
+		response = BW_dict_cn.getTranslate(text)(/(^\/[^\/]*\/).*/, "$1") + response;
+	}
 	return response;
 };
 BW_GoogleTranslate.prototype.deleteDictFile = function () {
@@ -2355,7 +2361,7 @@ BW_DictcnTranslate.prototype.getTranslate = function (text) {
 		return response;
 	}
 };
-
+var BW_dict_cn = new BW_DictcnTranslate();
 // originally published by passerby. Thanks passerby!
 function BW_Simp_to_Trad(strIn) {
 	var zhmap = TongWen.s_2_t;
