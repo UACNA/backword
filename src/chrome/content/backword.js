@@ -277,7 +277,7 @@ function BW_setElementStyle(obj) {
 	obj.style.fontSize = (backword._size - 4) + "px!important";
 	obj.style.fontWeight = "normal!important";
 	obj.style.fontStyle = "normal!important";
-	obj.style.fontFamily = "tahoma,arial,verdana,sans-serif";
+	obj.style.fontFamily = "tahoma,宋体,arial,verdana,sans-serif";
 	obj.style.fontSizeAdjust = "none!important";
 	obj.style.fontStretch = "normal!important";
 	obj.style.fontVariant = "normal!important";
@@ -307,7 +307,7 @@ function BW_defaultStyle() {
 	var style = "font-size: " + (backword._size - 4) + "px!important;";
 	style += "font-weight: normal!important;";
 	style += "font-style: normal!important;";
-	style += "font-family: verdana,sans-serif;";
+	style += "font-family: tahoma,宋体,arial,verdana,sans-serif";
 	style += "font-size-adjust: none;";
 	style += "font-variant: normal;";
 	style += "font-stretch: normal;";
@@ -2162,7 +2162,14 @@ function BW_GoogleTranslate() {
 		this.dictFileReady = this.dictFileLocation.exists();
 	}
 }
-BW_GoogleTranslate.prototype.getTranslate = function (text) {
+BW_GoogleTranslate.prototype.getTranslate = function(text){
+	var response  = this._getTranslate(text);
+	if (response.length > 0 && backword._showPhonetics){
+		response = BW_dict_cn.getTranslate(text).replace(/(^\/[^\/]*\/).*/, "$1") + response;
+	}
+	return response;
+}
+BW_GoogleTranslate.prototype._getTranslate = function (text) {
 	var response = "";
 	try {
 		var tolang = backword._tolang;
@@ -2207,9 +2214,6 @@ BW_GoogleTranslate.prototype.getTranslate = function (text) {
 		BW_ddump(e);
 		backword.disable();
 		return "";
-	}
-	if (backword._showPhonetics){
-		response = BW_dict_cn.getTranslate(text).replace(/(^\/[^\/]*\/).*/, "$1") + response;
 	}
 	return response;
 };
