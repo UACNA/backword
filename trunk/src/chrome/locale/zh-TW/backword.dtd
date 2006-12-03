@@ -14,6 +14,7 @@
 <!ENTITY options.translator.google.zh-TW "Google - 繁體中文">
 <!ENTITY options.translator.dictcn "Dict.cn - 簡體中文">
 <!ENTITY options.translator.dictcn.tw "Dict.cn - 繁體中文">
+<!ENTITY options.translator.showPhonetics "顯示音標 - 可能導致Firefox假死">
 <!ENTITY options.groupbox.search "搜索詳細解釋">
 <!ENTITY options.url "地址：">
 <!ENTITY options.groupbox.api "後台">

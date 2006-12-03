@@ -2209,7 +2209,7 @@ BW_GoogleTranslate.prototype.getTranslate = function (text) {
 		return "";
 	}
 	if (backword._showPhonetics){
-		response = BW_dict_cn.getTranslate(text)(/(^\/[^\/]*\/).*/, "$1") + response;
+		response = BW_dict_cn.getTranslate(text).replace(/(^\/[^\/]*\/).*/, "$1") + response;
 	}
 	return response;
 };

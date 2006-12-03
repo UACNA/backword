@@ -28,9 +28,9 @@
 	<tabpanels flex="1">
 		<tabpanel>
 			<vbox>
-			    <groupbox>
+			    <groupbox orient="vertical">
 			      <caption label="&options.groupbox.translator;" />
-			      <menulist id="translator">
+			      <menulist id="translator" oncommand="document.getElementById('showphonetics').setAttribute('disabled', this.value.indexOf('google') == -1);" >
 			        <menupopup>
 			          <menuitem label="&options.translator.google.fr;" value="google.fr" id="google.fr" />
 			          <menuitem label="&options.translator.google.de;" value="google.de" id="google.de" />
@@ -45,6 +45,7 @@
 			          <menuitem label="&options.translator.dictcn.tw;" value="dictcn.tw" id="dictcn.tw" />
 			        </menupopup>
 			      </menulist>
+		        <checkbox id="showphonetics" label="&options.translator.showPhonetics;" />
 			    </groupbox>
 				<separator class="thin" />
 				  <groupbox orient="horizontal">
