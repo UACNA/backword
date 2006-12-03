@@ -45,7 +45,7 @@
 			          <menuitem label="&options.translator.dictcn.tw;" value="dictcn.tw" id="dictcn.tw" />
 			        </menupopup>
 			      </menulist>
-		        <checkbox id="showphonetics" label="&options.translator.showPhonetics;" />
+		        <checkbox id="showphonetics" label="&options.translator.showphonetics;" />
 			    </groupbox>
 				<separator class="thin" />
 				  <groupbox orient="horizontal">

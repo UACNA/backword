@@ -1,4 +1,4 @@
-<!ENTITY version "1.2.061201">
+<!ENTITY version "1.2.061203">
 <!ENTITY status.tooltip "关闭 Backword">
 <!ENTITY options.windowtitle "设置">
 <!ENTITY options.settingstab "选项">
@@ -14,7 +14,7 @@
 <!ENTITY options.translator.google.zh-TW "Google - 繁体中文">
 <!ENTITY options.translator.dictcn "Dict.cn - 简体中文">
 <!ENTITY options.translator.dictcn.tw "Dict.cn - 繁体中文">
-<!ENTITY options.translator.showPhonetics "显示音标 - 可能导致Firefox假死">
+<!ENTITY options.translator.showphonetics "显示音标 (可能导致Firefox假死)">
 <!ENTITY options.groupbox.search "搜索详细解释">
 <!ENTITY options.url "地址：">
 <!ENTITY options.groupbox.api "后台">

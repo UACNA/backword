@@ -1,4 +1,4 @@
-<!ENTITY version "1.2.061201">
+<!ENTITY version "1.2.061203">
 <!ENTITY status.tooltip "Backword Enabled">
 <!ENTITY options.windowtitle "Options">
 <!ENTITY options.settingstab "Settings">
@@ -14,7 +14,7 @@
 <!ENTITY options.translator.google.zh-TW "Google - Traditional Chinese">
 <!ENTITY options.translator.dictcn "Dict.cn - Simplified Chinese">
 <!ENTITY options.translator.dictcn.tw "Dict.cn - Traditional Chinese">
-<!ENTITY options.translator.showPhonetics "Show phonetics - may slow down Firefox">
+<!ENTITY options.translator.showphonetics "Show phonetics (may slow down Firefox)">
 <!ENTITY options.groupbox.search "Search web">
 <!ENTITY options.url "URL:">
 <!ENTITY options.groupbox.api "Storage">
