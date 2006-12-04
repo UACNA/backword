@@ -16,7 +16,7 @@
 <!ENTITY options.translator.dictcn.tw "Dict.cn - 繁體中文">
 <!ENTITY options.translator.showphonetics "顯示音標 (可能導致Firefox假死)">
 <!ENTITY options.groupbox.search "搜索詳細解釋">
-<!ENTITY options.url "地址：">
+<!ENTITY options.url "地址列表：(以回車分割)">
 <!ENTITY options.groupbox.api "後台">
 <!ENTITY options.api.use "使用後台">
 <!ENTITY options.api.uselocal "使用本地存儲 (否則使用遠端接口存儲，詳見幫助頁)">
@@ -58,7 +58,7 @@
 <!ENTITY options.help.link.lable.email "作者郵箱：">
 <!ENTITY options.help.link.group "http://groups.google.com/group/backword">
 <!ENTITY options.help.link.blog "http://blog.gneheix.com">
-<!ENTITY options.help.operation "左鍵點擊打開/關閉取詞；右鍵點擊打開/關閉後台；使用後台時中鍵點擊打開後台管理頁面，否則打開討論組頁面。">
+<!ENTITY options.help.operation "左鍵點擊打開/關閉取詞；使用後台時中鍵點擊打開後台管理頁面，否則打開討論組頁面。">
 <!ENTITY options.help.title.layout "介面">
 <!ENTITY options.help.layout "使用Flash即使發音：當其他廣告遮罩擴展使得介面無法正常顯示時請去除此選項；自動選中當前句子作為上下文：自動使用當前句子而不是整個段落作為上下文；字體大小：設置字體及介面大小，最小值為13；引用個數：設置最多顯示引用個數，最小值為2；隱藏介面：當滑鼠移出介面的圖元值超過此設置時隱藏介面，最小值5；取詞延時：單位毫秒，最小值100。">
 <!ENTITY menu.options.label "選項(O)">

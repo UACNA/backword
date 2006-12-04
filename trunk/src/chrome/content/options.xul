@@ -22,7 +22,8 @@
 <vbox id="optionsBox" flex="1">
  <tabbox flex="1">
 	<tabs id="options-tabs">
-		<tab id="settings-tab" label="&options.settingstab;"/>
+		<tab id="settings-tab" label="&options.settingstab; I"/>
+		<tab id="settings2-tab" label="&options.settingstab; II"/>
 		<tab id="help-tab" label="&options.helptab;"/>
 	</tabs>
 	<tabpanels flex="1">
@@ -30,7 +31,7 @@
 			<vbox>
 			    <groupbox orient="vertical">
 			      <caption label="&options.groupbox.translator;" />
-			      <menulist id="translator" oncommand="document.getElementById('showphonetics').setAttribute('disabled', this.value.indexOf('google') == -1);" >
+			      <menulist id="translator" oncommand="document.getElementById('showphonetics').setAttribute('disabled', this.value.indexOf('dictcn') != -1);" >
 			        <menupopup>
 			          <menuitem label="&options.translator.google.fr;" value="google.fr" id="google.fr" />
 			          <menuitem label="&options.translator.google.de;" value="google.de" id="google.de" />
@@ -48,14 +49,15 @@
 		        <checkbox id="showphonetics" label="&options.translator.showphonetics;" />
 			    </groupbox>
 				<separator class="thin" />
-				  <groupbox orient="horizontal">
+				  <groupbox orient="vertical">
 				    <caption label="&options.groupbox.search;" />
-				    <hbox  align="center">
 				    <label value="&options.url;" />
-				    <textbox id="searchweburl" size="50" />
-				    </hbox>
+				    <textbox id="searchweburl" cols="52" multiline="true" rows="10" />
 				  </groupbox>
-				<separator class="thin"/>
+			</vbox>
+		</tabpanel>
+		<tabpanel>
+			<vbox>
 				  <groupbox orient="vertical">
 				    <caption label="&options.groupbox.api;"/>
  			        <checkbox id="usingapi" label="&options.api.use;" oncommand="BW_options.usingApi(this.hasAttribute('checked'))" />

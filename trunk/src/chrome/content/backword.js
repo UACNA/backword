@@ -277,7 +277,7 @@ function BW_setElementStyle(obj) {
 	obj.style.fontSize = (backword._size - 4) + "px!important";
 	obj.style.fontWeight = "normal!important";
 	obj.style.fontStyle = "normal!important";
-	obj.style.fontFamily = "tahoma,宋体,arial,verdana,sans-serif";
+	obj.style.fontFamily = "宋体,tahoma,arial,verdana,sans-serif";
 	obj.style.fontSizeAdjust = "none!important";
 	obj.style.fontStretch = "normal!important";
 	obj.style.fontVariant = "normal!important";
@@ -307,7 +307,7 @@ function BW_defaultStyle() {
 	var style = "font-size: " + (backword._size - 4) + "px!important;";
 	style += "font-weight: normal!important;";
 	style += "font-style: normal!important;";
-	style += "font-family: tahoma,宋体,arial,verdana,sans-serif";
+	style += "font-family: 宋体,tahoma,arial,verdana,sans-serif";
 	style += "font-size-adjust: none;";
 	style += "font-variant: normal;";
 	style += "font-stretch: normal;";
@@ -451,7 +451,6 @@ function BW_Layout() {
 	this._nameQuoteDetailDiv = "BW_showQuoteDetailDiv";
 	this._nameOpenPage = "BW_openPageButton";
 	this._nameShowQuotes = "BW_showQuotesButton";
-	this._nameSearchWeb = "BW_searchWebButton";
 	this._nameParaphraseWidth = "BW_paraWidthSpan";
 	this._namePreviewDiv = "BW_previewDiv";
 	this._namePreviewFrame = "BW_previewFrame";
@@ -595,7 +594,7 @@ BW_Layout.prototype.loadPref = function () {
 			}
 		}
 	}
-	this._searchWebUrl = this._pref.getCharPref(this._namePrefSearchWebUrl);
+	this._searchWebUrl = BW_trim(this._pref.getCharPref(this._namePrefSearchWebUrl)).replace(/\n\n+/g, '\n').split('\n');
 	this._apiUrl = this._pref.getCharPref(this._namePrefAPIUrl);
 	this._apiWebUrl = this._pref.getCharPref(this._namePrefAPIWebUrl);
 	this._apiUsername = this._pref.getCharPref(this._namePrefAPIUsername);
@@ -728,7 +727,8 @@ BW_Layout.prototype.maybeShowTooltip = function (tipElement) {
 			return;
 		}
 	}
-	if (tipElement.tagName.toLowerCase() == "a"){
+	var goParent="a i b strong span";
+	if (goParent.indexOf(tipElement.tagName.toLowerCase()) >= 0){
 		parent = tipElement;
 		tipElement = tipElement.parentNode;
 	}
@@ -1296,19 +1296,24 @@ BW_Layout.prototype.openPageButton = function () {
 	this.getDiv().appendChild(button);
 };
 BW_Layout.prototype.searchWebButton = function () {
-	var button = BW_createElement("IMG");
-	button.setAttribute("align", "absmiddle");
-	button.style.cursor = "pointer";
-	button.style.backgroundColor = "#D5E6FF";
-	button.setAttribute("title", this.getString("tooltip.searchweb"));
-	button.setAttribute("src", "chrome://backword/skin/searchWeb.gif");
-	button.id = this._nameSearchWeb;
-	button.addEventListener("click", openPage, false);
 	function openPage() {
-		gBrowser.addTab(backword._searchWebUrl + backword._currentWord);
+		var index = parseInt(this.getAttribute("index"));
+		if (!isNaN(index)){
+			gBrowser.addTab(backword._searchWebUrl[index] + backword._currentWord);
+		}
 		backword.hide();
 	}
-	this.getDiv().appendChild(button);
+	for (var i=0; i<this._searchWebUrl.length; i++){
+		var button = BW_createElement("IMG");
+		button.setAttribute("align", "absmiddle");
+		button.style.cursor = "pointer";
+		button.style.backgroundColor = "#D5E6FF";
+		button.setAttribute("title", this.getString("tooltip.searchweb") + ": " + BW_makeShortString(this._searchWebUrl[i], "http", 25));
+		button.setAttribute("src", "chrome://backword/skin/searchWeb.gif");
+		button.setAttribute("index", i);
+		button.addEventListener("click", openPage, false);
+		this.getDiv().appendChild(button);
+	}
 };
 BW_Layout.prototype.paraphraseSpan = function () {
 	var span = BW_createElement("SPAN");

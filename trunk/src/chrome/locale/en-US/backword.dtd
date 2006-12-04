@@ -16,7 +16,7 @@
 <!ENTITY options.translator.dictcn.tw "Dict.cn - Traditional Chinese">
 <!ENTITY options.translator.showphonetics "Show phonetics (may slow down Firefox)">
 <!ENTITY options.groupbox.search "Search web">
-<!ENTITY options.url "URL:">
+<!ENTITY options.url "URLs: (split by Enter)">
 <!ENTITY options.groupbox.api "Storage">
 <!ENTITY options.api.use "Use Storage">
 <!ENTITY options.api.uselocal "Use Local Storage (Uncheck to use web API storage)">
@@ -50,7 +50,7 @@
 <!ENTITY options.help.translator.link.iciba "http://www.iciba.com">
 <!ENTITY options.help.translator.4 "(Pronuncation Flashes). Backword has no licenses of those resources this moment. If they are illegal, please contact. Please support Backword by distributing a license or helping find common resouces.">
 <!ENTITY options.help.searchweb "Current word will be appended to this URL when Search Web button was clicked.">
-<!ENTITY options.help.searchweb.2 " may help you find someone.">
+<!ENTITY options.help.searchweb.2 " may help you find some good ones.">
 <!ENTITY options.help.searchweb.wiki "This page">
 <!ENTITY options.help.api "You could use Backword Local Storage to store your data. All files are located in /backword subfold of your profile fold. But it's recommanded to build your own web API support for Backword, which with more security and helpful administration pages. Here is a ">
 <!ENTITY options.help.api.tutorial "tutorial.">
@@ -59,7 +59,7 @@
 <!ENTITY options.help.link.lable.email "Author's Email:">
 <!ENTITY options.help.link.group "http://groups.google.com/group/backword">
 <!ENTITY options.help.link.blog "http://blog.gneheix.com">
-<!ENTITY options.help.operation "Left click turns on/off. Right click turns API on/off. If API enabled middle click opens admin page otherwise opens forum page.">
+<!ENTITY options.help.operation "Left click turns on/off. If using web API middle click opens admin page otherwise opens forum page.">
 <!ENTITY options.help.layout "Show Pronunciation Flash: Uncheck if other ad-blocking extensions break the interface. Auto-select current sentence as context: Use current sentence as context by select it automatically. Font Size: font size of layout, minimum value is 13. Quotes Count: max number of quotes to be shown, minimum value is 2. Mouse Out: the interface will be hidden when mouse out of it more than this in pix, minimum value is 5. Popup Delay: popup delay in millisecond, minimum value is 100.">
 <!ENTITY menu.options.label "Options">
 <!ENTITY menu.options.accesskey "O">
