@@ -691,9 +691,9 @@ BW_Layout.prototype.maybeShowTooltip = function (tipElement) {
 	if (this._toReset) {
 		this.resetData();
 	}
-	var parent = this._rangeParent;
+	var rangeParent = this._rangeParent;
 	var offset = this._rangeOffset;
-	if (!parent) {
+	if (!rangeParent) {
 		return;
 	}
 	if (!this._enable || (this._visitingPreview && tipElement.ownerDocument == BW_getDoc().getElementById(this._namePreviewFrame).contentDocument)) {
@@ -706,19 +706,19 @@ BW_Layout.prototype.maybeShowTooltip = function (tipElement) {
 			this.hide(this._currentDoc);
 		}
 	}
-	if (parent.parentNode != tipElement) {
+	if (rangeParent.parentNode != tipElement) {
 		return;
 	}
-	if (parent.nodeType != Node.TEXT_NODE) {
+	if (rangeParent.nodeType != Node.TEXT_NODE) {
 		return;
 	}
 	this.loadPref();
-	this._currentParent = parent;
-	var container = parent.parentNode;
+	this._currentParent = rangeParent;
+	var container = rangeParent.parentNode;
 	if (container) {
 		var foundNode = false;
 		for (var c = container.firstChild; c != null; c = c.nextSibling) {
-			if (c == parent) {
+			if (c == rangeParent) {
 				foundNode = true;
 				break;
 			}
@@ -727,11 +727,6 @@ BW_Layout.prototype.maybeShowTooltip = function (tipElement) {
 			return;
 		}
 	}
-	var goParent="a i b strong span";
-	if (goParent.indexOf(tipElement.tagName.toLowerCase()) >= 0){
-		parent = tipElement;
-		tipElement = tipElement.parentNode;
-	}
 	this._currentDoc = tipElement.ownerDocument;
 	this._isHTML = (this._currentDoc.contentType == "text/html");
 	this._currentWindow = this._currentDoc.defaultView;
@@ -739,9 +734,10 @@ BW_Layout.prototype.maybeShowTooltip = function (tipElement) {
 	this._currentOffset = offset;
 	this._currentCursorX = this._cursorX;
 	this._currentCursorY = this._cursorY;
-	var word = this.getCurrentWord(parent, offset, tipElement);
-	if (word)
+	var word = this.getCurrentWord(rangeParent, offset, tipElement);
+	if (word){
 		this.showTooltip(word);
+	}
 	return;
 };
 BW_Layout.prototype.showTooltip = function (word) {
@@ -1083,8 +1079,8 @@ BW_Layout.prototype.updatePosition = function () {
 	}
 	this.getDiv().style.left = left;
 };*/
-BW_Layout.prototype.getCurrentWord = function (parent, offset, target) {
-	var str = parent.textContent;
+BW_Layout.prototype.getCurrentWord = function (rangeParent, offset, target) {
+	var str = rangeParent.textContent;
 	var word = BW_parseWord(str, offset);
 	if (!word)
 		return null;
@@ -1093,6 +1089,22 @@ BW_Layout.prototype.getCurrentWord = function (parent, offset, target) {
 		this._currentParagraph = BW_plainText(BW_trim(BW_getPage().getSelection().toString()));
 	}
 	else {
+		var goParent="a i b strong span ";
+		if (goParent.indexOf(target.tagName.toLowerCase()+" ") >= 0){
+			BW_ddump(target.tagName);
+			BW_ddump(offset);
+			var children = target.childNodes;
+			for (var i=0; i<children.length; i++){
+				if (children[i] == rangeParent)
+					break;
+				else{
+					offset += children[i].textContent.length;
+				}
+			}
+			rangeParent = target;
+			BW_ddump(offset);
+			target = target.parentNode;
+		}
 		var selection = BW_getSelectionText(target);
 		var textContent = target.textContent;
 		if (this._quoteSentence){
@@ -1100,7 +1112,7 @@ BW_Layout.prototype.getCurrentWord = function (parent, offset, target) {
 			var pre = 0;
 			var offsetTC = 0;
 			for (var i=0; i<children.length; i++){
-				if (children[i] == parent)
+				if (children[i] == rangeParent)
 					break;
 				else{
 					offsetTC += children[i].textContent.length;
