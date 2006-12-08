@@ -1,0 +1,77 @@
+<!ENTITY version "1.2.061209">
+<!ENTITY status.tooltip "关闭 Backword">
+<!ENTITY options.windowtitle "设置">
+<!ENTITY options.settingstab "选项">
+<!ENTITY options.helptab "帮助">
+<!ENTITY options.groupbox.translator "词典">
+<!ENTITY options.translator.google.fr "Google - 法语">
+<!ENTITY options.translator.google.de "Google - 德语">
+<!ENTITY options.translator.google.it "Google - 意大利语">
+<!ENTITY options.translator.google.ja "Google - 日本语">
+<!ENTITY options.translator.google.ko "Google - 韩语">
+<!ENTITY options.translator.google.zh-CN "Google - 简体中文">
+<!ENTITY options.translator.google.es "Google - 西班牙语">
+<!ENTITY options.translator.google.zh-TW "Google - 繁体中文">
+<!ENTITY options.translator.dictcn "Dict.cn - 简体中文">
+<!ENTITY options.translator.dictcn.tw "Dict.cn - 繁体中文">
+<!ENTITY options.translator.showphonetics "显示音标 (可能导致Firefox假死)">
+<!ENTITY options.groupbox.search "搜索详细解释">
+<!ENTITY options.url "地址列表：(以回车分割)">
+<!ENTITY options.groupbox.api "后台">
+<!ENTITY options.api.use "使用后台">
+<!ENTITY options.api.uselocal "使用本地存储 (否则使用远程接口存储，详见帮助页)">
+<!ENTITY options.api.url "接口地址：">
+<!ENTITY options.api.weburl "页面地址：">
+<!ENTITY options.api.username "　用户名：">
+<!ENTITY options.api.password "　　密码：">
+<!ENTITY options.dscp.translator "注意：这里使用的词典引擎可能未得到授权。">
+<!ENTITY options.groupbox.layout "界面">
+<!ENTITY options.layout.showpronunciation "使用Flash即使发音 (界面无法正常显示去除此选项)">
+<!ENTITY options.layout.quotesentence "自动选中当前句子作为上下文">
+<!ENTITY options.layout.size "字体大小">
+<!ENTITY options.layout.quotes "引用个数">
+<!ENTITY options.layout.mouseout "隐藏界面">
+<!ENTITY options.layout.popdelay "取词延时">
+<!ENTITY options.help.title "Backword">
+<!ENTITY options.help.version "当前版本 &version;">
+<!ENTITY options.help.title.translator "词典和语音">
+<!ENTITY options.help.title.searchweb "搜索详细解释">
+<!ENTITY options.help.title.api "后台">
+<!ENTITY options.help.title.setting "设置">
+<!ENTITY options.help.title.link "链接">
+<!ENTITY options.help.title.layout "界面">
+<!ENTITY options.help.title.operation "操作说明">
+<!ENTITY options.help.title.statusbutton "状态烂按钮">
+<!ENTITY options.help.translator.1 "Backword使用的词典及语音资源分别由以下网站提供：">
+<!ENTITY options.help.translator.link.google "http://www.google.com">
+<!ENTITY options.help.translator.2 "（Google词典）">
+<!ENTITY options.help.translator.link.dictcn "http://www.dict.cn">
+<!ENTITY options.help.translator.3 "（dict.cn词典）">
+<!ENTITY options.help.translator.link.iciba "http://www.iciba.com">
+<!ENTITY options.help.translator.4 "（语音flash）。目前对这些资源的使用均未得到授权，如果侵犯您的权益请来信告知。同时也请广大网友或者公司提供授权或公共资源来源。">
+<!ENTITY options.help.searchweb "搜索详细解释时，单词将追加到此地址的后面。">
+<!ENTITY options.help.searchweb.2 "也许可以帮助你找到一些好用的。">
+<!ENTITY options.help.searchweb.wiki "这个页面">
+<!ENTITY options.help.api "您可以选择使用本地文件存储Backword收录的数据(文件被存放在用户数据目录下的Backword子目录)或者自行搭建Web后台(推荐使用，可保证数据安全，并提供管理页面可帮助复习)，搭建方法参见">
+<!ENTITY options.help.api.tutorial "此教程。">
+<!ENTITY options.help.link.lable.group "讨论组：">
+<!ENTITY options.help.link.lable.blog "作者博客：">
+<!ENTITY options.help.link.lable.email "作者邮箱：">
+<!ENTITY options.help.link.group "http://groups.google.com/group/backword">
+<!ENTITY options.help.link.blog "http://blog.gneheix.com">
+<!ENTITY options.help.operation "左键点击打开/关闭取词；使用后台时中键点击打开后台管理页面，否则打开讨论组页面。">
+<!ENTITY options.help.layout "使用Flash即使发音：当其他广告屏蔽扩展使得界面无法正常显示时请去除此选项；自动选中当前句子作为上下文：自动使用当前句子而不是整个段落作为上下文；字体大小：设置字体及界面大小，最小值为13；引用个数：设置最多显示引用个数，最小值为2；隐藏界面：当鼠标移出界面的像素值超过此设置时隐藏界面，最小值5；取词延时：单位毫秒，最小值100。">
+<!ENTITY menu.options.label "选项(O)">
+<!ENTITY menu.options.accesskey "O">
+<!ENTITY menu.dictionary.label "词典(D)">
+<!ENTITY menu.dictionary.accesskey "D">
+<!ENTITY menu.usingapi.label "使用后台(S)">
+<!ENTITY menu.usingapi.accesskey "S">
+<!ENTITY menu.usinglocalapi.label "使用本地存储(L)">
+<!ENTITY menu.usinglocalapi.accesskey "L">
+<!ENTITY menu.showpronunciation.label "使用Flash即使发音(P)">
+<!ENTITY menu.showpronunciation.accesskey "P">
+<!ENTITY menu.quotesentence.label "自动选中当前句子(A)">
+<!ENTITY menu.quotesentence.accesskey "A">
+<!ENTITY menu.enable.label "实时翻译(E)">
+<!ENTITY menu.enable.accesskey "E">
