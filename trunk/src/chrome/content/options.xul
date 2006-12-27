@@ -150,8 +150,7 @@
 				<description value="&options.help.title.searchweb;" class="h3" />
 				<description>
 					&options.help.searchweb;
-					<description value="&options.help.searchweb.wiki;" onclick="BW_options.openPage('http://wikihost.org/wikis/backword/');" class="link"/>
-					&options.help.searchweb.2;
+					<description value="&options.help.link.lable.wiki;" onclick="BW_options.openPage('&options.help.link.wiki;');" class="link"/>
 				</description>
 				<separator class="thin"/>
 				<description value="&options.help.title.api;" class="h3" />
@@ -168,6 +167,10 @@
 				<vbox align="center">
 				<description value="&options.help.title.link;" class="h2" />
 				</vbox>
+				<hbox>
+				<description value="&options.help.link.lable.homepage;" />
+				<description value="&options.help.link.homepage;" onclick="BW_options.openPage(this.value);" class="link"/>
+				</hbox>
 				<hbox>
 				<description value="&options.help.link.lable.group;" />
 				<description value="&options.help.link.group;" onclick="BW_options.openPage(this.value);" class="link"/>
