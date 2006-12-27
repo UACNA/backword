@@ -1,4 +1,4 @@
-<!ENTITY version "1.2.061209">
+<!ENTITY version "1.2.061228">
 <!ENTITY status.tooltip "关闭 Backword">
 <!ENTITY options.windowtitle "设置">
 <!ENTITY options.settingstab "选项">
@@ -49,28 +49,37 @@
 <!ENTITY options.help.translator.3 "（dict.cn词典）">
 <!ENTITY options.help.translator.link.iciba "http://www.iciba.com">
 <!ENTITY options.help.translator.4 "（语音flash）。目前对这些资源的使用均未得到授权，如果侵犯您的权益请来信告知。同时也请广大网友或者公司提供授权或公共资源来源。">
-<!ENTITY options.help.searchweb "搜索详细解释时，单词将追加到此地址的后面。">
-<!ENTITY options.help.searchweb.2 "也许可以帮助你找到一些好用的。">
-<!ENTITY options.help.searchweb.wiki "这个页面">
+<!ENTITY options.help.searchweb "搜索详细解释时，单词将追加到此地址的后面。有一个维基页面列举了一些可以使用的地址:">
 <!ENTITY options.help.api "您可以选择使用本地文件存储Backword收录的数据(文件被存放在用户数据目录下的Backword子目录)或者自行搭建Web后台(推荐使用，可保证数据安全，并提供管理页面可帮助复习)，搭建方法参见">
 <!ENTITY options.help.api.tutorial "此教程。">
+<!ENTITY options.help.link.lable.homepage "主页:">
 <!ENTITY options.help.link.lable.group "讨论组：">
 <!ENTITY options.help.link.lable.blog "作者博客：">
 <!ENTITY options.help.link.lable.email "作者邮箱：">
+<!ENTITY options.help.link.lable.wiki "Candidates of Backword Search Web URL">
 <!ENTITY options.help.link.group "http://groups.google.com/group/backword">
 <!ENTITY options.help.link.blog "http://blog.gneheix.com">
+<!ENTITY options.help.link.homepage "http://backword.gneheix.com">
+<!ENTITY options.help.link.wiki "http://wikihost.org/wikis/backword/">
 <!ENTITY options.help.operation "左键点击打开/关闭取词；使用后台时中键点击打开后台管理页面，否则打开讨论组页面。">
 <!ENTITY options.help.layout "使用Flash即使发音：当其他广告屏蔽扩展使得界面无法正常显示时请去除此选项；自动选中当前句子作为上下文：自动使用当前句子而不是整个段落作为上下文；字体大小：设置字体及界面大小，最小值为13；引用个数：设置最多显示引用个数，最小值为2；隐藏界面：当鼠标移出界面的像素值超过此设置时隐藏界面，最小值5；取词延时：单位毫秒，最小值100。">
+<!ENTITY options.page.api "Web后台管理页面">
+<!ENTITY options.page.group "Backword Google 讨论组">
+<!ENTITY options.page.blog "Just s.t. (作者博客)">
+<!ENTITY options.page.homepage "Backword 主页">
+<!ENTITY options.page.wiki "Search Web 地址维基页面">
 <!ENTITY menu.options.label "选项(O)">
 <!ENTITY menu.options.accesskey "O">
+<!ENTITY menu.pages.label "网页(P)">
+<!ENTITY menu.pages.accesskey "P">
 <!ENTITY menu.dictionary.label "词典(D)">
 <!ENTITY menu.dictionary.accesskey "D">
 <!ENTITY menu.usingapi.label "使用后台(S)">
 <!ENTITY menu.usingapi.accesskey "S">
 <!ENTITY menu.usinglocalapi.label "使用本地存储(L)">
 <!ENTITY menu.usinglocalapi.accesskey "L">
-<!ENTITY menu.showpronunciation.label "使用Flash即使发音(P)">
-<!ENTITY menu.showpronunciation.accesskey "P">
+<!ENTITY menu.showpronunciation.label "使用 Flash 即使发音">
+<!ENTITY menu.showpronunciation.accesskey "F">
 <!ENTITY menu.quotesentence.label "自动选中当前句子(A)">
 <!ENTITY menu.quotesentence.accesskey "A">
 <!ENTITY menu.enable.label "实时翻译(E)">

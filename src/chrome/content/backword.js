@@ -29,8 +29,8 @@
 // Functions are derived from GPL code originally by mozilla Inc:
 // For the original source, see: http://www.koders.com/javascript/fidFEF1093F08C9BDE750ABD0ED1863319D8179449A.aspx
 ////////////////////////////////////////////////////////////////////////////
-//const BW_debugOutput = false;	
-const BW_debugOutput = true;
+const BW_debugOutput = false;	
+//const BW_debugOutput = true;
 function BW_ddump(text) {
 	if (BW_debugOutput) {
 		dump(text + "\n");
@@ -176,26 +176,31 @@ function BW_getSelectionText(target){
 }
 function BW_parseSentence(selection, textContent, offsetTC){
 	var ReSp=/\s/g;
-	var spSL = [];
-	var spTC = [];
-	while (ReSp.exec(selection) != undefined) {
-	  spSL[spSL.length] = ReSp.lastIndex;
+	var offsetSL = offsetTC;
+	//if selection and textContent has differenct letters, use textContent
+	if (selection.replace(ReSp, "") != textContent.replace(ReSp, "")){
+		selection = textContent;
 	}
-	while (ReSp.exec(textContent) != undefined) {
-	  spTC[spTC.length] = ReSp.lastIndex;
+	//try to find the word in select
+	else{
+		var spSL = [];
+		var spTC = [];
+		while (ReSp.exec(selection) != undefined) {
+		  spSL[spSL.length] = ReSp.lastIndex;
+		}
+		while (ReSp.exec(textContent) != undefined) {
+		  spTC[spTC.length] = ReSp.lastIndex;
+		}
+		function relatedOffset(ar, offset, ar2){
+			var offset2 = offset;
+			for (var i=0; i<ar.length; i++)
+				if (ar[i] <= offset) offset2--;
+			for (var i=0; i<ar2.length; i++)
+				if (ar2[i] <= offset2) offset2++;
+			return offset2;
+		}
+		offsetSL = relatedOffset(spTC, offsetTC, spSL);
 	}
-	var diff = (selection.replace(ReSp, "") != textContent.replace(ReSp, ""));
-	if (diff) selection = textContent;
-	function relatedOffset(ar, offset, ar2){
-		if (diff) return offset;
-		var offset2 = offset;
-		for (var i=0; i<ar.length; i++)
-			if (ar[i] <= offset) offset2--;
-		for (var i=0; i<ar2.length; i++)
-			if (ar2[i] <= offset2) offset2++;
-		return offset2;
-	}
-	var offsetSL = relatedOffset(spTC, offsetTC, spSL);
 	
 	var s;
 	var start = 0;
@@ -1089,10 +1094,8 @@ BW_Layout.prototype.getCurrentWord = function (rangeParent, offset, target) {
 		this._currentParagraph = BW_plainText(BW_trim(BW_getPage().getSelection().toString()));
 	}
 	else {
-		var goParent="a i b strong span ";
+		var goParent="a i b strong em span ";
 		if (goParent.indexOf(target.tagName.toLowerCase()+" ") >= 0){
-			BW_ddump(target.tagName);
-			BW_ddump(offset);
 			var children = target.childNodes;
 			for (var i=0; i<children.length; i++){
 				if (children[i] == rangeParent)
@@ -1111,6 +1114,7 @@ BW_Layout.prototype.getCurrentWord = function (rangeParent, offset, target) {
 			var children = target.childNodes;
 			var pre = 0;
 			var offsetTC = 0;
+			//sometimes this fails
 			for (var i=0; i<children.length; i++){
 				if (children[i] == rangeParent)
 					break;
@@ -1120,10 +1124,14 @@ BW_Layout.prototype.getCurrentWord = function (rangeParent, offset, target) {
 			}
 			offsetTC += offset;
 			this._currentParagraph = BW_parseSentence(selection, textContent, offsetTC);
+			if (!new RegExp(word).test(this._currentParagraph)){
+				this._currentParagraph = BW_parseSentence(BW_getSelectionText(rangeParent), rangeParent.textContent, offset, word);
+			}
 		}
 		else{
 			this._currentParagraph = BW_plainText(BW_trim(textContent));
 		}
+		BW_ddump("_currentParagraph:"+this._currentParagraph);
 	}
 	return word;
 };
@@ -1280,7 +1288,7 @@ BW_Layout.prototype.clickBackWord = function () {
 		if (this._currentWordId == null) {
 			this._api.backWord(this._currentWord, this._paraphrase);
 		} else {
-			this._api.backQuote(this._currentWordId, BW_getDoc().URL, BW_getDoc().title || BW_getDoc().URL, this._currentParagraph);
+			this._api.backQuote(this._currentWordId, BW_getDoc().URL, BW_getPage().top.document.title || BW_getDoc().URL, this._currentParagraph);
 		}
 	}
 };
@@ -1601,6 +1609,17 @@ BW_Layout.prototype.showQuote = function (index) {
 	div.addEventListener("mouseover", mouseOverDiv, false);
 	return div;
 };
+BW_Layout.prototype.openPage = function(pageUrl){
+	var windowService = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator);
+	var currentWindow = windowService.getMostRecentWindow("navigator:browser");
+	if (currentWindow) {
+		try {
+		  currentWindow.delayedOpenTab(pageUrl);
+		} catch(e) { currentWindow.loadURI(pageUrl); }
+	}
+	else
+		window.open(pageUrl);
+};
 BW_Layout.prototype.showNextQuote = function () {
 	if (backword._currentQuoteIndex < backword._quotes.length - backword._listQuotesLimit) {
 		backword._currentQuoteIndex++;
@@ -1643,13 +1662,18 @@ BW_Layout.prototype.showQuoteDetail = function (para, keyword) {
 	var detail = BW_getDoc().getElementById(backword._nameQuoteDetailDiv);
 	detail.textContent = "";
 	var re;
-	if (new RegExp("[^aieouy]$").test(keyword)) {
-		re = keyword + "{1,2}(s|es|ies|d|ed|ied|ing){0,2}";
-	} else {
-		if (new RegExp("[ey]$").test(keyword)) {
-			re = keyword + "?(s|es|ies|d|ed|ied|ing){0,2}";
+	if (/f$/.test(keyword)){
+		re = keyword.replace(/f$/, "") + "[fv](s|es|ies|d|ed|ied|ing){0,2}";
+	}
+	else{
+		if (/[^aieouy]$/.test(keyword)) {
+			re = keyword + "{1,2}(s|es|ies|d|ed|ied|ing){0,2}";
 		} else {
-			re = keyword + "(s|es|ies|d|ed|ied|ing){0,2}";
+			if (/[ey]$/.test(keyword)) {
+				re = keyword + "?(s|es|ies|d|ed|ied|ing){0,2}";
+			} else {
+				re = keyword + "(s|es|ies|d|ed|ied|ing){0,2}";
+			}
 		}
 	}
 	para = BW_HTMLDecode(para);
@@ -1838,13 +1862,13 @@ BW_Layout.prototype.showPreview = function (index) {
 		div.style.position = "absolute";
 		div.style.zIndex = "32718";
 		div.style.display = "none";
-		div.style.border = "0px";
+		div.style.border = "1px solid #0043B3";
 		frame = BW_getDoc().createElement("IFRAME");
 		frame.id = this._namePreviewFrame;
 		frame.setAttribute("index", index);
 		frame.style.overflow = "auto";
-		frame.style.border = "1px solid black";
 		frame.style.background = "white";
+		frame.style.border = "0px";
 		frame.style.width = "100%";
 		frame.style.height = "100%";
 		div.appendChild(frame);
@@ -1925,7 +1949,7 @@ BW_Layout.prototype.highlight = function (wnd, para, currentPage) {
 	var finder = Components.classes["@mozilla.org/embedcomp/rangefind;1"].createInstance().QueryInterface(Components.interfaces.nsIFind);
 	finder.caseSensitive = false;
 	if (!(retRange = finder.Find(para, searchRange, startPt, endPt))) {
-		var paras = para.split(getLineBreak());
+		var paras = para.split("\n");
 		retRange = finder.Find(paras[0], searchRange, startPt, endPt);
 	}
 	if (!retRange) return false;
@@ -1985,7 +2009,7 @@ BW_Layout.prototype.callbackGetQuotes = function (theObject) {
 BW_Layout.prototype.callbackBackWord = function (theObject) {
 	if (this._currentWordId == null && this._paraphrase == " ") {
 		this._currentWordId = theObject;
-		this._api.backQuote(this._currentWordId, BW_getDoc().URL, BW_getDoc().title || BW_getDoc().URL, this._currentParagraph);
+		this._api.backQuote(this._currentWordId, BW_getDoc().URL, BW_getPage().top.document.title || BW_getDoc().URL, this._currentParagraph);
 	} else {
 		this._currentWordId = theObject;
 	}
@@ -2047,6 +2071,16 @@ BW_Layout.prototype.popupDictionaryMenu= function (menu) {
   }
 	var translator = this._pref.getCharPref(this._namePrefTranslator);
 	elements[translator].setAttribute('checked', true);
+	return true;
+};
+BW_Layout.prototype.popupPagesMenu= function (menu) {
+  var elements = {};
+  var list = menu.getElementsByTagName("menuitem");
+  for (var i = 0; i < list.length; i++){
+  	list[i].setAttribute('checked', false);
+    elements[list[i].id] = list[i];
+  }
+	elements['page.api'].setAttribute('hidden', (!this._usingAPI || this._usingLocalAPI));
 	return true;
 };
 BW_Layout.prototype.openOptions= function () {
