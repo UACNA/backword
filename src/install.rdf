@@ -7,15 +7,15 @@ xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
 		<em:id>backword@gneheix.com</em:id>
 		<em:name>backword</em:name>
-		<em:version>1.2.061228</em:version>
+		<em:version>1.2.070101</em:version>
 		<em:description>Backup every word ever met</em:description>
 		<em:creator>gneheix</em:creator>
 		<em:homepageURL>http://backword.gneheix.com</em:homepageURL>
 		<em:iconURL>chrome://backword/skin/openPage.gif</em:iconURL>
 		<em:contributor>passerby - Traditional Chinese</em:contributor>
 		<em:optionsURL>chrome://backword/content/options.xul</em:optionsURL>
-	    <em:extension>true</em:extension>
-	    <em:type>2</em:type>
+    <em:extension>true</em:extension>
+    <em:type>2</em:type>
 		<em:file>
 			<Description about="urn:mozilla:extension:file:backword.jar">
 				<em:package>content/</em:package>

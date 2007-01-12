@@ -155,6 +155,7 @@ function BW_parseWord(str, offset){
 	var word = str.substring(start, end);
 	if (!word)
 		return null;
+	BW_ddump("word:"+word);
 	return word.toLowerCase();
 }
 function BW_getSelectionText(target){
@@ -181,26 +182,25 @@ function BW_parseSentence(selection, textContent, offsetTC){
 	if (selection.replace(ReSp, "") != textContent.replace(ReSp, "")){
 		selection = textContent;
 	}
-	//try to find the word in select
-	else{
-		var spSL = [];
-		var spTC = [];
-		while (ReSp.exec(selection) != undefined) {
-		  spSL[spSL.length] = ReSp.lastIndex;
-		}
-		while (ReSp.exec(textContent) != undefined) {
-		  spTC[spTC.length] = ReSp.lastIndex;
-		}
-		function relatedOffset(ar, offset, ar2){
-			var offset2 = offset;
-			for (var i=0; i<ar.length; i++)
-				if (ar[i] <= offset) offset2--;
-			for (var i=0; i<ar2.length; i++)
-				if (ar2[i] <= offset2) offset2++;
-			return offset2;
-		}
-		offsetSL = relatedOffset(spTC, offsetTC, spSL);
+	var spSL = [];
+	var spTC = [];
+	while (ReSp.exec(selection) != undefined) {
+	  spSL[spSL.length] = ReSp.lastIndex;
 	}
+	while (ReSp.exec(textContent) != undefined) {
+	  spTC[spTC.length] = ReSp.lastIndex;
+	}
+	
+	function relatedOffset(ar, offset, ar2){
+		var offset2 = offset;
+		for (var i=0; i<ar.length; i++)
+			if (ar[i] <= offset) offset2--;
+		for (var i=0; i<ar2.length; i++)
+			if (ar2[i] <= offset2) offset2++;
+		return offset2;
+	}
+
+	offsetSL = relatedOffset(spTC, offsetTC, spSL);
 	
 	var s;
 	var start = 0;
@@ -854,7 +854,8 @@ BW_Layout.prototype.doUnloadImpl = function (event) {
 			try {
 				id = parseInt(cil[i]);
 				if (id == this._id) {
-					cil = cil.slice(0, i).concat(cil.slice(i + 1));
+					cil.splice(i, 1);
+//					cil = cil.slice(0, i).concat(cil.slice(i + 1));
 					break;
 				}
 			}
@@ -2645,8 +2646,10 @@ BW_LocalAPI.prototype.deleteWord = function (wrd) {
 	if (idxRefWord >= 0) {
 		var idxWord = this._refWords[idxRefWord]._idxWord;
 		var word = this._words[idxWord];
-		this._words = this._words.slice(0, idxWord).concat(this._words.slice(idxWord + 1));
-		this._refWords = this._refWords.slice(0, idxRefWord).concat(this._refWords.slice(idxRefWord + 1));
+		this._words.splice(idxWord, 1);
+//		this._words = this._words.slice(0, idxWord).concat(this._words.slice(idxWord + 1));
+		this._refWords.splice(idxRefWord, 1);
+//		this._refWords = this._refWords.slice(0, idxRefWord).concat(this._refWords.slice(idxRefWord + 1));
 		this.saveWords();
 	}
 };
@@ -2680,8 +2683,10 @@ BW_LocalAPI.prototype.deleteQuote = function (wrd, id) {
 				var q = this._words[this._refQuotes[i]._idxWord].quotes[this._refQuotes[i]._idxQuote];
 				q.idxRef--;
 			}
-			word.quotes = word.quotes.slice(0, h).concat(word.quotes.slice(h + 1));
-			this._refQuotes = this._refQuotes.slice(0, index).concat(this._refQuotes.slice(index + 1));
+			word.quotes.splice(h, 1);
+//			word.quotes = word.quotes.slice(0, h).concat(word.quotes.slice(h + 1));
+			this._refQuotes.splice(index, 1);
+//			this._refQuotes = this._refQuotes.slice(0, index).concat(this._refQuotes.slice(index + 1));
 			this.saveQuotes();
 			backword.callbackModifyQuotes(word);
 		}
