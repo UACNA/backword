@@ -181,7 +181,7 @@
 				</hbox>
 				<hbox>
 				<description value="&options.help.link.lable.email;" />
-				<description value="gneheix@gmail.com" onclick="window.location = 'mailto:gneheix@gmail.com?subject=Backword';" class="link"/>
+				<description value="gneheix@gmail.com" onclick="window.location = 'mailto:gneheix+backword@gmail.com';" class="link"/>
 				</hbox>
 			</groupbox>
 		</tabpanel>

@@ -1,4 +1,4 @@
-<!ENTITY version "1.2.061228">
+<!ENTITY version "1.2.070101">
 <!ENTITY status.tooltip "Backword Enabled">
 <!ENTITY options.windowtitle "Options">
 <!ENTITY options.settingstab "Settings">
@@ -54,10 +54,9 @@
 <!ENTITY options.help.api "You could use Backword Local Storage to store your data. All files are located in /backword subfolder of your profile folder. But it's recommanded to build your own web API support for Backword, which with more security and helpful administration pages. Here is a ">
 <!ENTITY options.help.api.tutorial "tutorial.">
 <!ENTITY options.help.link.lable.homepage "HomePage:">
-<!ENTITY options.help.link.lable.group "forum:">
+<!ENTITY options.help.link.lable.group "Forum:">
 <!ENTITY options.help.link.lable.blog "Author's Blog:">
 <!ENTITY options.help.link.lable.email "Author's Email:">
-<!ENTITY options.help.link.lable.homepage "Home Page:">
 <!ENTITY options.help.link.lable.wiki "Candidates of Backword Search Web URL">
 <!ENTITY options.help.link.group "http://groups.google.com/group/backword">
 <!ENTITY options.help.link.blog "http://blog.gneheix.com">
