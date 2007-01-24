@@ -52,7 +52,7 @@
 				  <groupbox orient="vertical">
 				    <caption label="&options.groupbox.search;" />
 				    <label value="&options.url;" />
-				    <textbox id="searchweburl" cols="52" multiline="true" rows="10" />
+				    <textbox id="searchweburl" cols="52" multiline="true" rows="11" />
 				  </groupbox>
 			</vbox>
 		</tabpanel>
@@ -88,6 +88,9 @@
  			        </hbox>
  			        <hbox align="center">
 	 			        <checkbox id="quotesentence" label="&options.layout.quotesentence;" />
+ 			        </hbox>
+ 			        <hbox align="center">
+	 			        <checkbox id="ctrl" label="&options.layout.ctrl;" />
  			        </hbox>
  			        <hbox>
 								<vbox>

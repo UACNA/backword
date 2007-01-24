@@ -1,4 +1,4 @@
-<!ENTITY version "1.2.070101">
+<!ENTITY version "1.2.070124">
 <!ENTITY status.tooltip "关闭 Backword">
 <!ENTITY options.windowtitle "设置">
 <!ENTITY options.settingstab "选项">
@@ -28,6 +28,7 @@
 <!ENTITY options.groupbox.layout "界面">
 <!ENTITY options.layout.showpronunciation "使用Flash即使发音 (界面无法正常显示去除此选项)">
 <!ENTITY options.layout.quotesentence "自动选中当前句子作为上下文">
+<!ENTITY options.layout.ctrl "只在Ctrl键按下时取词">
 <!ENTITY options.layout.size "字体大小">
 <!ENTITY options.layout.quotes "引用个数">
 <!ENTITY options.layout.mouseout "隐藏界面">
@@ -68,19 +69,21 @@
 <!ENTITY options.page.blog "Just s.t. (作者博客)">
 <!ENTITY options.page.homepage "Backword 主页">
 <!ENTITY options.page.wiki "Search Web 地址维基页面">
-<!ENTITY menu.options.label "选项(O)">
+<!ENTITY menu.options.label "选项">
 <!ENTITY menu.options.accesskey "O">
-<!ENTITY menu.pages.label "网页(P)">
+<!ENTITY menu.pages.label "网页">
 <!ENTITY menu.pages.accesskey "P">
-<!ENTITY menu.dictionary.label "词典(D)">
+<!ENTITY menu.dictionary.label "词典">
 <!ENTITY menu.dictionary.accesskey "D">
-<!ENTITY menu.usingapi.label "使用后台(S)">
+<!ENTITY menu.usingapi.label "使用后台">
 <!ENTITY menu.usingapi.accesskey "S">
-<!ENTITY menu.usinglocalapi.label "使用本地存储(L)">
+<!ENTITY menu.usinglocalapi.label "使用本地存储">
 <!ENTITY menu.usinglocalapi.accesskey "L">
 <!ENTITY menu.showpronunciation.label "使用 Flash 即使发音">
 <!ENTITY menu.showpronunciation.accesskey "F">
-<!ENTITY menu.quotesentence.label "自动选中当前句子(A)">
+<!ENTITY menu.quotesentence.label "自动选中当前句子">
 <!ENTITY menu.quotesentence.accesskey "A">
-<!ENTITY menu.enable.label "实时翻译(E)">
+<!ENTITY menu.ctrl.label "在Ctrl键被按下时取词">
+<!ENTITY menu.ctrl.accesskey "C">
+<!ENTITY menu.enable.label "实时翻译">
 <!ENTITY menu.enable.accesskey "E">

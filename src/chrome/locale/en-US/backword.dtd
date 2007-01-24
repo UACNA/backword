@@ -1,4 +1,4 @@
-<!ENTITY version "1.2.070101">
+<!ENTITY version "1.2.070124">
 <!ENTITY status.tooltip "Backword Enabled">
 <!ENTITY options.windowtitle "Options">
 <!ENTITY options.settingstab "Settings">
@@ -27,6 +27,7 @@
 <!ENTITY options.groupbox.layout "Layout">
 <!ENTITY options.layout.showpronunciation "Show Pronunciation Flash (uncheck if interface broken)">
 <!ENTITY options.layout.quotesentence "Auto-select current sentence as context">
+<!ENTITY options.layout.ctrl "Work only if Ctrl was pressed">
 <!ENTITY options.layout.size "Font Size">
 <!ENTITY options.layout.quotes "Quotes Count">
 <!ENTITY options.layout.mouseout "Mouse Out">
@@ -83,5 +84,7 @@
 <!ENTITY menu.showpronunciation.accesskey "F">
 <!ENTITY menu.quotesentence.label "Auto-select Sentence">
 <!ENTITY menu.quotesentence.accesskey "A">
+<!ENTITY menu.ctrl.label "Work only Ctrl pressed">
+<!ENTITY menu.ctrl.accesskey "C">
 <!ENTITY menu.enable.label "Enable Backword">
 <!ENTITY menu.enable.accesskey "E">

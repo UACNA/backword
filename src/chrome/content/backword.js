@@ -479,6 +479,7 @@ function BW_Layout() {
 	this._namePrefShowPronunciation = "backword.showpronunciation";
 	this._namePrefQuoteSentence = "backword.quotesentence";
 	this._namePrefShowPhonetics = "backword.showphonetics";
+	this._namePrefCtrl = "backword.ctrl";
 	this._quoteSentence = true;
 	this._stringBundle = null;
 	this._currentElementBorder = null;
@@ -488,9 +489,11 @@ function BW_Layout() {
 	this._usingLocalAPI = true;
 	this._showPronunciation = true;
 	this._disableAPIByMulti = false;
+//	this._toParseWord = null;
 	this._timerShow = null;
 	this._timerStatus = null;
 	this._version = null;
+	this._ctrl = false;
 	this._tolang = "zh-CN";
 	this._tw = false;
 	this._size = 20;
@@ -612,6 +615,7 @@ BW_Layout.prototype.loadPref = function () {
 	this._listQuotesLimit = parseInt(this._pref.getCharPref(this._namePrefLayoutQuotes));
 	this._maxMouseOut = parseInt(this._pref.getCharPref(this._namePrefLayoutMouseOut));
 	this._popDelay = parseInt(this._pref.getCharPref(this._namePrefLayoutPopDelay));
+	this._ctrl = this._pref.getBoolPref(this._namePrefCtrl);
 	this.updateStatusIcon();
 };
 BW_Layout.prototype.appendDiv = function () {
@@ -696,6 +700,7 @@ BW_Layout.prototype.maybeShowTooltip = function (tipElement) {
 	if (this._toReset) {
 		this.resetData();
 	}
+//	this._toParseWord = null;
 	var rangeParent = this._rangeParent;
 	var offset = this._rangeOffset;
 	if (!rangeParent) {
@@ -865,6 +870,15 @@ BW_Layout.prototype.doUnloadImpl = function (event) {
 		this._pref.setCharPref(this._namePrefCurrentInstanceList, cil.join(","));
 	}
 };
+//BW_Layout.prototype.doKeyDown = function(event){
+//	backword.doKeyDownImpl(event);
+//};
+//BW_Layout.prototype.doKeyDownImpl = function(event){
+//	BW_ddump(event.keyCode);
+//	if (event.keyCode == 17 && this._toParseWord !== null && !this._display){
+//		this.maybeShowTooltip(this._toParseWord);
+//	}
+//};
 BW_Layout.prototype.doMouseMove = function (event) {
 	backword.doMouseMoveImpl(event);
 };
@@ -883,11 +897,16 @@ BW_Layout.prototype.doMouseMoveImpl = function (event) {
 			var element = event.target;
 			if (!this._mouseDown) {
 				this._timerShow = setTimeout(function (element) {
-					backword.maybeShowTooltip(element);
-					backword.updateStatusIcon();
+//					backword._toParseWord = element;
+					if (!backword._ctrl || event.ctrlKey){
+						backword.maybeShowTooltip(element);
+						backword.updateStatusIcon();
+					}
 				}, this._popDelay, element);
 				this._timerStatus = setTimeout(function () {
-					backword.updateStatusIcon(true);
+					if (!backword._ctrl || event.ctrlKey){
+						backword.updateStatusIcon(true);
+					}
 				}, 100);
 			}
 		}
@@ -2060,6 +2079,7 @@ BW_Layout.prototype.popupMenu= function (menu) {
 	elements['bw-status-usinglocalapi'].setAttribute('checked', this._usingLocalAPI);
 	elements['bw-status-showpronunciation'].setAttribute('checked', this._showPronunciation);
 	elements['bw-status-quotesentence'].setAttribute('checked', this._quoteSentence);
+	elements['bw-status-ctrl'].setAttribute('checked', this._ctrl);
 	elements['bw-status-enable'].setAttribute('checked', this._enable);
 	return true;
 };

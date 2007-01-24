@@ -1,4 +1,4 @@
-<!ENTITY version "1.2.070101">
+<!ENTITY version "1.2.070124">
 <!ENTITY status.tooltip "關閉 Backword">
 <!ENTITY options.windowtitle "設置">
 <!ENTITY options.settingstab "選項">
@@ -28,6 +28,7 @@
 <!ENTITY options.groupbox.layout "介面">
 <!ENTITY options.layout.showpronunciation "使用Flash即使發音 (介面無法正常顯示去除此選項)">
 <!ENTITY options.layout.quotesentence "自動選中當前句子作為上下文">
+<!ENTITY options.layout.ctrl "只在Ctrl鍵按下時取詞">
 <!ENTITY options.layout.size "字體大小">
 <!ENTITY options.layout.quotes "引用個數">
 <!ENTITY options.layout.mouseout "隱藏介面">
@@ -55,6 +56,7 @@
 <!ENTITY options.help.link.lable.group "討論組：">
 <!ENTITY options.help.link.lable.blog "作者博客：">
 <!ENTITY options.help.link.lable.email "作者郵箱：">
+<!ENTITY options.help.link.lable.wiki "Candidates of Backword Search Web URL">
 <!ENTITY options.help.link.group "http://groups.google.com/group/backword">
 <!ENTITY options.help.link.blog "http://blog.gneheix.com">
 <!ENTITY options.help.link.homepage "http://backword.gneheix.com">
@@ -81,6 +83,7 @@
 <!ENTITY menu.showpronunciation.accesskey "F">
 <!ENTITY menu.quotesentence.label "自動選中當前句子(A)">
 <!ENTITY menu.quotesentence.accesskey "A">
+<!ENTITY menu.ctrl.label "在Ctrl鍵被按下時取詞">
+<!ENTITY menu.ctrl.accesskey "C">
 <!ENTITY menu.enable.label "即時翻譯(E)">
 <!ENTITY menu.enable.accesskey "E">
-
