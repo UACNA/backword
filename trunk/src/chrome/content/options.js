@@ -15,6 +15,7 @@ BW_Setting.prototype.init = function() {
 	document.getElementById("showpronunciation").checked = this._pref.getBoolPref("backword.showpronunciation");
 	document.getElementById("showphonetics").checked = this._pref.getBoolPref("backword.showphonetics");
 	document.getElementById("quotesentence").checked = this._pref.getBoolPref("backword.quotesentence");
+	document.getElementById("ctrl").checked = this._pref.getBoolPref("backword.ctrl");
 	document.getElementById("usinglocalapi").checked = this._pref.getBoolPref("backword.usinglocalapi");
 	document.getElementById("apiurl").setAttribute("value", this._pref.getCharPref("backword.apiurl"));
 	document.getElementById("apiweburl").setAttribute("value", this._pref.getCharPref("backword.apiweburl"));
@@ -34,6 +35,7 @@ BW_Setting.prototype.save = function() {
 	this._pref.setBoolPref("backword.showpronunciation", document.getElementById("showpronunciation").checked);
 	this._pref.setBoolPref("backword.showphonetics", document.getElementById("showphonetics").checked);
 	this._pref.setBoolPref("backword.quotesentence", document.getElementById("quotesentence").checked);
+	this._pref.setBoolPref("backword.ctrl", document.getElementById("ctrl").checked);
 	this._pref.setBoolPref("backword.usinglocalapi", document.getElementById("usinglocalapi").checked);
 	this._pref.setCharPref("backword.apiurl", document.getElementById("apiurl").value);
 	this._pref.setCharPref("backword.apiweburl", document.getElementById("apiweburl").value);
