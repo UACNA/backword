@@ -1,4 +1,4 @@
-<!ENTITY version "1.2.070124">
+<!ENTITY version "1.2.070324">
 <!ENTITY status.tooltip "關閉 Backword">
 <!ENTITY options.windowtitle "設置">
 <!ENTITY options.settingstab "選項">
@@ -9,6 +9,7 @@
 <!ENTITY options.translator.google.it "Google - 義大利語">
 <!ENTITY options.translator.google.ja "Google - 日本語">
 <!ENTITY options.translator.google.ko "Google - 韓語">
+<!ENTITY options.translator.google.ru "Google - 俄語">
 <!ENTITY options.translator.google.zh-CN "Google - 簡體中文">
 <!ENTITY options.translator.google.es "Google - 西班牙語">
 <!ENTITY options.translator.google.zh-TW "Google - 繁體中文">
