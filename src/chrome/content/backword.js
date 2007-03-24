@@ -282,7 +282,7 @@ function BW_setElementStyle(obj) {
 	obj.style.fontSize = (backword._size - 4) + "px!important";
 	obj.style.fontWeight = "normal!important";
 	obj.style.fontStyle = "normal!important";
-	obj.style.fontFamily = "宋体,tahoma,arial,verdana,sans-serif";
+	obj.style.fontFamily = "tahoma,宋体,arial,verdana,sans-serif";
 	obj.style.fontSizeAdjust = "none!important";
 	obj.style.fontStretch = "normal!important";
 	obj.style.fontVariant = "normal!important";
@@ -312,7 +312,7 @@ function BW_defaultStyle() {
 	var style = "font-size: " + (backword._size - 4) + "px!important;";
 	style += "font-weight: normal!important;";
 	style += "font-style: normal!important;";
-	style += "font-family: 宋体,tahoma,arial,verdana,sans-serif";
+	style += "font-family: tahoma,宋体,arial,verdana,sans-serif";
 	style += "font-size-adjust: none;";
 	style += "font-variant: normal;";
 	style += "font-stretch: normal;";

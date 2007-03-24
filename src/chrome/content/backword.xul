@@ -69,6 +69,7 @@
 	          <menuitem label="&options.translator.google.it;" type="checkbox"  id="google.it" oncommand="backword.updatePref('backword.translator', this.id, true)" />
 	          <menuitem label="&options.translator.google.ja;" type="checkbox"  id="google.ja" oncommand="backword.updatePref('backword.translator', this.id, true)" />
 	          <menuitem label="&options.translator.google.ko;" type="checkbox"  id="google.ko" oncommand="backword.updatePref('backword.translator', this.id, true)" />
+	          <menuitem label="&options.translator.google.ru;" type="checkbox"  id="google.ru" oncommand="backword.updatePref('backword.translator', this.id, true)" />
 	          <menuitem label="&options.translator.google.zh-CN;" type="checkbox"  id="google.zh-CN" oncommand="backword.updatePref('backword.translator', this.id, true)" />
 	          <menuitem label="&options.translator.google.es;" type="checkbox"  id="google.es" oncommand="backword.updatePref('backword.translator', this.id, true)" />
 	          <menuitem label="&options.translator.google.zh-TW;" type="checkbox"  id="google.zh-TW" oncommand="backword.updatePref('backword.translator', this.id, true)" />

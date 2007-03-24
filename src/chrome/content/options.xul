@@ -38,6 +38,7 @@
 			          <menuitem label="&options.translator.google.it;" value="google.it" id="google.it" />
 			          <menuitem label="&options.translator.google.ja;" value="google.ja" id="google.ja" />
 			          <menuitem label="&options.translator.google.ko;" value="google.ko" id="google.ko" />
+			          <menuitem label="&options.translator.google.ru;" value="google.ru" id="google.ru" />
 			          <menuitem label="&options.translator.google.zh-CN;" value="google.zh-CN" id="google.zh-CN" />
 			          <menuitem label="&options.translator.google.es;" value="google.es" id="google.es" />
 			          <menuitem label="&options.translator.google.zh-TW;" value="google.zh-TW" id="google.zh-TW" />
