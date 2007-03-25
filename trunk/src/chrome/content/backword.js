@@ -1472,13 +1472,13 @@ BW_Layout.prototype.translateSpan = function () {
 	var span = BW_createElement("SPAN");
 	span.id = this._nameTranslate;
 	span.style.color = "#002864";
-	if (this._untense) {
-		var bSpan =  BW_createElement("SPAN");
-		bSpan.style.fontWeight = "bold";
-		bSpan.setAttribute("title", this.getString("tooltip.untense"));
-		bSpan.textContent = this._currentWord;
-		span.appendChild(bSpan);
-	}
+//	if (this._untense) {
+//		var bSpan =  BW_createElement("SPAN");
+//		bSpan.style.fontWeight = "bold";
+//		bSpan.setAttribute("title", this.getString("tooltip.untense"));
+//		bSpan.textContent = this._currentWord;
+//		span.appendChild(bSpan);
+//	}
 	var trans = BW_createElement("SPAN");
 	trans.innerHTML = this._translate;
 	span.appendChild(trans);
@@ -2413,7 +2413,7 @@ BW_DictcnTranslate.prototype.getTranslate = function (text) {
 				var child = children[i];
 				if (child.name().toString() == "pron") {
 					var pron = child.text().toString();
-					response = "/" + pron + "/ " + response;
+					response = text+":/" + pron + "/ ";
 				} else {
 					if (child.name().toString() == "def") {
 						var def = child.text().toString();
