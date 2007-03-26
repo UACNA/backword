@@ -15,7 +15,7 @@
 <!ENTITY options.translator.google.zh-TW "Google - Traditional Chinese">
 <!ENTITY options.translator.dictcn "Dict.cn - Simplified Chinese">
 <!ENTITY options.translator.dictcn.tw "Dict.cn - Traditional Chinese">
-<!ENTITY options.translator.showphonetics "Show phonetics (make Firefox unresponsive rarely)">
+<!ENTITY options.translator.showphonetics "Show phonetics (rarely hang on Firefox)">
 <!ENTITY options.groupbox.search "Search web">
 <!ENTITY options.url "URLs: (split by Enter)">
 <!ENTITY options.groupbox.api "Storage">
