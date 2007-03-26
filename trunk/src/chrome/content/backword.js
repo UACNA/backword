@@ -429,7 +429,7 @@ function BW_stemWord(w) {
 ////////////////////////////////////////////////////////////////////////////
 // start of Layout function
 ////////////////////////////////////////////////////////////////////////////
-function BW_Layout() {
+function BW_Layout(observe) {
 	this.resetStatus();
 	this.resetData();
 	this._dictionary = new BW_GoogleTranslate();
@@ -500,7 +500,28 @@ function BW_Layout() {
 	this._popDelay = 500;
 	this._showPhonetics = false;
 	this._pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
+	if (typeof(observe) == "undefined" || observe){
+    var observerService = Components.
+      classes["@mozilla.org/observer-service;1"].
+      getService(Components.interfaces.nsIObserverService);
+
+    observerService.addObserver(this, "bw_loadpref", false);	
+	}
 }
+BW_Layout.prototype.observe = function(aSubject, aTopic, aData){
+	if (aTopic == "bw_loadpref" && aSubject != this){
+		this.loadPref();
+	}
+};
+BW_Layout.prototype.QueryInterface = function(aIID){
+  if (!aIID.equals(Components.interfaces.nsIObserver) &&
+      !aIID.equals(Components.interfaces.nsISupports))
+    throw Components.results.NS_ERROR_NO_INTERFACE;
+   return this;
+};
+BW_Layout.prototype.notify = function(){
+	Components.classes['@mozilla.org/observer-service;1'].getService(Components.interfaces.nsIObserverService).notifyObservers(this, 'bw_loadpref', '');
+};
 BW_Layout.prototype.resetData = function () {
 	this._currentWord = null;
 	this._originalWord = null;
@@ -559,49 +580,49 @@ BW_Layout.prototype.loadPref = function () {
 	}
 	this._usingAPI = this._pref.getBoolPref(this._namePrefUsingAPI);
 	var usingLocalAPI = this._pref.getBoolPref(this._namePrefUsingLocalAPI);
-	if (!backword._api || usingLocalAPI != this._usingLocalAPI) {
+	if (!this._api || usingLocalAPI != this._usingLocalAPI) {
 		this._usingLocalAPI = usingLocalAPI;
 		if (usingLocalAPI) {
-			backword._api = new BW_LocalAPI();
+			this._api = new BW_LocalAPI();
 		} else {
 			if (backword._api) {
-				backword._api.close();
+				this._api.close();
 			}
-			backword._api = new BW_API();
+			this._api = new BW_API();
 		}
 	}
-	var currentInstaceList = this._pref.getCharPref(this._namePrefCurrentInstanceList);
-	var id = 0;
-	var cil = [];
-	if (currentInstaceList.length > 0) {
-		cil = currentInstaceList.split(",");
-//		BW_ddumpObject(cil, "cil");
-		if (cil.length > 0) {
-			try {
-				id = parseInt(cil[cil.length - 1]);
-			}
-			catch (e) {
-				id = 0;
-			}
-		}
-	}
-	if (this._id == null) {
-		this._id = id + 1;
-		cil.push(this._id.toString());
-		this._pref.setCharPref(this._namePrefCurrentInstanceList, cil.join(","));
-	} else {
-		if (this._usingLocalAPI) {
-			if (this._id == id && this._disableAPIByMulti) {
-				this._disableAPIByMulti = false;
-				this._usingAPI = true;
-			} else {
-				if (this._id < id) {
-					this._disableAPIByMulti = true;
-					this._usingAPI = false;
-				}
-			}
-		}
-	}
+//	var currentInstaceList = this._pref.getCharPref(this._namePrefCurrentInstanceList);
+//	var id = 0;
+//	var cil = [];
+//	if (currentInstaceList.length > 0) {
+//		cil = currentInstaceList.split(",");
+////		BW_ddumpObject(cil, "cil");
+//		if (cil.length > 0) {
+//			try {
+//				id = parseInt(cil[cil.length - 1]);
+//			}
+//			catch (e) {
+//				id = 0;
+//			}
+//		}
+//	}
+//	if (this._id == null) {
+//		this._id = id + 1;
+//		cil.push(this._id.toString());
+//		this._pref.setCharPref(this._namePrefCurrentInstanceList, cil.join(","));
+//	} else {
+//		if (this._usingLocalAPI) {
+//			if (this._id == id && this._disableAPIByMulti) {
+//				this._disableAPIByMulti = false;
+//				this._usingAPI = true;
+//			} else {
+//				if (this._id < id) {
+//					this._disableAPIByMulti = true;
+//					this._usingAPI = false;
+//				}
+//			}
+//		}
+//	}
 	this._searchWebUrl = BW_trim(this._pref.getCharPref(this._namePrefSearchWebUrl)).replace(/\n\n+/g, '\n').split('\n');
 	this._apiUrl = this._pref.getCharPref(this._namePrefAPIUrl);
 	this._apiWebUrl = this._pref.getCharPref(this._namePrefAPIWebUrl);
@@ -722,7 +743,7 @@ BW_Layout.prototype.maybeShowTooltip = function (tipElement) {
 	if (rangeParent.nodeType != Node.TEXT_NODE) {
 		return;
 	}
-	this.loadPref();
+//	this.loadPref();
 	this._currentParent = rangeParent;
 	var container = rangeParent.parentNode;
 	if (container) {
@@ -850,25 +871,33 @@ BW_Layout.prototype.doUnload = function (event) {
 	backword.doUnloadImpl(event);
 };
 BW_Layout.prototype.doUnloadImpl = function (event) {
-//	BW_ddump("unload" + this._id);
-	if (this._id != null) {
-		var currentInstaceList = this._pref.getCharPref(this._namePrefCurrentInstanceList);
-		var cil = currentInstaceList.split(",");
-		var id = 0;
-		for (var i = 0; i < cil.length; i++) {
-			try {
-				id = parseInt(cil[i]);
-				if (id == this._id) {
-					cil.splice(i, 1);
-//					cil = cil.slice(0, i).concat(cil.slice(i + 1));
-					break;
-				}
-			}
-			catch (e) {
-			}
-		}
-		this._pref.setCharPref(this._namePrefCurrentInstanceList, cil.join(","));
+	if (this._api){
+		this._api.close();
 	}
+  var observerService = Components.
+    classes["@mozilla.org/observer-service;1"].
+    getService(Components.interfaces.nsIObserverService);
+
+  observerService.removeObserver(this, "bw_loadpref");	
+//	BW_ddump("unload" + this._id);
+//	if (this._id != null) {
+//		var currentInstaceList = this._pref.getCharPref(this._namePrefCurrentInstanceList);
+//		var cil = currentInstaceList.split(",");
+//		var id = 0;
+//		for (var i = 0; i < cil.length; i++) {
+//			try {
+//				id = parseInt(cil[i]);
+//				if (id == this._id) {
+//					cil.splice(i, 1);
+////					cil = cil.slice(0, i).concat(cil.slice(i + 1));
+//					break;
+//				}
+//			}
+//			catch (e) {
+//			}
+//		}
+//		this._pref.setCharPref(this._namePrefCurrentInstanceList, cil.join(","));
+//	}
 };
 //BW_Layout.prototype.doKeyDown = function(event){
 //	backword.doKeyDownImpl(event);
@@ -1472,13 +1501,13 @@ BW_Layout.prototype.translateSpan = function () {
 	var span = BW_createElement("SPAN");
 	span.id = this._nameTranslate;
 	span.style.color = "#002864";
-//	if (this._untense) {
-//		var bSpan =  BW_createElement("SPAN");
+	if (this._untense && this._translate.indexOf(this._currentWord) != 0) {
+		var bSpan =  BW_createElement("SPAN");
 //		bSpan.style.fontWeight = "bold";
 //		bSpan.setAttribute("title", this.getString("tooltip.untense"));
-//		bSpan.textContent = this._currentWord;
-//		span.appendChild(bSpan);
-//	}
+		bSpan.textContent = this._currentWord+": ";
+		span.appendChild(bSpan);
+	}
 	var trans = BW_createElement("SPAN");
 	trans.innerHTML = this._translate;
 	span.appendChild(trans);
@@ -2057,6 +2086,7 @@ BW_Layout.prototype.clickStatus = function (e) {
 				this.hide();
 			}
 			this.updateStatusIcon();
+			this.notify();
 		}
 	}
 };
@@ -2068,9 +2098,10 @@ BW_Layout.prototype.updatePref = function (id, value, isChar){
 		this._pref.setBoolPref(id, value);
 	}
 	this.loadPref();
+	this.notify();
 };
 BW_Layout.prototype.popupMenu= function (menu) {
-	this.loadPref();
+//	this.loadPref();
   var elements = {};
   var list = menu.getElementsByTagName("menuitem");
   for (var i = 0; i < list.length; i++)
@@ -2148,64 +2179,6 @@ BW_Layout.prototype.disableAPI = function () {
 	this._pref.setBoolPref(this._namePrefUsingAPI, this._usingAPI);
 	this.updateStatusIcon();
 };
-////////////////////////////////////////////////////////////////////////////
-// start of pref utility function
-////////////////////////////////////////////////////////////////////////////
-var BW_PrefHandler = {isExists:function (prefName, type) {
-	type = (type == null) ? "char" : type;
-	if (type == "char") {
-		if (backword._pref.getPrefType(prefName) == backword._pref.PREF_STRING && jsUtils.trimWhitespace(backword._pref.getCharPref(prefName).toString()) != "") {
-			return true;
-		} else {
-			return false;
-		}
-	} else {
-		if (type == "bool") {
-			try {
-				var tempValue = backword._pref.getBoolPref(prefName);
-			}
-			catch (ex) {
-				return false;
-			}
-			return true;
-		}
-	}
-}, getPref:function (prefName, type) {
-	type = (type == null) ? "char" : type;
-	if (type == "char") {
-		return backword._pref.getCharPref(prefName).toString();
-	} else {
-		if (type == "bool") {
-			return backword._pref.getBoolPref(prefName);
-		}
-	}
-}, setPref:function (prefName, value, type) {
-	type = (type == null) ? "char" : type;
-	if (type == "char") {
-		backword._pref.setCharPref(prefName, value);
-	} else {
-		if (type == "bool") {
-			backword._pref.setBoolPref(prefName, value);
-		}
-	}
-}, setPrefIfNotExists:function (prefName, value, type) {
-	type = (type == null) ? "char" : type;
-	if (type == "char") {
-		if (backword._pref.getPrefType(prefName) != backword._pref.PREF_STRING || (backword._pref.getPrefType(prefName) == backword._pref.PREF_STRING && jsUtils.trimWhitespace(backword._pref.getCharPref(prefName).toString()) == "")) {
-			backword._pref.setCharPref(prefName, value);
-		}
-	} else {
-		if (type == "bool") {
-			try {
-				var boolValue = backword._pref.getBoolPref(prefName);
-			}
-			catch (ex) {
-				backword._pref.setBoolPref(prefName, value);
-			}
-		}
-	}
-}};
-
 ////////////////////////////////////////////////////////////////////////////
 // start of google autotranslation function
 // all using of this part functions are not autherized
@@ -2413,7 +2386,7 @@ BW_DictcnTranslate.prototype.getTranslate = function (text) {
 				var child = children[i];
 				if (child.name().toString() == "pron") {
 					var pron = child.text().toString();
-					response = text+":/" + pron + "/ ";
+					response = "/" + pron + "/ ";
 				} else {
 					if (child.name().toString() == "def") {
 						var def = child.text().toString();
@@ -2609,7 +2582,26 @@ function BW_LocalAPI() {
 			this.writeLineQuotes(verQuotes, 0);
 		}
 	}
+  var observerService = Components.
+    classes["@mozilla.org/observer-service;1"].
+    getService(Components.interfaces.nsIObserverService);
+
+  observerService.addObserver(this, "bw_load_storage", false);	
 }
+BW_LocalAPI.prototype.observe = function(aSubject, aTopic, aData){
+	if (aTopic == "bw_load_storage" && aSubject != this){
+		this.load();
+	}
+};
+BW_LocalAPI.prototype.QueryInterface = function(aIID){
+  if (!aIID.equals(Components.interfaces.nsIObserver) &&
+      !aIID.equals(Components.interfaces.nsISupports))
+    throw Components.results.NS_ERROR_NO_INTERFACE;
+   return this;
+};
+BW_LocalAPI.prototype.notify = function(){
+	Components.classes['@mozilla.org/observer-service;1'].getService(Components.interfaces.nsIObserverService).notifyObservers(this, 'bw_load_storage', '');
+};
 BW_LocalAPI.prototype.getWord = function (wrd) {
 	var word = this.findWord(wrd);
 	if (word) {
@@ -2730,6 +2722,11 @@ BW_LocalAPI.prototype.close = function () {
 	}
 	catch (e) {
 	}
+  var observerService = Components.
+    classes["@mozilla.org/observer-service;1"].
+    getService(Components.interfaces.nsIObserverService);
+
+  observerService.removeObserver(this, "bw_load_storage");
 };
 BW_LocalAPI.prototype.init = function () {
 	this._outWords = this.getOutputStream(this.getFile(this._path + "words"));
@@ -2831,6 +2828,7 @@ BW_LocalAPI.prototype.saveWords = function () {
 	seek.seek(0, 0);
 	seek.setEOF();
 	this._outWords.write(buf, buf.length);
+	this.notify();
 };
 BW_LocalAPI.prototype.saveQuotes = function () {
 	var buf = [];
@@ -2843,14 +2841,17 @@ BW_LocalAPI.prototype.saveQuotes = function () {
 	seek.seek(0, 0);
 	seek.setEOF();
 	this._outQuotes.write(buf, buf.length);
+	this.notify();
 };
 BW_LocalAPI.prototype.appendWord = function (word) {
 	var buf = word.toString() + getLineBreak();
 	this._outWords.write(buf, buf.length);
+	this.notify();
 };
 BW_LocalAPI.prototype.appendQuote = function (quote) {
 	var buf = quote.toString() + getLineBreak();
 	this._outQuotes.write(buf, buf.length);
+	this.notify();
 };
 BW_LocalAPI.prototype.writeLineWords = function (str, offset) {
 	try {
