@@ -70,6 +70,7 @@ BW_Setting.prototype.save = function() {
 	this._pref.setCharPref("backword.layout.popdelay", popdelay);
 	this._pref.setCharPref("backword.layout.quotes", quotes);
 	this._pref.setCharPref("backword.layout.mouseout", mouseout);
+	Components.classes['@mozilla.org/observer-service;1'].getService(Components.interfaces.nsIObserverService).notifyObservers(null, 'bw_loadpref', '');
 };
 BW_Setting.prototype.openPage = function(pageUrl){
 	var windowService = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator);
