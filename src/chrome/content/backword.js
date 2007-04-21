@@ -29,8 +29,8 @@
 // Functions are derived from GPL code originally by mozilla Inc:
 // For the original source, see: http://www.koders.com/javascript/fidFEF1093F08C9BDE750ABD0ED1863319D8179449A.aspx
 ////////////////////////////////////////////////////////////////////////////
-const BW_debugOutput = false;	
-//const BW_debugOutput = true;
+var BW_debugOutput = false;	
+//var BW_debugOutput = true;
 function BW_ddump(text) {
 	if (BW_debugOutput) {
 		dump(text + "\n");
@@ -2454,8 +2454,8 @@ function getLineBreakLen() {
 	}
 	return lineBreak.length;
 }
-const verWords = "1.0";
-const verQuotes = "1.0";
+var verWords = "1.0";
+var verQuotes = "1.0";
 function BW_word(val) {
 	this.error = false;
 	this.id = "";
@@ -2560,8 +2560,13 @@ function BW_space(len) {
 	}
 	return str.substr(0, len);
 }
-function BW_LocalAPI() {
-	this._path = backword._pref.getCharPref(backword._namePrefLocalAPIPath);
+function BW_LocalAPI(path) {
+	if (path){
+		this._path = path;
+	}
+	else{
+		this._path = backword._pref.getCharPref(backword._namePrefLocalAPIPath);
+	}
 	this._lastQuoteId = 1;
 	this._errReadWords = false;
 	this._errReadQuotes = false;
