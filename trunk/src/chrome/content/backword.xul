@@ -53,8 +53,9 @@
         <menuitem id="bw-status-options" label="&menu.options.label;..." accesskey="&menu.options.accesskey;" oncommand="backword.openOptions()" default="true" />
         <menuseparator />
         <menu id="bw-status-pages" label="&menu.pages.label;" accesskey="&menu.pages.accesskey;">
-          <menupopup id="bw-status-pages-popup" onpopupshowing="return backword.popupPagesMenu(event.target)">
+          <menupopup id="bw-status-pages-popup" onpopupshowing="event.stopPropagation();return backword.popupPagesMenu(event.target)">
 	          <menuitem label="&options.page.api;"  id="page.api" oncommand="backword.openPage(backword._apiWebUrl)" />
+	          <menuitem label="&options.page.review;"  id="page.review" oncommand="backword.openPage('chrome://backword/content/review.html')" />
 	          <menuitem label="&options.page.group;"  id="page.group" oncommand="backword.openPage('&options.help.link.group;')" />
 	          <menuitem label="&options.page.blog;"  id="page.blog" oncommand="backword.openPage('&options.help.link.blog;')" />
 	          <menuitem label="&options.page.homepage;"  id="page.homepage" oncommand="backword.openPage('&options.help.link.homepage;')" />
@@ -63,7 +64,7 @@
         </menu>
         <menuseparator />
         <menu id="bw-status-dictionary" label="&menu.dictionary.label;" accesskey="&menu.dictionary.accesskey;">
-          <menupopup id="bw-status-dictionaries-popup" onpopupshowing="return backword.popupDictionaryMenu(event.target)">
+          <menupopup id="bw-status-dictionaries-popup" onpopupshowing="event.stopPropagation();return backword.popupDictionaryMenu(event.target)">
 	          <menuitem label="&options.translator.google.fr;" type="checkbox"  id="google.fr" oncommand="backword.updatePref('backword.translator', this.id, true)"/>
 	          <menuitem label="&options.translator.google.de;" type="checkbox"  id="google.de" oncommand="backword.updatePref('backword.translator', this.id, true)" />
 	          <menuitem label="&options.translator.google.it;" type="checkbox"  id="google.it" oncommand="backword.updatePref('backword.translator', this.id, true)" />

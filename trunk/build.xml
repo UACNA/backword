@@ -29,7 +29,7 @@
 
 <!-- 生成xpi -->
 <target name="xpi" depends="jar"  description="make .xpi file">
-<zip destfile="backword.xpi" basedir="${bin.dir}">
+<zip destfile="d:/deploy/backword.xpi" basedir="${bin.dir}">
 	<exclude name="**/test*.*" />
 	<exclude name="**/*.bak" />
 </zip>

@@ -66,6 +66,7 @@
 <!ENTITY options.help.title.layout "介面">
 <!ENTITY options.help.layout "使用Flash即使發音：當其他廣告遮罩擴展使得介面無法正常顯示時請去除此選項；自動選中當前句子作為上下文：自動使用當前句子而不是整個段落作為上下文；字體大小：設置字體及介面大小，最小值為13；引用個數：設置最多顯示引用個數，最小值為2；隱藏介面：當滑鼠移出介面的圖元值超過此設置時隱藏介面，最小值5；取詞延時：單位毫秒，最小值100。">
 <!ENTITY options.page.api "Web後臺管理頁面">
+<!ENTITY options.page.review "復習頁面">
 <!ENTITY options.page.group "Backword Google 討論組">
 <!ENTITY options.page.blog "Just s.t. (作者博客)">
 <!ENTITY options.page.homepage "Backword 主頁">

@@ -1,4 +1,4 @@
-<!ENTITY version "1.2.070326">
+<!ENTITY version "1.3.0">
 <!ENTITY status.tooltip "Backword Enabled">
 <!ENTITY options.windowtitle "Options">
 <!ENTITY options.settingstab "Settings">
@@ -67,6 +67,7 @@
 <!ENTITY options.help.operation "Left click turns on/off. If using web API middle click opens admin page otherwise opens forum page.">
 <!ENTITY options.help.layout "Show Pronunciation Flash: Uncheck if other ad-blocking extensions break the interface. Auto-select current sentence as context: Use current sentence as context by select it automatically. Font Size: font size of layout, minimum value is 13. Quotes Count: max number of quotes to be shown, minimum value is 2. Mouse Out: the interface will be hidden when mouse out of it more than this in pix, minimum value is 5. Popup Delay: popup delay in millisecond, minimum value is 100.">
 <!ENTITY options.page.api "Admin Page of Web API">
+<!ENTITY options.page.api "Review Page of Local Storage">
 <!ENTITY options.page.group "Backword Google Group">
 <!ENTITY options.page.blog "Just s.t. (Author's Blog)">
 <!ENTITY options.page.homepage "Home Page of Backword">
