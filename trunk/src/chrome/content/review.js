@@ -8,10 +8,14 @@ function doLoad(){
 	for (var i=words.length-1; i>=0; i--){
 		html += formatWord(words[i]);
 	}
+	for (var i=words.length-1; i>=0; i--){
+		var re = new RegExp("(>[^<]*[^A-Za-z])"+words[i].re.replace(/\?/,"")+"(?!(<\\/span>|[A-Za-z]))", "gi");
+		html = html.replace(re, "$1<a href='#word-"+words[i].id+"' class='innerlink'>$2</a>");
+	}
 	panel.innerHTML = html;
 }
 
-function formatWord(word){
+function getReForWord(word){
 	var re;
 	if (/f$/.test(word.id)){
 		re = "("+word.id.replace(/f$/, "") + "[fv](s|es|ies|d|ed|ied|ing){0,2})";
@@ -27,9 +31,13 @@ function formatWord(word){
 			}
 		}
 	}
-	var Reg = new RegExp(re, "gi");
+	word.re = re;
+	return re;
+}
 
-	var html = '<div id="word-'+word.id+'" class="word"><span class="wordid">'+
+function formatWord(word){
+	var Reg = new RegExp(getReForWord(word), "gi");
+	var html = '<a name="word-'+word.id+'"/><div id="word-'+word.id+'" class="word"><span class="wordid">'+
 		word.id+'</span><span class="wordparaphrase">'+word.paraphrase+'<span>';
 	for (var i=0; i<word.quotes.length; i++){
 		html += formatQuote(word.quotes[i], Reg);
@@ -40,7 +48,7 @@ function formatWord(word){
 
 function formatQuote(quote, Reg){
 	var html = '<div id="quote-'+quote.id+'" class="quote">&raquo;<a href="'+quote.url+'" class="quoteurl"><span class="quotetitle">'+
-		quote.title+'</span></a><div class="quoteparagraph">'+quote.paragraph.replace(Reg, "<u>$1</u>")+'</div></div>';
+		quote.title+'</span></a><div class="quoteparagraph">'+quote.paragraph.replace(Reg, "<span class='theword'>$1</span>")+'</div></div>';
 	return html;
 }
 
