@@ -18,13 +18,19 @@ img
 	border-bottom: 2px solid #888;
 	border-left: 1px solid #bbb;
 }
-
+.innerlink{
+    color: black;
+	text-decoration: none;
+	border-bottom: 1px dotted #333;
+}
 .wordid{
     margin: 0px 20px 0px 10px;
 	font-weight: bold;
 	font-size: 105%;
 }
-
+.theword{
+    background-color: #ddd;
+}
 .wordparaphrase{
 	font-size: 90%;
 }
