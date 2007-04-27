@@ -685,9 +685,7 @@ BW_Layout.prototype.updateLayout = function () {
 			this._display = true;
 			if (this._usingAPI) {
 				this.backWordButton();
-				if (!this._usingLocalAPI) {
-					this.openPageButton();
-				}
+				this.openPageButton();
 			}
 			this.searchWebButton();
 			if (this._showPronunciation && this._isHTML) {
@@ -1346,7 +1344,7 @@ BW_Layout.prototype.openPageButton = function () {
 	button.setAttribute("align", "absmiddle");
 	button.style.cursor = "pointer";
 	button.style.backgroundColor = "#D5E6FF";
-	button.setAttribute("title", this.getString("tooltip.openpage"));
+	button.setAttribute("title", this.getString(backword._usingLocalAPI?"tooltip.openreviewpage":"tooltip.openpage"));
 	if (this._apiCalling) {
 		button.setAttribute("src", "chrome://backword/skin/apiCalling.gif");
 	} else {
@@ -1355,10 +1353,11 @@ BW_Layout.prototype.openPageButton = function () {
 	button.id = this._nameOpenPage;
 	button.addEventListener("click", openPage, false);
 	function openPage() {
+		var url = backword._usingLocalAPI?"chrome://backword/content/review.html":backword._apiWebUrl;
 		if (!backword.is_tbird) {
-			gBrowser.selectedTab = gBrowser.addTab(backword._apiWebUrl);
+			gBrowser.selectedTab = gBrowser.addTab(url);
 		} else {
-			window.open(backword._apiWebUrl);
+			window.open(url);
 		}
 		backword.hide();
 	}
@@ -2126,13 +2125,14 @@ BW_Layout.prototype.popupDictionaryMenu= function (menu) {
 	return true;
 };
 BW_Layout.prototype.popupPagesMenu= function (menu) {
-  var elements = {};
-  var list = menu.getElementsByTagName("menuitem");
-  for (var i = 0; i < list.length; i++){
-  	list[i].setAttribute('checked', false);
-    elements[list[i].id] = list[i];
-  }
+	var elements = {};
+	var list = menu.getElementsByTagName("menuitem");
+	for (var i = 0; i < list.length; i++){
+		list[i].setAttribute('checked', false);
+		elements[list[i].id] = list[i];
+	}
 	elements['page.api'].setAttribute('hidden', (!this._usingAPI || this._usingLocalAPI));
+	elements['page.review'].setAttribute('hidden', (!this._usingAPI || !this._usingLocalAPI));
 	return true;
 };
 BW_Layout.prototype.openOptions= function () {
