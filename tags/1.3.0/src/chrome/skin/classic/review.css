@@ -1,0 +1,64 @@
+body{
+	font-family: tahoma,arial,verdana,helvetica,lucida,sans-serif;
+	font-size: 83%;
+	margin-top: 3px;
+	margin-left: 3px;
+}
+img
+{
+	border: 0;
+}
+
+.word{
+	width: 90%;
+	margin: 0px 0px 15px 30px;
+	padding: 5px 0px 0px 0px;
+	border-top: 1px solid #ccc;
+	border-right: 2px solid #bbb;
+	border-bottom: 2px solid #888;
+	border-left: 1px solid #bbb;
+}
+.innerlink{
+    color: black;
+	text-decoration: none;
+	border-bottom: 1px dotted #333;
+}
+.wordid{
+    margin: 0px 20px 0px 10px;
+	font-weight: bold;
+	font-size: 105%;
+}
+.theword{
+    background-color: #ddd;
+}
+.wordparaphrase{
+	font-size: 90%;
+}
+
+.quote{
+	margin: 5px 10px 5px 10px;
+	padding: 10px 0px 0px 0px;
+	border-top: 1px dashed #CCC;
+}
+
+.quotetitle{
+   margin-left: 2px;
+}
+
+.quoteparagraph{
+    margin-top: 3px;
+    padding-left: 5px;
+    border-left: 1px solid #DDD;
+	font-size: 90%;
+	text-indent: 10px;
+}
+#header{
+    margin: 10px 40px 20px 30px;
+    font-size: 250%;
+    font-weight: bold;
+}
+#footer{
+    width: 90%;
+	margin: 0px 15px 10px 30px;
+	color: #666;
+}

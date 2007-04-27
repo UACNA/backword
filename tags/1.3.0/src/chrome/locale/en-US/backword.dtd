@@ -1,0 +1,92 @@
+<!ENTITY version "1.3.0">
+<!ENTITY status.tooltip "Backword Enabled">
+<!ENTITY options.windowtitle "Options">
+<!ENTITY options.settingstab "Settings">
+<!ENTITY options.helptab "Help">
+<!ENTITY options.groupbox.translator "Dictionary">
+<!ENTITY options.translator.google.fr "Google - French">
+<!ENTITY options.translator.google.de "Google - German">
+<!ENTITY options.translator.google.it "Google - Italian">
+<!ENTITY options.translator.google.ja "Google - Japanese">
+<!ENTITY options.translator.google.ko "Google - Korean">
+<!ENTITY options.translator.google.ru "Google - Russian">
+<!ENTITY options.translator.google.zh-CN "Google - Simplified Chinese">
+<!ENTITY options.translator.google.es "Google - Spanish">
+<!ENTITY options.translator.google.zh-TW "Google - Traditional Chinese">
+<!ENTITY options.translator.dictcn "Dict.cn - Simplified Chinese">
+<!ENTITY options.translator.dictcn.tw "Dict.cn - Traditional Chinese">
+<!ENTITY options.translator.showphonetics "Show phonetics (rarely hang on Firefox)">
+<!ENTITY options.groupbox.search "Search web">
+<!ENTITY options.url "URLs: (split by Enter)">
+<!ENTITY options.groupbox.api "Storage">
+<!ENTITY options.api.use "Use Storage">
+<!ENTITY options.api.uselocal "Use Local Storage (Uncheck to use web API storage)">
+<!ENTITY options.api.url "API URL:">
+<!ENTITY options.api.weburl "Admin Page:">
+<!ENTITY options.api.username "Username:">
+<!ENTITY options.api.password "Password:">
+<!ENTITY options.groupbox.layout "Layout">
+<!ENTITY options.layout.showpronunciation "Show Pronunciation Flash (uncheck if interface broken)">
+<!ENTITY options.layout.quotesentence "Auto-select current sentence as context">
+<!ENTITY options.layout.ctrl "Work only if Ctrl was pressed">
+<!ENTITY options.layout.size "Font Size">
+<!ENTITY options.layout.quotes "Quotes Count">
+<!ENTITY options.layout.mouseout "Mouse Out">
+<!ENTITY options.layout.popdelay "Popup Delay">
+<!ENTITY options.dscp.translator "Attention: Those dictionarys may have no license.">
+<!ENTITY options.help.title "Backword">
+<!ENTITY options.help.version "Version &version;">
+<!ENTITY options.help.title.translator "Dictionary and Pronounce">
+<!ENTITY options.help.title.searchweb "Search Web">
+<!ENTITY options.help.title.api "API">
+<!ENTITY options.help.title.setting "Settings">
+<!ENTITY options.help.title.link "Links">
+<!ENTITY options.help.title.layout "Layout">
+<!ENTITY options.help.title.operation "Operations">
+<!ENTITY options.help.title.statusbutton "Status Button">
+<!ENTITY options.help.translator.1 "Dictionarys and Pronunciation Flashes using by Backword are offered by: ">
+<!ENTITY options.help.translator.link.google "http://www.google.com">
+<!ENTITY options.help.translator.2 "(Google Dictionaries)">
+<!ENTITY options.help.translator.link.dictcn "http://www.dict.cn">
+<!ENTITY options.help.translator.3 "(dict.cn Dictionary)">
+<!ENTITY options.help.translator.link.iciba "http://www.iciba.com">
+<!ENTITY options.help.translator.4 "(Pronuncation Flashes). Backword has no licenses of those resources this moment. If they are illegal, please contact. Please support Backword by distributing a license or helping find common resouces.">
+<!ENTITY options.help.searchweb "Current word will be appended to this URL when Search Web button was clicked. Find some ones or publish your own ones in page: ">
+<!ENTITY options.help.searchweb.wiki "This page">
+<!ENTITY options.help.api "You could use Backword Local Storage to store your data. All files are located in /backword subfolder of your profile folder. But it's recommanded to build your own web API support for Backword, which with more security and helpful administration pages. Here is a ">
+<!ENTITY options.help.api.tutorial "tutorial.">
+<!ENTITY options.help.link.lable.homepage "HomePage:">
+<!ENTITY options.help.link.lable.group "Forum:">
+<!ENTITY options.help.link.lable.blog "Author's Blog:">
+<!ENTITY options.help.link.lable.email "Author's Email:">
+<!ENTITY options.help.link.lable.wiki "Candidates of Backword Search Web URL">
+<!ENTITY options.help.link.group "http://groups.google.com/group/backword">
+<!ENTITY options.help.link.blog "http://blog.gneheix.com">
+<!ENTITY options.help.link.homepage "http://backword.gneheix.com">
+<!ENTITY options.help.link.wiki "http://wikihost.org/wikis/backword/">
+<!ENTITY options.help.operation "Left click turns on/off. If using web API middle click opens admin page otherwise opens forum page.">
+<!ENTITY options.help.layout "Show Pronunciation Flash: Uncheck if other ad-blocking extensions break the interface. Auto-select current sentence as context: Use current sentence as context by select it automatically. Font Size: font size of layout, minimum value is 13. Quotes Count: max number of quotes to be shown, minimum value is 2. Mouse Out: the interface will be hidden when mouse out of it more than this in pix, minimum value is 5. Popup Delay: popup delay in millisecond, minimum value is 100.">
+<!ENTITY options.page.api "Admin Page of Web API">
+<!ENTITY options.page.api "Review Page of Local Storage">
+<!ENTITY options.page.group "Backword Google Group">
+<!ENTITY options.page.blog "Just s.t. (Author's Blog)">
+<!ENTITY options.page.homepage "Home Page of Backword">
+<!ENTITY options.page.wiki "Candidates of Search Web URL">
+<!ENTITY menu.options.label "Options">
+<!ENTITY menu.options.accesskey "O">
+<!ENTITY menu.pages.label "Pages">
+<!ENTITY menu.pages.accesskey "P">
+<!ENTITY menu.dictionary.label "Dictionaries">
+<!ENTITY menu.dictionary.accesskey "D">
+<!ENTITY menu.usingapi.label "Use Storage">
+<!ENTITY menu.usingapi.accesskey "S">
+<!ENTITY menu.usinglocalapi.label "Use Local Storage">
+<!ENTITY menu.usinglocalapi.accesskey "L">
+<!ENTITY menu.showpronunciation.label "Show Pronuciation Flash">
+<!ENTITY menu.showpronunciation.accesskey "F">
+<!ENTITY menu.quotesentence.label "Auto-select Sentence">
+<!ENTITY menu.quotesentence.accesskey "A">
+<!ENTITY menu.ctrl.label "Work only Ctrl pressed">
+<!ENTITY menu.ctrl.accesskey "C">
+<!ENTITY menu.enable.label "Enable Backword">
+<!ENTITY menu.enable.accesskey "E">

@@ -1,0 +1,195 @@
+<?xml version="1.0"?> 
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://backword/skin/options.css" type="text/css"?>
+<!DOCTYPE dialog SYSTEM "chrome://backword/locale/backword.dtd">
+
+
+<dialog
+		id="backwordoptions"
+		title="&options.windowtitle;"
+		xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+		xmlns:html="http://www.w3.org/1999/xhtml"
+		buttons="cancel,accept"
+		persist="screenX screenY"
+		onload="BW_options.init(); sizeToContent();"
+		ondialogaccept="BW_options.save();window.close();"
+    ondialogcancel="window.close();"
+    windowtype="backword:settings"
+    >
+    
+<script type="application/x-javascript" src="chrome://backword/content/options.js"/> 
+  
+<vbox id="optionsBox" flex="1">
+ <tabbox flex="1">
+	<tabs id="options-tabs">
+		<tab id="settings-tab" label="&options.settingstab; I"/>
+		<tab id="settings2-tab" label="&options.settingstab; II"/>
+		<tab id="help-tab" label="&options.helptab;"/>
+	</tabs>
+	<tabpanels flex="1">
+		<tabpanel>
+			<vbox>
+			    <groupbox orient="vertical">
+			      <caption label="&options.groupbox.translator;" />
+			      <menulist id="translator" oncommand="document.getElementById('showphonetics').setAttribute('disabled', this.value.indexOf('dictcn') != -1);" >
+			        <menupopup>
+			          <menuitem label="&options.translator.google.fr;" value="google.fr" id="google.fr" />
+			          <menuitem label="&options.translator.google.de;" value="google.de" id="google.de" />
+			          <menuitem label="&options.translator.google.it;" value="google.it" id="google.it" />
+			          <menuitem label="&options.translator.google.ja;" value="google.ja" id="google.ja" />
+			          <menuitem label="&options.translator.google.ko;" value="google.ko" id="google.ko" />
+			          <menuitem label="&options.translator.google.ru;" value="google.ru" id="google.ru" />
+			          <menuitem label="&options.translator.google.zh-CN;" value="google.zh-CN" id="google.zh-CN" />
+			          <menuitem label="&options.translator.google.es;" value="google.es" id="google.es" />
+			          <menuitem label="&options.translator.google.zh-TW;" value="google.zh-TW" id="google.zh-TW" />
+			          <menuseparator />
+			          <menuitem label="&options.translator.dictcn;" value="dictcn" id="dictcn" />
+			          <menuitem label="&options.translator.dictcn.tw;" value="dictcn.tw" id="dictcn.tw" />
+			        </menupopup>
+			      </menulist>
+		        <checkbox id="showphonetics" label="&options.translator.showphonetics;" />
+			    </groupbox>
+				<separator class="thin" />
+				  <groupbox orient="vertical">
+				    <caption label="&options.groupbox.search;" />
+				    <label value="&options.url;" />
+				    <textbox id="searchweburl" cols="52" multiline="true" rows="11" />
+				  </groupbox>
+			</vbox>
+		</tabpanel>
+		<tabpanel>
+			<vbox>
+				  <groupbox orient="vertical">
+				    <caption label="&options.groupbox.api;"/>
+ 			        <checkbox id="usingapi" label="&options.api.use;" oncommand="BW_options.usingApi(this.hasAttribute('checked'))" />
+ 			        <checkbox id="usinglocalapi" label="&options.api.uselocal;" oncommand="BW_options.usingLocalApi(this.hasAttribute('checked'))" />
+ 			        <hbox align="center">
+ 			        	<label value="&options.api.url;" />
+ 			        	<textbox id="apiurl" size="40"/>
+ 			        </hbox>
+ 			        <hbox align="center">
+ 			        	<label value="&options.api.weburl;" />
+ 			        	<textbox id="apiweburl" size="40"/>
+ 			        </hbox>
+ 			        <hbox align="center">
+ 			        	<label value="&options.api.username;" />
+ 			        	<textbox id="apiusername"/>
+ 			        </hbox>
+ 			        <hbox align="center">
+ 			        	<label value="&options.api.password;" />
+ 			        	<textbox id="apipassword" type="password"/>
+ 			        </hbox>
+				  </groupbox>
+				<separator class="thin" />
+				<groupbox orient="horizontal">
+				    <caption label="&options.groupbox.layout;"/>
+				    <vbox>
+ 			        <hbox align="center">
+	 			        <checkbox id="showpronunciation" label="&options.layout.showpronunciation;" />
+ 			        </hbox>
+ 			        <hbox align="center">
+	 			        <checkbox id="quotesentence" label="&options.layout.quotesentence;" />
+ 			        </hbox>
+ 			        <hbox align="center">
+	 			        <checkbox id="ctrl" label="&options.layout.ctrl;" />
+ 			        </hbox>
+ 			        <hbox>
+								<vbox>
+		 			        <hbox align="center">
+		 			        	<label value="&options.layout.size;" />
+		 			        	<textbox id="layoutsize" size="5"/>
+		 			        </hbox>
+		 			        <hbox align="center">
+		 			        	<label value="&options.layout.quotes;" />
+		 			        	<textbox id="layoutquotes" size="5"/>
+		 			        </hbox>
+	 			        </vbox>
+	 			        <separator class="thin" />
+	 			        <vbox>
+		 			        <hbox align="center">
+		 			        	<label value="&options.layout.mouseout;" />
+		 			        	<textbox id="layoutmouseout" size="5"/>
+		 			        </hbox>
+		 			        <hbox align="center">
+		 			        	<label value="&options.layout.popdelay;" />
+		 			        	<textbox id="layoutpopdelay" size="5"/>
+		 			        </hbox>
+	 			        </vbox>
+ 			        </hbox>
+ 			     </vbox>
+				</groupbox>
+			</vbox>
+		</tabpanel>
+		<tabpanel>
+			<groupbox id="helppanel" orient="vertical" flex="1">
+				<vbox align="center">
+				<description value="&options.help.title;" class="h2" />
+				<description value="&options.help.version;"/>
+				</vbox>
+				<separator />
+				<vbox align="center">
+				<description value="&options.help.title.operation;" class="h2" />
+				</vbox>
+				<separator class="thin"/>
+				<description value="&options.help.title.statusbutton;" class="h3" />
+				<description>
+					&options.help.operation;
+				</description>
+				<separator />
+				<vbox align="center">
+				<description value="&options.help.title.setting;" class="h2" />
+				</vbox>
+				<separator class="thin"/>
+				<description value="&options.help.title.translator;" class="h3" />
+				<description>
+					&options.help.translator.1;
+					<description value="&options.help.translator.link.google;" onclick="BW_options.openPage(this.value);" class="link"/>
+					&options.help.translator.2;
+					<description value="&options.help.translator.link.dictcn;" onclick="BW_options.openPage(this.value);" class="link"/>
+					&options.help.translator.3;
+					<description value="&options.help.translator.link.iciba;" onclick="BW_options.openPage(this.value);" class="link"/>
+					&options.help.translator.4;
+				</description>
+				<separator class="thin"/>
+				<description value="&options.help.title.searchweb;" class="h3" />
+				<description>
+					&options.help.searchweb;
+					<description value="&options.help.link.lable.wiki;" onclick="BW_options.openPage('&options.help.link.wiki;');" class="link"/>
+				</description>
+				<separator class="thin"/>
+				<description value="&options.help.title.api;" class="h3" />
+				<description>
+					&options.help.api;
+					<description value="&options.help.api.tutorial;" onclick="BW_options.openPage('http://my.donews.com/gneheix/2006/07/20/support-backword-api-on-your-own/');" class="link"/>
+				</description>
+				<separator class="thin"/>
+				<description value="&options.help.title.layout;" class="h3" />
+				<description>
+					&options.help.layout;
+				</description>
+				<separator />
+				<vbox align="center">
+				<description value="&options.help.title.link;" class="h2" />
+				</vbox>
+				<hbox>
+				<description value="&options.help.link.lable.homepage;" />
+				<description value="&options.help.link.homepage;" onclick="BW_options.openPage(this.value);" class="link"/>
+				</hbox>
+				<hbox>
+				<description value="&options.help.link.lable.group;" />
+				<description value="&options.help.link.group;" onclick="BW_options.openPage(this.value);" class="link"/>
+				</hbox>
+				<hbox>
+				<description value="&options.help.link.lable.blog;" />
+				<description value="&options.help.link.blog;" onclick="BW_options.openPage(this.value);" class="link"/>
+				</hbox>
+				<hbox>
+				<description value="&options.help.link.lable.email;" />
+				<description value="gneheix@gmail.com" onclick="window.location = 'mailto:gneheix+backword@gmail.com';" class="link"/>
+				</hbox>
+			</groupbox>
+		</tabpanel>
+	</tabpanels>
+  </tabbox>
+</vbox>
+</dialog>
