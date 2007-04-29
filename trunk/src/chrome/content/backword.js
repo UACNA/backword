@@ -501,16 +501,21 @@ function BW_Layout(observe) {
 	this._showPhonetics = false;
 	this._pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
 	if (typeof(observe) == "undefined" || observe){
-    var observerService = Components.
-      classes["@mozilla.org/observer-service;1"].
-      getService(Components.interfaces.nsIObserverService);
-
-    observerService.addObserver(this, "bw_loadpref", false);	
+		var observerService = Components.
+		  classes["@mozilla.org/observer-service;1"].
+		  getService(Components.interfaces.nsIObserverService);
+		
+		observerService.addObserver(this, "bw_loadpref", false);	
+		observerService.addObserver(this, "bw_review_page_opened", false);	
 	}
 }
 BW_Layout.prototype.observe = function(aSubject, aTopic, aData){
 	if (aTopic == "bw_loadpref" && aSubject != this){
 		this.loadPref();
+	}
+	if (aTopic == "bw_review_page_opened"){
+		Components.classes['@mozilla.org/observer-service;1'].getService(Components.interfaces.nsIObserverService)
+			.notifyObservers(this, 'bw_dictionary_changed', this._currentTranslator);
 	}
 };
 BW_Layout.prototype.QueryInterface = function(aIID){
@@ -520,6 +525,8 @@ BW_Layout.prototype.QueryInterface = function(aIID){
    return this;
 };
 BW_Layout.prototype.notify = function(){
+	Components.classes['@mozilla.org/observer-service;1'].getService(Components.interfaces.nsIObserverService)
+		.notifyObservers(this, 'bw_dictionary_changed', this._currentTranslator);
 	Components.classes['@mozilla.org/observer-service;1'].getService(Components.interfaces.nsIObserverService).notifyObservers(this, 'bw_loadpref', '');
 };
 BW_Layout.prototype.resetData = function () {
@@ -566,16 +573,16 @@ BW_Layout.prototype.loadPref = function () {
 	if (this._currentTranslator != translator) {
 		this._currentTranslator = translator;
 		if (translator.substr(0, 6) == "google") {
-			this._dictionary = new BW_GoogleTranslate();
 			if (translator.length > 6) {
 				this._tolang = translator.substr(7);
 			} else {
 				this._tolang = "zh-CN";
 				this._pref.setCharPref(this._namePrefTranslator, "google.zh-CN");
 			}
+			this._dictionary = new BW_GoogleTranslate(this._tolang);
 		} else {
-			this._dictionary = new BW_DictcnTranslate();
 			this._tw = (translator == "dictcn.tw");
+			this._dictionary = new BW_DictcnTranslate(this._tw);
 		}
 	}
 	this._usingAPI = this._pref.getBoolPref(this._namePrefUsingAPI);
@@ -2183,7 +2190,8 @@ BW_Layout.prototype.disableAPI = function () {
 // start of google autotranslation function
 // all using of this part functions are not autherized
 ////////////////////////////////////////////////////////////////////////////
-function BW_GoogleTranslate() {
+function BW_GoogleTranslate(tolang) {
+	this._tolang = tolang;
 	this._GTAvaliable = (Components.classes["@google.com/autotranslate;1"] != null);
 	if (this._GTAvaliable) {
 		var dirsvc = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties);
@@ -2217,7 +2225,7 @@ BW_GoogleTranslate.prototype.getTranslate = function(text){
 BW_GoogleTranslate.prototype._getTranslate = function (text) {
 	var response = "";
 	try {
-		var tolang = backword._tolang;
+		var tolang = this._tolang;
 		var host = "www.google.cn";
 		var lang = "en|" + tolang;
 		if (this._GTAvaliable) {
@@ -2367,7 +2375,8 @@ DictFileDownloadObserver.prototype = {onDownloadComplete:function (downloader, r
 // unautherized, originally published by Austiny as a maxthon plugin named dict.cn:
 // http://forum.maxthon.com/index.php?showtopic=33167
 ////////////////////////////////////////////////////////////////////////////
-function BW_DictcnTranslate() {
+function BW_DictcnTranslate(tw) {
+	this._tw = tw;
 }
 BW_DictcnTranslate.prototype.getTranslate = function (text) {
 	var response = "";
@@ -2404,7 +2413,7 @@ BW_DictcnTranslate.prototype.getTranslate = function (text) {
 		backword.disable();
 		return "";
 	}
-	if (backword._tw) {
+	if (this._tw) {
 		return BW_Simp_to_Trad(response);
 	} else {
 		return response;
