@@ -15,6 +15,7 @@ pref("backword.layout.popdelay", "500");
 pref("backword.apiurl", "http://localhost:3000/backend/xmlrpc");
 pref("backword.apiweburl", "http://localhost:3000/");
 pref("backword.apiusername", "demouser");
+pref("backword.autoback", false);
 pref("backword.apipassword", "demouser");
 pref("backword.localapi.path", "backword/");
 pref("backword.currentinstancelist", "");
