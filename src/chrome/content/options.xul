@@ -93,6 +93,9 @@
  			        <hbox align="center">
 	 			        <checkbox id="ctrl" label="&options.layout.ctrl;" />
  			        </hbox>
+ 			        <hbox align="center">
+	 			        <checkbox id="autoback" label="&options.layout.autoback;" />
+ 			        </hbox>
  			        <hbox>
 								<vbox>
 		 			        <hbox align="center">

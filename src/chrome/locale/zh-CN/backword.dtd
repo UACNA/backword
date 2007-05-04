@@ -1,4 +1,4 @@
-<!ENTITY version "1.3.1">
+<!ENTITY version "1.3.2">
 <!ENTITY status.tooltip "关闭 Backword">
 <!ENTITY options.windowtitle "设置">
 <!ENTITY options.settingstab "选项">
@@ -30,6 +30,7 @@
 <!ENTITY options.layout.showpronunciation "使用Flash即使发音 (界面无法正常显示去除此选项)">
 <!ENTITY options.layout.quotesentence "自动选中当前句子作为上下文">
 <!ENTITY options.layout.ctrl "只在Ctrl键按下时取词">
+<!ENTITY options.layout.autoback "自动收集词汇和上下文">
 <!ENTITY options.layout.size "字体大小">
 <!ENTITY options.layout.quotes "引用个数">
 <!ENTITY options.layout.mouseout "隐藏界面">
@@ -87,5 +88,7 @@
 <!ENTITY menu.quotesentence.accesskey "A">
 <!ENTITY menu.ctrl.label "在Ctrl键被按下时取词">
 <!ENTITY menu.ctrl.accesskey "C">
+<!ENTITY menu.autoback.label "自动收集">
+<!ENTITY menu.autoback.accesskey "U">
 <!ENTITY menu.enable.label "实时翻译">
 <!ENTITY menu.enable.accesskey "E">

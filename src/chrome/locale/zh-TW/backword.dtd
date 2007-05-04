@@ -30,6 +30,7 @@
 <!ENTITY options.layout.showpronunciation "使用Flash即使發音 (介面無法正常顯示去除此選項)">
 <!ENTITY options.layout.quotesentence "自動選中當前句子作為上下文">
 <!ENTITY options.layout.ctrl "只在Ctrl鍵按下時取詞">
+<!ENTITY options.layout.autoback "自動收集辭彙和上下文">
 <!ENTITY options.layout.size "字體大小">
 <!ENTITY options.layout.quotes "引用個數">
 <!ENTITY options.layout.mouseout "隱藏介面">
@@ -87,5 +88,7 @@
 <!ENTITY menu.quotesentence.accesskey "A">
 <!ENTITY menu.ctrl.label "在Ctrl鍵被按下時取詞">
 <!ENTITY menu.ctrl.accesskey "C">
+<!ENTITY menu.autoback.label "自动收集">
+<!ENTITY menu.autoback.accesskey "U">
 <!ENTITY menu.enable.label "即時翻譯(E)">
 <!ENTITY menu.enable.accesskey "E">
