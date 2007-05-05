@@ -2056,7 +2056,7 @@ BW_Layout.prototype.callbackGetWord = function (theObject) {
 		this._api.getQuotes(this._currentWordId);
 		this._loadingQuotes = true;
 	}
-	else if (this._autoBack){
+	else if (this._autoBack && this._display){
 		this.clickBackWord(true);
 	}
 };
