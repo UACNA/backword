@@ -111,11 +111,11 @@ function formatQuoteParagraph(quote, word){
 }
 
 function attachEvent(){
-    attachClicktoParaphrase();
+    attachParaphrase();
     attachDeleteButton();
 }
 
-function attachClicktoParaphrase(){
+function attachParaphrase(){
 	for (var i=words.length-1; i>=0; i--){
 	    var el = $(words[i].id);
 	    el.onmouseover = function(){
