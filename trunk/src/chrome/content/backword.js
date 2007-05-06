@@ -127,8 +127,8 @@ function BW_isAWord(string) {
 	}
 	return true;
 }
-function BW_isReviewPage(){
-	return BW_getPage().getElementByTagName('backwordReviewPage').length > 1;
+function BW_isNotReviewPage(){
+	return BW_getDoc().getElementById('backwordreviewpage') == null;
 }
 function BW_isLetter(string) {
 	var valid_chars = /\w/;
@@ -2059,7 +2059,7 @@ BW_Layout.prototype.callbackGetWord = function (theObject) {
 		this._api.getQuotes(this._currentWordId);
 		this._loadingQuotes = true;
 	}
-	else if (this._autoBack && this._display && !BW_isReviewPage()){
+	else if (this._autoBack && this._display && BW_isNotReviewPage()){
 		this.clickBackWord(true);
 	}
 };
@@ -2074,7 +2074,7 @@ BW_Layout.prototype.callbackGetQuotes = function (theObject) {
 	}
 	this.checkCurrentParagraph();
 	this.updateLayout();
-	if (this._autoBack && !this._deletingQuote && !BW_isReviewPage()){
+	if (this._autoBack && !this._deletingQuote && BW_isNotReviewPage()){
 		this.clickBackWord(true);
 	}
 	this._deletingQuote = false;
