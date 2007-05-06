@@ -1,22 +1,36 @@
 body{
 	font-family: tahoma,arial,verdana,helvetica,lucida,sans-serif;
 	font-size: 83%;
-	margin-top: 3px;
-	margin-left: 3px;
+	margin: 3px 30px 20px 20px;
 }
 img
 {
 	border: 0;
 }
-
+.button{
+    cursor: pointer;
+}
 .word{
-	width: 90%;
-	margin: 0px 0px 15px 30px;
+	float: left;
+}
+.innerword{
+	margin: 0px 0px 15px 10px;
 	padding: 5px 0px 0px 0px;
 	border-top: 1px solid #ccc;
 	border-right: 2px solid #bbb;
 	border-bottom: 2px solid #888;
 	border-left: 1px solid #bbb;
+}
+.onecolumn{
+	width: 100%;
+}
+.twocolumn{
+	width: 50%;
+}
+.inline{
+}
+.threecolumn{
+	width: 33.333%;
 }
 .innerlink{
     color: black;
@@ -65,7 +79,7 @@ img
     font-weight: bold;
 }
 #footer{
-    width: 90%;
-	margin: 0px 15px 10px 30px;
+    text-align: right;
+    width: 100%;
 	color: #666;
 }

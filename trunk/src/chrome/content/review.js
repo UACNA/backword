@@ -85,13 +85,13 @@ function buildMatchPattern(){
 }
 
 function formatWord(word){
-	var html = '<a name="word-'+word.id+'"/><div id="word-'+word.id+'" class="word"><img src="chrome://backword/skin/backWordED.gif" class="delete" id="todelete-word-'+word.id
+	var html = '<a name="word-'+word.id+'"><div id="word-'+word.id+'" class="word twocolumn"><div class="innerword"><img src="chrome://backword/skin/backWordED.gif" class="delete" id="todelete-word-'+word.id
 	+'"/><img src="chrome://backword/skin/backWordOK.gif" class="delete" style="display:none;" id="delete-word-'+word.id+'"/><span class="wordid" id="'+word.id+'">'+
 		word.id+'</span><span class="wordparaphrase" id="paraphrase-'+word.id+'">'+word.paraphrase+'</span><span class="wordparaphrase" id="translation-'+word.id+'"></span>';
 	for (var i=0; i<word.quotes.length; i++){
 		html += formatQuote(word.quotes[i], word);
 	}
-	html+='</div>';
+	html+='</div></div></a>';
 	return html;
 }
 
@@ -113,6 +113,40 @@ function formatQuoteParagraph(quote, word){
 function attachEvent(){
     attachParaphrase();
     attachDeleteButton();
+    attachButtons();
+}
+function attachButtons(){
+	$('HideTrans').onclick = function(){
+		for (var i=words.length-1; i>=0; i--){
+		    $('translation-'+words[i].id).innerHTML = "";
+		}
+	}
+	$('ShowTrans').onclick = function(){
+		for (var i=words.length-1; i>=0; i--){
+		    $('translation-'+words[i].id).innerHTML = "|" + page.dictionary.getTranslate(words[i].id);
+		}
+	}
+	$('OneColumn').onclick = function(){
+		for (var i=words.length-1; i>=0; i--){
+		    $('word-'+words[i].id).className = "word onecolumn";
+		}
+	}
+	$('TwoColumn').onclick = function(){
+		for (var i=words.length-1; i>=0; i--){
+			if (i % 2 == 0)
+			    $('word-'+words[i].id).className = "word twocolumn";
+			else
+			    $('word-'+words[i].id).className = "word twocolumn inline";
+		}
+	}
+	$('ThreeColumn').onclick = function(){
+		for (var i=words.length-1; i>=0; i--){
+			if (i % 3 == 0)
+			    $('word-'+words[i].id).className = "word threecolumn";
+			else
+			    $('word-'+words[i].id).className = "word threecolumn inline";
+		}
+	}
 }
 
 function attachParaphrase(){
