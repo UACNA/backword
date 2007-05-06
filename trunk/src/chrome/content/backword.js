@@ -1149,7 +1149,7 @@ BW_Layout.prototype.getCurrentWord = function (rangeParent, offset, target) {
 	if (!word)
 		return null;
 
-	if (this.isSelected()){
+	if (this.isSelected() && word.indexOf(BW_trim(BW_getPage().getSelection().toString().toLowerCase())) == -1){
 		this._currentParagraph = BW_plainText(BW_trim(BW_getPage().getSelection().toString()));
 	}
 	else {
