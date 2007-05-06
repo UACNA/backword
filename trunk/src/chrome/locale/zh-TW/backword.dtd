@@ -27,7 +27,7 @@
 <!ENTITY options.api.password "　　密碼：">
 <!ENTITY options.dscp.translator "注意：這裡使用的詞典引擎可能未得到授權。">
 <!ENTITY options.groupbox.layout "介面">
-<!ENTITY options.layout.showpronunciation "使用Flash即使發音 (介面無法正常顯示去除此選項)">
+<!ENTITY options.layout.showpronunciation "使用Flash即時發音 (介面無法正常顯示去除此選項)">
 <!ENTITY options.layout.quotesentence "自動選中當前句子作為上下文">
 <!ENTITY options.layout.ctrl "只在Ctrl鍵按下時取詞">
 <!ENTITY options.layout.autoback "自動收集辭彙和上下文">
@@ -65,7 +65,7 @@
 <!ENTITY options.help.link.wiki "http://wikihost.org/wikis/backword/">
 <!ENTITY options.help.operation "左鍵點擊打開/關閉取詞；使用後台時中鍵點擊打開後台管理頁面，否則打開討論組頁面。">
 <!ENTITY options.help.title.layout "介面">
-<!ENTITY options.help.layout "使用Flash即使發音：當其他廣告遮罩擴展使得介面無法正常顯示時請去除此選項；自動選中當前句子作為上下文：自動使用當前句子而不是整個段落作為上下文；字體大小：設置字體及介面大小，最小值為13；引用個數：設置最多顯示引用個數，最小值為2；隱藏介面：當滑鼠移出介面的圖元值超過此設置時隱藏介面，最小值5；取詞延時：單位毫秒，最小值100。">
+<!ENTITY options.help.layout "使用Flash即時發音：當其他廣告遮罩擴展使得介面無法正常顯示時請去除此選項；自動選中當前句子作為上下文：自動使用當前句子而不是整個段落作為上下文；字體大小：設置字體及介面大小，最小值為13；引用個數：設置最多顯示引用個數，最小值為2；隱藏介面：當滑鼠移出介面的圖元值超過此設置時隱藏介面，最小值5；取詞延時：單位毫秒，最小值100。">
 <!ENTITY options.page.api "Web後臺管理頁面">
 <!ENTITY options.page.review "復習頁面">
 <!ENTITY options.page.group "Backword Google 討論組">
@@ -82,7 +82,7 @@
 <!ENTITY menu.usingapi.accesskey "S">
 <!ENTITY menu.usinglocalapi.label "使用本地存儲(L)">
 <!ENTITY menu.usinglocalapi.accesskey "L">
-<!ENTITY menu.showpronunciation.label "使用 Flash 即使發音">
+<!ENTITY menu.showpronunciation.label "使用Flash即時發音">
 <!ENTITY menu.showpronunciation.accesskey "F">
 <!ENTITY menu.quotesentence.label "自動選中當前句子(A)">
 <!ENTITY menu.quotesentence.accesskey "A">
