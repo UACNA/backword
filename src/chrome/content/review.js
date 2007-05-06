@@ -49,7 +49,9 @@ function doLoad(){
 	panel.innerHTML = html;
 	attachEvent();
 	registerObserve();
-	document.appendChild(document.createElement('backwordReviewPage'));
+	var s = document.createElement('span')
+	s.id = 'backwordreviewpage';
+	document.body.appendChild(s);
 }
 
 function registerObserve(){
