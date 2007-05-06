@@ -127,6 +127,9 @@ function BW_isAWord(string) {
 	}
 	return true;
 }
+function BW_isReviewPage(){
+	return BW_getPage().getElementByTagName('backwordReviewPage').length > 1;
+}
 function BW_isLetter(string) {
 	var valid_chars = /\w/;
 	return valid_chars.test(string);
@@ -2056,7 +2059,7 @@ BW_Layout.prototype.callbackGetWord = function (theObject) {
 		this._api.getQuotes(this._currentWordId);
 		this._loadingQuotes = true;
 	}
-	else if (this._autoBack && this._display){
+	else if (this._autoBack && this._display && !BW_isReviewPage()){
 		this.clickBackWord(true);
 	}
 };
@@ -2071,7 +2074,7 @@ BW_Layout.prototype.callbackGetQuotes = function (theObject) {
 	}
 	this.checkCurrentParagraph();
 	this.updateLayout();
-	if (this._autoBack && !this._deletingQuote){
+	if (this._autoBack && !this._deletingQuote && !BW_isReviewPage()){
 		this.clickBackWord(true);
 	}
 	this._deletingQuote = false;
@@ -2695,7 +2698,10 @@ BW_LocalAPI.prototype.deleteWord = function (wrd) {
 		this.saveWords();
 	}
 };
-BW_LocalAPI.prototype.deleteQuote = function (wrd, id) {
+BW_LocalAPI.prototype.deleteQuote = function (wrd, id, callback) {
+	if (typeof(callback) == "undefined"){
+		callback = true;
+	}
 	var word = this.findWord(wrd);
 	if (word) {
 		var a = 0, b = word.quotes.length - 1;
@@ -2717,7 +2723,8 @@ BW_LocalAPI.prototype.deleteQuote = function (wrd, id) {
 		}
 		if (quote) {
 			this._deleteQuote(word, quote, h);
-			backword.callbackModifyQuotes(word);
+			if (callback)
+				backword.callbackModifyQuotes(word);
 		}
 	}
 };

@@ -6,7 +6,6 @@ api.observe = function(aSubject, aTopic, aData){
 	}
 };
 var words = api._words;
-var backwordReviewPage = true;
 
 function BW_ReviewPage(dict){
 	this.dictionary = null;
@@ -50,6 +49,7 @@ function doLoad(){
 	panel.innerHTML = html;
 	attachEvent();
 	registerObserve();
+	document.appendChild(document.createElement('backwordReviewPage'));
 }
 
 function registerObserve(){
@@ -150,7 +150,7 @@ function attachDeleteButton(){
 				else{
 					var id = this.id.substr(13);
 					var i = id.indexOf('-');
-					api.deleteQuote(id.substring(0, i), id.substring(i+1, id.length));
+					api.deleteQuote(id.substring(0, i), id.substring(i+1, id.length), false);
 				}
 			}
 		}
