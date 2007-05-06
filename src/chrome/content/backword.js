@@ -2685,6 +2685,9 @@ BW_LocalAPI.prototype.deleteWord = function (wrd) {
 	if (idxRefWord >= 0) {
 		var idxWord = this._refWords[idxRefWord]._idxWord;
 		var word = this._words[idxWord];
+		for(var index=word.quotes.length-1; index>=0; index--) {
+			this._deleteQuote(word, word.quotes[index], index);
+		}
 		this._words.splice(idxWord, 1);
 //		this._words = this._words.slice(0, idxWord).concat(this._words.slice(idxWord + 1));
 		this._refWords.splice(idxRefWord, 1);
@@ -2713,23 +2716,26 @@ BW_LocalAPI.prototype.deleteQuote = function (wrd, id) {
 			}
 		}
 		if (quote) {
-			var index = quote.idxRef;
-			var offsetDecrease = quote.toString().length + 1;
-			for (var i = h + 1; i < word.quotes.length; i++) {
-				this._refQuotes[word.quotes[i].idxRef]._idxQuote--;
-			}
-			for (var i = index + 1; i < this._refQuotes.length; i++) {
-				var q = this._words[this._refQuotes[i]._idxWord].quotes[this._refQuotes[i]._idxQuote];
-				q.idxRef--;
-			}
-			word.quotes.splice(h, 1);
-//			word.quotes = word.quotes.slice(0, h).concat(word.quotes.slice(h + 1));
-			this._refQuotes.splice(index, 1);
-//			this._refQuotes = this._refQuotes.slice(0, index).concat(this._refQuotes.slice(index + 1));
-			this.saveQuotes();
+			this._deleteQuote(word, quote, h);
 			backword.callbackModifyQuotes(word);
 		}
 	}
+};
+BW_LocalAPI.prototype._deleteQuote = function (word, quote, h){
+	var index = quote.idxRef;
+	var offsetDecrease = quote.toString().length + 1;
+	for (var i = h + 1; i < word.quotes.length; i++) {
+		this._refQuotes[word.quotes[i].idxRef]._idxQuote--;
+	}
+	for (var i = index + 1; i < this._refQuotes.length; i++) {
+		var q = this._words[this._refQuotes[i]._idxWord].quotes[this._refQuotes[i]._idxQuote];
+		q.idxRef--;
+	}
+	word.quotes.splice(h, 1);
+//			word.quotes = word.quotes.slice(0, h).concat(word.quotes.slice(h + 1));
+	this._refQuotes.splice(index, 1);
+//			this._refQuotes = this._refQuotes.slice(0, index).concat(this._refQuotes.slice(index + 1));
+	this.saveQuotes();
 };
 BW_LocalAPI.prototype.getEndOffset = function (stream) {
 	var seek = stream.QueryInterface(Components.interfaces.nsISeekableStream);
