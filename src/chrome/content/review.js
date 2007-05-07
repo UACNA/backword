@@ -133,18 +133,12 @@ function attachButtons(){
 	}
 	$('TwoColumn').onclick = function(){
 		for (var i=words.length-1; i>=0; i--){
-			if (i % 2 == 0)
-			    $('word-'+words[i].id).className = "word twocolumn";
-			else
-			    $('word-'+words[i].id).className = "word twocolumn inline";
+		    $('word-'+words[i].id).className = "word twocolumn";
 		}
 	}
 	$('ThreeColumn').onclick = function(){
 		for (var i=words.length-1; i>=0; i--){
-			if (i % 3 == 0)
-			    $('word-'+words[i].id).className = "word threecolumn";
-			else
-			    $('word-'+words[i].id).className = "word threecolumn inline";
+		    $('word-'+words[i].id).className = "word threecolumn";
 		}
 	}
 }
