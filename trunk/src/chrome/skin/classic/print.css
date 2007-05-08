@@ -1,0 +1,85 @@
+body{
+	margin: 3px 30px 20px 20px;
+}
+img
+{
+	border: 0;
+}
+a
+{
+    color: black;
+	text-decoration: none;
+}
+.button{
+    cursor: pointer;
+	display: none;
+}
+.word{
+	float: left;
+}
+.innerword{
+	margin: 0px 0px 15px 10px;
+	padding: 5px 0px 0px 0px;
+	border: 1px solid #ccc;
+}
+.onecolumn{
+	width: 100%;
+}
+.twocolumn{
+	width: 50%;
+}
+.threecolumn{
+	width: 33.333%;
+}
+.innerlink{
+}
+.wordid{
+    margin: 0px 20px 0px 10px;
+	font-weight: bold;
+	font-size: 105%;
+	cursor: pointer;
+}
+.theword{
+    text-decoration: underline;
+}
+.wordparaphrase{
+	font-size: 83%;
+}
+
+.quote{
+	margin: 5px 10px 5px 10px;
+	padding: 10px 0px 0px 0px;
+	border-top: 1px dashed #CCC;
+}
+
+.quotetitle{
+    margin-left: 2px;
+    font-style: italic;
+	font-size: 83%;
+}
+
+.delete{
+    cursor: pointer;
+    float: right;
+    margin: 0px 5px 0px 0px;
+	display: none;
+}
+
+.quoteparagraph{
+    margin-top: 3px;
+    padding-left: 5px;
+    border-left: 1px solid #DDD;
+	text-indent: 10px;
+}
+#header{
+    margin: 10px 40px 20px 30px;
+    font-size: 250%;
+    font-weight: bold;
+	display: none;
+}
+#footer{
+    text-align: right;
+    width: 100%;
+	color: #666;
+	display: none;
+}
