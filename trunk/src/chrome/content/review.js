@@ -46,6 +46,22 @@ function doLoad(){
 	for (var i=words.length-1; i>=0; i--){
 		html += formatWord(words[i]);
 	}
+	if (html.length == 0){
+		html = "<div class='innerword' align=center><h3>How to use Backword</h3><p>Interface & Operations:<br/>" +
+				"<a href='http://www.flickr.com/photos/gneheix/158641849/'>" +
+				"http://www.flickr.com/photos/gneheix/158641849/</a>" +
+				" (major layout)<br/><a href='http://www.flickr.com/photos/gneheix/194794084/'>" +
+				"http://www.flickr.com/photos/gneheix/194794084/</a> (new features)<br/></p>" +
+				"<p>Function Flash demo :<br/><a href='http://gneheix.googlepages.com/backwordflashdemo'>" +
+				"http://gneheix.googlepages.com/backwordflashdemo</a> (in Chinese)<br/>" +
+				"<a href='http://gneheix.googlepages.com/backwordflashdemo2'>" +
+				"http://gneheix.googlepages.com/backwordflashdemo2</a> (in English)<br/>" +
+				"</p>Operation Flash demo :<br/><a href='http://gneheix.googlepages.com/backwordflashdemo3'>" +
+				"http://gneheix.googlepages.com/backwordflashdemo3</a> (in Chinese)<br/>" +
+				"<a href='http://gneheix.googlepages.com/backwordflashdemo22'>" +
+				"http://gneheix.googlepages.com/backwordflashdemo22</a> (in English)<br/></p></div>";
+		document.getElementById('buttons').style.display='none';
+	}
 	panel.innerHTML = html;
 	attachEvent();
 	registerObserve();
