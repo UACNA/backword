@@ -89,15 +89,15 @@ BW_Setting.prototype.openPage = function(pageUrl){
 BW_Setting.prototype.usingApi = function(checked){
 	document.getElementById("usinglocalapi").disabled = !checked;
 	var localapi = document.getElementById("usinglocalapi").checked;
-	var readonly = localapi || !checked;
-	document.getElementById("apiurl").setAttribute("readonly", readonly);
-	document.getElementById("apiweburl").setAttribute("readonly", readonly);
-	document.getElementById("apiusername").setAttribute("readonly", readonly);
-	document.getElementById("apipassword").setAttribute("readonly", readonly);
+	var disabled = localapi || !checked;
+	document.getElementById("apiurl").disabled = disabled;
+	document.getElementById("apiweburl").disabled = disabled;
+	document.getElementById("apiusername").disabled = disabled;
+	document.getElementById("apipassword").disabled = disabled;
 };
 BW_Setting.prototype.usingLocalApi = function(checked){
-	document.getElementById("apiurl").setAttribute("readonly", checked);
-	document.getElementById("apiweburl").setAttribute("readonly", checked);
-	document.getElementById("apiusername").setAttribute("readonly", checked);
-	document.getElementById("apipassword").setAttribute("readonly", checked);
+	document.getElementById("apiurl").disabled = checked;
+	document.getElementById("apiweburl").disabled = checked;
+	document.getElementById("apiusername").disabled = checked;
+	document.getElementById("apipassword").disabled = checked;
 };
