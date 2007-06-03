@@ -598,6 +598,8 @@ BW_Layout.prototype.loadPref = function () {
 		this._usingLocalAPI = usingLocalAPI;
 		if (usingLocalAPI) {
 			this._api = new BW_LocalAPI();
+			this._apiError = false;
+			this._apiCalling = false;
 		} else {
 			if (backword._api) {
 				this._api.close();
