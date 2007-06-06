@@ -7,7 +7,7 @@ function BW_Setting(){
 
 BW_Setting.prototype.init = function() {
 	document.getElementById("translator").selectedItem = document.getElementById(this._pref.getCharPref("backword.translator"));
-	if (this._pref.getCharPref("backword.translator").indexOf('dictcn') != -1)
+	if (this._pref.getCharPref("backword.translator").indexOf('google') == -1)
 		document.getElementById("showphonetics").setAttribute('disabled', true);
 //	document.getElementById(this._pref.getCharPref("backword.translator")).setAttribute("selected", "true");
 	document.getElementById("searchweburl").setAttribute("value", this._pref.getCharPref("backword.searchweburl"));
