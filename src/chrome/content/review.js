@@ -31,6 +31,8 @@ BW_ReviewPage.prototype.setDictionary = function(translator){
 		this.currentTranslator = translator;
 		if (translator.substr(0, 6) == "google") {
 			this.dictionary = new BW_GoogleTranslate(translator.substr(7));
+		} else if (translator == "outlook"){
+			this.dictionary = new BW_OutLookTranslate();
 		} else {
 			this.dictionary = new BW_DictcnTranslate(translator == "dictcn.tw");
 		}

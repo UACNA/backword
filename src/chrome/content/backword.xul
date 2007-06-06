@@ -77,6 +77,8 @@
 	          <menuseparator />
 	          <menuitem label="&options.translator.dictcn;" type="checkbox"  id="dictcn" oncommand="backword.updatePref('backword.translator', this.id, true)" />
 	          <menuitem label="&options.translator.dictcn.tw;" type="checkbox"  id="dictcn.tw" oncommand="backword.updatePref('backword.translator', this.id, true)" />
+	          <menuseparator />
+	          <menuitem label="&options.translator.outlook;" type="checkbox"  id="outlook" oncommand="backword.updatePref('backword.translator', this.id, true)" />
           </menupopup>
         </menu>
         <menuitem id="bw-status-usingapi" label="&menu.usingapi.label;" accesskey="&menu.usingapi.accesskey;" type="checkbox" oncommand="backword.updatePref('backword.usingapi', this.hasAttribute('checked'))"/>
