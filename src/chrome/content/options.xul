@@ -31,7 +31,7 @@
 			<vbox>
 			    <groupbox orient="vertical">
 			      <caption label="&options.groupbox.translator;" />
-			      <menulist id="translator" oncommand="document.getElementById('showphonetics').setAttribute('disabled', this.value.indexOf('dictcn') != -1);" >
+			      <menulist id="translator" oncommand="document.getElementById('showphonetics').setAttribute('disabled', this.value.indexOf('google') == -1);" >
 			        <menupopup>
 			          <menuitem label="&options.translator.google.fr;" value="google.fr" id="google.fr" />
 			          <menuitem label="&options.translator.google.de;" value="google.de" id="google.de" />
