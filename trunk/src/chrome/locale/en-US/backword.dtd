@@ -1,4 +1,4 @@
-<!ENTITY version "1.3.3.3">
+<!ENTITY version "1.3.4">
 <!ENTITY status.tooltip "Backword Enabled">
 <!ENTITY options.windowtitle "Options">
 <!ENTITY options.settingstab "Settings">
@@ -15,6 +15,7 @@
 <!ENTITY options.translator.google.zh-TW "Google - Traditional Chinese">
 <!ENTITY options.translator.dictcn "Dict.cn - Simplified Chinese">
 <!ENTITY options.translator.dictcn.tw "Dict.cn - Traditional Chinese">
+<!ENTITY options.translator.outlook "Outlook.com - English">
 <!ENTITY options.translator.showphonetics "Show phonetics (rarely hang on Firefox)">
 <!ENTITY options.groupbox.search "Search web">
 <!ENTITY options.url "URLs: (split by Enter)">

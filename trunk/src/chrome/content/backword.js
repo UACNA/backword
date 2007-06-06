@@ -587,7 +587,10 @@ BW_Layout.prototype.loadPref = function () {
 				this._pref.setCharPref(this._namePrefTranslator, "google.zh-CN");
 			}
 			this._dictionary = new BW_GoogleTranslate(this._tolang);
-		} else {
+		} else if (translator == "outlook"){
+			this._dictionary = new BW_OutLookTranslate();
+		}
+		else {
 			this._tw = (translator == "dictcn.tw");
 			this._dictionary = new BW_DictcnTranslate(this._tw);
 		}
@@ -2449,6 +2452,30 @@ function BW_Simp_to_Trad(strIn) {
 	});
 	return strIn;
 }
+////////////////////////////////////////////////////////////////////////////
+// start of outlook.com translation function
+////////////////////////////////////////////////////////////////////////////
+function BW_OutLookTranslate() {
+}
+BW_OutLookTranslate.prototype.getTranslate = function (text) {
+	var response = "";
+	try {
+		var request = new XMLHttpRequest();
+		request.open("GET", "http://www.onelook.com/?other=web1913&w=" + text, false);
+		request.send(null);
+		var response = "";
+		if (request.status == 200) {
+			text = request.responseText;
+			response = text.replace(/^(.|\n|\r)*\<\/b\>\<br\>/i, "").replace(/\<\p\>(.|\n|\r)*$/i, "").replace(/\<\/?l?i\>/ig,"").replace("\n","");
+		}
+	}
+	catch (e) {
+		BW_ddump(e);
+		backword.disable();
+		return "";
+	}
+	return response;
+};
 ////////////////////////////////////////////////////////////////////////////
 // start of local api function
 ////////////////////////////////////////////////////////////////////////////

@@ -45,6 +45,8 @@
 			          <menuseparator />
 			          <menuitem label="&options.translator.dictcn;" value="dictcn" id="dictcn" />
 			          <menuitem label="&options.translator.dictcn.tw;" value="dictcn.tw" id="dictcn.tw" />
+			          <menuseparator />
+			          <menuitem label="&options.translator.outlook;" value="outlook" id="outlook" />
 			        </menupopup>
 			      </menulist>
 		        <checkbox id="showphonetics" label="&options.translator.showphonetics;" />
