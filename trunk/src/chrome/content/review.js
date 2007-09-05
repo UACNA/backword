@@ -1,11 +1,26 @@
 var backword = new BW_Layout(false);
 var api = new BW_LocalAPI('backword/');
 api.observe = function(aSubject, aTopic, aData){
-	if (aTopic == "bw_load_storage" && aSubject != this){
-		location.reload();
+	if (aTopic == "bw_load_storage"){
+		this.toReload = true;
 	}
 };
-var words = api._words;
+api.toReload = false;
+
+var currentPage = 0;
+var perPage = 10;
+var listModel = "twocolumn";
+
+function checkReload(){
+	setTimeout(function(){checkReload()}, 1000, false);
+	if (api.toReload){
+		api.toReload = false;
+		BW_ddump('api.load');
+		api.load();
+		buildMatchPattern();
+		showWords(currentPage);
+	}
+}
 
 function BW_ReviewPage(dict){
 	this.dictionary = null;
@@ -39,14 +54,33 @@ BW_ReviewPage.prototype.setDictionary = function(translator){
 	}
 }
 
-var page = new BW_ReviewPage();
+var reviewPage = new BW_ReviewPage();
 
 function doLoad(){
+	buildMatchPattern();
+    attachButtons();
+	registerObserve();
+	declarePageType();
+	showWords();
+	checkReload();
+}
+
+function showWords(page){
+	if (typeof(page) == "undefined"){
+		page = 0;
+	}
+	if (page < 0){
+		page = 0
+	}
+	var total = Math.ceil(api._words.length/perPage);
+	if (page > total-1){
+		page = total-1;
+	}
+	currentPage = page;
 	var panel = $('panel');
 	var html = "";
-	buildMatchPattern();
-	for (var i=words.length-1; i>=0; i--){
-		html += formatWord(words[i]);
+	for (i=api._words.length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		html += formatWord(api._words[i]);
 	}
 	if (html.length == 0){
 		html = "<div class='innerword' align=center><h3>How to use Backword</h3><p>Interface & Operations:<br/>" +
@@ -65,24 +99,56 @@ function doLoad(){
 		document.getElementById('buttons').style.display='none';
 	}
 	panel.innerHTML = html;
-	attachEvent();
-	registerObserve();
-	var s = document.createElement('span')
-	s.id = 'backwordreviewpage';
-	document.body.appendChild(s);
+    attachParaphrase(page);
+    attachDeleteButton();
+    showNavigator(page);
+}
+
+function showNavigator(page){
+	var total = Math.ceil(api._words.length/perPage);
+	if (total > 1){
+		var html = "";
+		if (currentPage > 0){
+			html += "<a href='javascript:showWords("+(currentPage-1)+");'>&lt;Prev</a> ";
+		}
+		for (i=1; i<=total; i++){
+			if (currentPage == i -1){
+				html += i+" ";	
+			}
+			else{
+				html += "<a href='javascript:showWords("+(i-1)+");'>"+i+"</a> ";
+			}
+		}		
+		if (currentPage < total - 1){
+			html += "<a href='javascript:showWords("+(currentPage+1)+");'>Next&gt;</a>";
+		}
+		$('navigator').innerHTML=html;
+		$('navigator').style.display = "";
+	}
+	else{
+		$('navigator').style.display = "none";
+	}
+}
+
+function declarePageType(){
+	if (!document.getElementById('backwordreviewpage')){
+		var s = document.createElement('span')
+		s.id = 'backwordreviewpage';
+		document.body.appendChild(s);
+	}
 }
 
 function registerObserve(){
 	var observerService = Components.
 	  classes["@mozilla.org/observer-service;1"].
 	  getService(Components.interfaces.nsIObserverService);
-	observerService.addObserver(page, "bw_dictionary_changed", false);	
+	observerService.addObserver(reviewPage, "bw_dictionary_changed", false);	
 	Components.classes['@mozilla.org/observer-service;1'].getService(Components.interfaces.nsIObserverService).notifyObservers(window, 'bw_review_page_opened', '');
 }
 
 function buildMatchPattern(){
-	for (var i=words.length-1; i>=0; i--){
-		var word = words[i];
+	for (var i=api._words.length-1; i>=0; i--){
+		var word = api._words[i];
 		if (/f$/.test(word.id)){
 			re = "("+word.id.replace(/f$/, "") + "[fv](s|es|ies|d|ed|ied|ing){0,2})";
 		}
@@ -103,7 +169,7 @@ function buildMatchPattern(){
 }
 
 function formatWord(word){
-	var html = '<a name="word-'+word.id+'"><div id="word-'+word.id+'" class="word twocolumn"><div class="innerword"><img src="chrome://backword/skin/backWordED.gif" class="delete" id="todelete-word-'+word.id
+	var html = '<a name="word-'+word.id+'"><div id="word-'+word.id+'" class="word '+listModel+'"><div class="innerword"><img src="chrome://backword/skin/backWordED.gif" class="delete" id="todelete-word-'+word.id
 	+'"/><img src="chrome://backword/skin/backWordOK.gif" class="delete" style="display:none;" id="delete-word-'+word.id+'"/><span class="wordid" id="'+word.id+'">'+
 		word.id+'</span><span class="wordparaphrase" id="paraphrase-'+word.id+'">'+word.paraphrase+'</span><span class="wordparaphrase" id="translation-'+word.id+'"></span>';
 	for (var i=0; i<word.quotes.length; i++){
@@ -122,50 +188,71 @@ function formatQuote(quote, word){
 
 function formatQuoteParagraph(quote, word){
     var html = quote.paragraph.replace(word.regHighLight,  "<span class='theword'>$1</span>");
-	for (var i=words.length-1; i>=0; i--){
-		html = html.replace(words[i].regLink, "$1<a href='#word-"+words[i].id+"' class='innerlink'>$2</a>");
+	for (var i=api._words.length-1; i>=0; i--){
+		html = html.replace(api._words[i].regLink, "$1<a href='javascript:displayWord(\""+api._words[i].id+"\","+(Math.ceil((api._words.length-i)/perPage)-1)+");' class='innerlink'>$2</a>");
 	}
 	return html;
 }
-
-function attachEvent(){
-    attachParaphrase();
-    attachDeleteButton();
-    attachButtons();
+function displayWord(word, page){
+	if (page != currentPage){
+		showWords(page);
+	}
+	$('word-'+word).scrollIntoView(true);
+	$('word-'+word).firstChild.className = "innerWord hightlighted";
+	setTimeout(function(){$('word-'+word).firstChild.className = "innerWord";}, 5000, false);
 }
 function attachButtons(){
 	$('HideTrans').onclick = function(){
-		for (var i=words.length-1; i>=0; i--){
-		    $('translation-'+words[i].id).innerHTML = "";
+		for (i=api._words.length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		    $('translation-'+api._words[i].id).innerHTML = "";
 		}
 	}
 	$('ShowTrans').onclick = function(){
-		for (var i=words.length-1; i>=0; i--){
-		    $('translation-'+words[i].id).innerHTML = "|" + page.dictionary.getTranslate(words[i].id);
+		for (i=api._words.length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		    $('translation-'+api._words[i].id).innerHTML = "|" + reviewPage.dictionary.getTranslate(api._words[i].id);
 		}
 	}
 	$('OneColumn').onclick = function(){
-		for (var i=words.length-1; i>=0; i--){
-		    $('word-'+words[i].id).className = "word onecolumn";
+		for (i=api._words.length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		    $('word-'+api._words[i].id).className = "word onecolumn";
 		}
+	    listModel = "onecolumn";
 	}
 	$('TwoColumn').onclick = function(){
-		for (var i=words.length-1; i>=0; i--){
-		    $('word-'+words[i].id).className = "word twocolumn";
+		for (i=api._words.length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		    $('word-'+api._words[i].id).className = "word twocolumn";
 		}
+	    listModel = "twocolumn";
 	}
 	$('ThreeColumn').onclick = function(){
-		for (var i=words.length-1; i>=0; i--){
-		    $('word-'+words[i].id).className = "word threecolumn";
+		for (i=api._words.length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		    $('word-'+api._words[i].id).className = "word threecolumn";
 		}
+	    listModel = "threecolumn";
+	}
+	$('Ten').onclick = function(){
+		perPage = 10;
+		showWords();
+	}
+	$('TwentyFive').onclick = function(){
+		perPage = 25;
+		showWords();
+	}
+	$('Fifty').onclick = function(){
+		perPage = 50;
+		showWords();
+	}
+	$('Hundred').onclick = function(){
+		perPage = 100;
+		showWords();
 	}
 }
 
-function attachParaphrase(){
-	for (var i=words.length-1; i>=0; i--){
-	    var el = $(words[i].id);
+function attachParaphrase(page){
+	for (i=api._words.length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
+	    var el = $(api._words[i].id);
 	    el.onmouseover = function(){
-		    $('translation-'+this.id).innerHTML = "|" + page.dictionary.getTranslate(this.id);
+		    $('translation-'+this.id).innerHTML = "|" + reviewPage.dictionary.getTranslate(this.id);
 	    }
 	    el.onmouseout = function(){
 		    $('translation-'+this.id).innerHTML = "";
@@ -200,6 +287,7 @@ function attachDeleteButton(){
 					var i = id.indexOf('-');
 					api.deleteQuote(id.substring(0, i), id.substring(i+1, id.length), false);
 				}
+				showWords(currentPage);
 			}
 		}
 	}

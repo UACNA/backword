@@ -29,8 +29,8 @@
 // Functions are derived from GPL code originally by mozilla Inc:
 // For the original source, see: http://www.koders.com/javascript/fidFEF1093F08C9BDE750ABD0ED1863319D8179449A.aspx
 ////////////////////////////////////////////////////////////////////////////
-var BW_debugOutput = false;	
-//var BW_debugOutput = true;
+//var BW_debugOutput = false;	
+var BW_debugOutput = true;
 function BW_ddump(text) {
 	if (BW_debugOutput) {
 		dump(text + "\n");
@@ -1533,6 +1533,7 @@ BW_Layout.prototype.translateSpan = function () {
 	var trans = BW_createElement("SPAN");
 	trans.innerHTML = this._translate;
 	span.appendChild(trans);
+	span.setAttribute("title", this._translate);
 	this.getDiv().appendChild(span);
 };
 BW_Layout.prototype.showQuotes = function () {
@@ -2844,6 +2845,7 @@ BW_LocalAPI.prototype.loadWords = function (stream) {
 			}
 		}
 		this._refWords.sort(this.sortWord);
+		BW_ddump('load words: '+this._words.length);
 	} else {
 		BW_ddump("read words error");
 		this._errReadWords = true;
