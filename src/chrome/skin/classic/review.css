@@ -21,6 +21,12 @@ img
 	border-bottom: 2px solid #888;
 	border-left: 1px solid #bbb;
 }
+.hightLighted{
+	border-top: 1px solid #f00;
+	border-right: 2px solid #e00;
+	border-bottom: 2px solid #a00;
+	border-left: 1px solid #e00;
+}
 .onecolumn{
 	width: 100%;
 }
@@ -80,4 +86,7 @@ img
     text-align: right;
     width: 100%;
 	color: #666;
+}
+#navigator{
+    margin-bottom: 4px;
 }
