@@ -875,8 +875,9 @@ BW_Layout.prototype.doLoad = function (event) {
 BW_Layout.prototype.doLoadImpl = function (event) {
 	this.loadPref();
 //	BW_ddump("load" + this._id);
-	if ("nsIAdblockPlus" in Components.interfaces) { //if Adblock Plus 0.7
-		var abp = Components.classes["@mozilla.org/adblockplus;1"].createInstance(Components.interfaces.nsIAdblockPlus);
+    if ("@mozilla.org/adblockplus;1" in Components.classes)
+    {
+        var abp = Components.classes["@mozilla.org/adblockplus;1"].createInstance().wrappedJSObject;
 		abp.updateExternalSubscription("Backword", "Backword [www.gneheix.com]", ["@@|http://www.iciba.com/resource/a/en/*.swf"], 1);
 	}
 	this.is_tbird = (navigator.userAgent.search(/Thunderbird\/\d+/) != -1);
