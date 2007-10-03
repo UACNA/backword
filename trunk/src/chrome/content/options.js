@@ -49,8 +49,6 @@ BW_Setting.prototype.save = function() {
 	var popdelay = 500;
 	try {
 		size = parseInt(document.getElementById("layoutsize").value);
-		if (size < 13)
-			size = 13;
 	} catch(e){}
 	try {
 		quotes = parseInt(document.getElementById("layoutquotes").value);
