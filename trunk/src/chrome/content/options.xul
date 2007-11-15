@@ -86,7 +86,7 @@
 				<groupbox orient="horizontal">
 				    <caption label="&options.groupbox.layout;"/>
 				    <vbox>
- 			        <hbox align="center">
+ 			        <hbox style="display:none" align="center">
 	 			        <checkbox id="showpronunciation" label="&options.layout.showpronunciation;" />
  			        </hbox>
  			        <hbox align="center">
