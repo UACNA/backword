@@ -455,6 +455,8 @@ function BW_Layout(observe) {
 	this._nameBackWord = "BW_backWordButton";
 	this._nameParaphrase = "BW_paraphraseSpan";
 	this._nameTranslate = "BW_translateSpan";
+	this._namePronunciationFrame = "BW_Pronunciation_Frame";
+	this._namePronunciationButton = "BW_Pronunciation_Button";
 	this._nameQuotesDiv = "BW_showQuotesDiv";
 	this._nameQuoteDetailDiv = "BW_showQuoteDetailDiv";
 	this._nameOpenPage = "BW_openPageButton";
@@ -708,9 +710,10 @@ BW_Layout.prototype.updateLayout = function () {
 				this.openPageButton();
 			}
 			this.searchWebButton();
-			if (this._showPronunciation && this._isHTML) {
-				this.cibaFlash();
-			}
+			this.pronunciationButton();
+//			if (this._showPronunciation && this._isHTML) {
+//				this.cibaFlash();
+//			}
 			this.untenseSpan();
 			if (this._usingAPI) {
 				this.paraphraseSpan();
@@ -1019,7 +1022,7 @@ BW_Layout.prototype.doPageLoadImpl = function (event) {
 	}
 	if (this._version != this.getString("version")) {
 		if (!this._version) {
-			alert(this.getString("alert.firsttime"));
+//			alert(this.getString("alert.firsttime"));
 		}
 		this._version = this.getString("version");
 		this._pref.setCharPref(this._namePrefVersion, this._version);
@@ -1386,6 +1389,50 @@ BW_Layout.prototype.openPageButton = function () {
 		backword.hide();
 	}
 	this.getDiv().appendChild(button);
+};
+BW_Layout.prototype.pronunciationButton = function () {
+	var button = BW_createElement("IMG");
+	button.setAttribute("align", "absmiddle");
+	button.style.cursor = "pointer";
+	button.style.backgroundColor = "#D5E6FF";
+	button.setAttribute("title", this.getString("tooltip.pronounce"));
+	button.id = this._namePronunciationButton;
+	button.setAttribute("src", "chrome://backword/skin/speaker.gif");
+	button.addEventListener("click", pronuonce, false);
+	function pronuonce() {
+		var IFrameObj = backword.pronunciationFrame();
+		IFrameObj.src = "about:blank";
+		IFrameObj.src = backword.pronunciationUrl();
+	}
+	this.getDiv().appendChild(button);
+};
+BW_Layout.prototype.pronunciationUrl = function () {
+	if (!this._currentWord || this._currentWord.length == 0){
+		return "about:blank";
+	}
+	var word = this._currentWord;
+	var url = "http://www.godict.com/voice/"+word.charCodeAt(0).toString(16)+"/";
+	if (word.length > 1){
+		url += word.charCodeAt(1).toString(16) +"/";
+	}
+	for(var index=0; index<word.length; index++) {
+		url += word.charCodeAt(index).toString(16);
+	}
+	url += ".wav";
+	return url;
+};
+BW_Layout.prototype.pronunciationFrame = function () {
+	var frame = BW_getDoc().getElementById(this._namePronunciationFrame);
+	if (!frame){
+		frame = BW_getDoc().createElement('IFRAME');
+		frame.id = this._namePronunciationFrame;
+		frame.frameborder = "0";
+		frame.style.position = "absolute";
+		frame.style.height = "0";
+		frame.style.width = "0";
+		BW_getDoc().body.appendChild(frame);
+	}
+	return frame;
 };
 BW_Layout.prototype.searchWebButton = function () {
 	function openPage() {
@@ -1812,18 +1859,18 @@ BW_Layout.prototype.updateQuoteDetail = function () {
 BW_Layout.prototype.getTranslate = function (word) {
 	return this._dictionary.getTranslate(word);
 };
-BW_Layout.prototype.cibaFlash = function () {
-	var word = this._currentWord;
-	var span = BW_createElement("span");
-	span.style.marginTop = "2px!important";
-	span.setAttribute("title", this.getString("tooltip.pronounce"));
-	var flash = "http://www.iciba.com/resource/a/en/" + word.substr(0, 1) + "/" + word + ".swf";
-	var html = "<object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0\" width=\"10\" height=\"12\">";
-	html += "<param name=\"movie\" value=\"" + flash + "\" /><param name=\"quality\" value=\"high\" /><param name=\"bgcolor\" value=\"#D5E6FF\" />";
-	html += "<embed src=\"" + flash + "\" quality=\"high\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" bgcolor=\"#D5E6FF\" width=\"10\" height=\"12\"></embed></object>";
-	span.innerHTML = html;
-	this.getDiv().appendChild(span);
-};
+//BW_Layout.prototype.cibaFlash = function () {
+//	var word = this._currentWord;
+//	var span = BW_createElement("span");
+//	span.style.marginTop = "2px!important";
+//	span.setAttribute("title", this.getString("tooltip.pronounce"));
+//	var flash = "http://www.iciba.com/resource/a/en/" + word.substr(0, 1) + "/" + word + ".swf";
+//	var html = "<object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0\" width=\"10\" height=\"12\">";
+//	html += "<param name=\"movie\" value=\"" + flash + "\" /><param name=\"quality\" value=\"high\" /><param name=\"bgcolor\" value=\"#D5E6FF\" />";
+//	html += "<embed src=\"" + flash + "\" quality=\"high\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" bgcolor=\"#D5E6FF\" width=\"10\" height=\"12\"></embed></object>";
+//	span.innerHTML = html;
+//	this.getDiv().appendChild(span);
+//};
 BW_Layout.prototype.untenseSpan = function () {
 	if (!this._untense) {
 		return;

@@ -1,4 +1,4 @@
-<!ENTITY version "1.3.5.2">
+<!ENTITY version "1.3.6">
 <!ENTITY status.tooltip "Backword Enabled">
 <!ENTITY options.windowtitle "Options">
 <!ENTITY options.settingstab "Settings">
@@ -51,8 +51,8 @@
 <!ENTITY options.help.translator.2 "(Google Dictionaries)">
 <!ENTITY options.help.translator.link.dictcn "http://www.dict.cn">
 <!ENTITY options.help.translator.3 "(dict.cn Dictionary)">
-<!ENTITY options.help.translator.link.iciba "http://www.iciba.com">
-<!ENTITY options.help.translator.4 "(Pronuncation Flashes). Backword has no licenses of those resources this moment. If they are illegal, please contact. Please support Backword by distributing a license or helping find common resouces.">
+<!ENTITY options.help.translator.link.iciba "http://www.godict.com/">
+<!ENTITY options.help.translator.4 "(Pronuncation Files).">
 <!ENTITY options.help.searchweb "Current word will be appended to this URL when Search Web button was clicked. Find some ones or publish your own ones in page: ">
 <!ENTITY options.help.searchweb.wiki "This page">
 <!ENTITY options.help.api "You could use Backword Local Storage to store your data. All files are located in /backword subfolder of your profile folder. But you could use it with a remote website too, just need to build one to support Backword API with a little job. Here is a ">
@@ -67,7 +67,7 @@
 <!ENTITY options.help.link.homepage "http://backword.gneheix.com">
 <!ENTITY options.help.link.wiki "http://wikihost.org/wikis/backword/">
 <!ENTITY options.help.operation "Left click turns on/off. If using web API middle click opens admin page otherwise opens forum page.">
-<!ENTITY options.help.layout "Show Pronunciation Flash: Uncheck if other ad-blocking extensions break the interface. Auto-select current sentence as context: Use current sentence as context by select it automatically. Font Size: font size of layout, minimum value is 13. Quotes Count: max number of quotes to be shown, minimum value is 2. Mouse Out: the interface will be hidden when mouse out of it more than this in pix, minimum value is 5. Popup Delay: popup delay in millisecond, minimum value is 100.">
+<!ENTITY options.help.layout "Auto-select current sentence as context: Use current sentence as context by select it automatically. Font Size: font size of layout, minimum value is 13. Quotes Count: max number of quotes to be shown, minimum value is 2. Mouse Out: the interface will be hidden when mouse out of it more than this in pix, minimum value is 5. Popup Delay: popup delay in millisecond, minimum value is 100.">
 <!ENTITY options.page.api "Admin Page of Web API">
 <!ENTITY options.page.review "Review Page of Local Storage">
 <!ENTITY options.page.group "Backword Google Group">

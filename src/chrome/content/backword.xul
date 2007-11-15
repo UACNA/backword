@@ -84,7 +84,7 @@
         <menuitem id="bw-status-usingapi" label="&menu.usingapi.label;" accesskey="&menu.usingapi.accesskey;" type="checkbox" oncommand="backword.updatePref('backword.usingapi', this.hasAttribute('checked'))"/>
         <menuitem id="bw-status-usinglocalapi" label="&menu.usinglocalapi.label;" accesskey="&menu.usinglocalapi.accesskey;" type="checkbox" oncommand="backword.updatePref('backword.usinglocalapi', this.hasAttribute('checked'))"/>
         <menuseparator/>
-        <menuitem id="bw-status-showpronunciation" label="&menu.showpronunciation.label;" accesskey="&menu.showpronunciation.accesskey;" type="checkbox" oncommand="backword.updatePref('backword.showpronunciation', this.hasAttribute('checked'))"/>
+        <menuitem id="bw-status-showpronunciation" label="&menu.showpronunciation.label;" style="display:none" accesskey="&menu.showpronunciation.accesskey;" type="checkbox" oncommand="backword.updatePref('backword.showpronunciation', this.hasAttribute('checked'))"/>
         <menuitem id="bw-status-quotesentence" label="&menu.quotesentence.label;" accesskey="&menu.quotesentence.accesskey;" type="checkbox" oncommand="backword.updatePref('backword.quotesentence', this.hasAttribute('checked'))"/>
         <menuitem id="bw-status-ctrl" label="&menu.ctrl.label;" accesskey="&menu.ctrl.accesskey;" type="checkbox" oncommand="backword.updatePref('backword.ctrl', this.hasAttribute('checked'))"/>
         <menuitem id="bw-status-autoback" label="&menu.autoback.label;" accesskey="&menu.autoback.accesskey;" type="checkbox" oncommand="backword.updatePref('backword.autoback', this.hasAttribute('checked'))"/>

@@ -73,7 +73,7 @@ function showWords(page){
 		page = 0
 	}
 	var total = Math.ceil(api._words.length/perPage);
-	if (page > total-1){
+	if (total > 0 && page > total-1){
 		page = total-1;
 	}
 	currentPage = page;
@@ -89,11 +89,11 @@ function showWords(page){
 				" (major layout)<br/><a href='http://www.flickr.com/photos/gneheix/194794084/'>" +
 				"http://www.flickr.com/photos/gneheix/194794084/</a> (new features)<br/></p>" +
 				"<p>Function Flash demo :<br/><a href='http://gneheix.googlepages.com/backwordflashdemo'>" +
-				"http://gneheix.googlepages.com/backwordflashdemo</a> (in Chinese)<br/>" +
+				"http://gneheix.googlepages.com/backwordflashdemo</a> (中文版)<br/>" +
 				"<a href='http://gneheix.googlepages.com/backwordflashdemo2'>" +
 				"http://gneheix.googlepages.com/backwordflashdemo2</a> (in English)<br/>" +
 				"</p>Operation Flash demo :<br/><a href='http://gneheix.googlepages.com/backwordflashdemo3'>" +
-				"http://gneheix.googlepages.com/backwordflashdemo3</a> (in Chinese)<br/>" +
+				"http://gneheix.googlepages.com/backwordflashdemo3</a> (中文版)<br/>" +
 				"<a href='http://gneheix.googlepages.com/backwordflashdemo22'>" +
 				"http://gneheix.googlepages.com/backwordflashdemo22</a> (in English)<br/></p></div>";
 		document.getElementById('buttons').style.display='none';
