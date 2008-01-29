@@ -44,7 +44,7 @@
 <!ENTITY options.help.title.setting "設置">
 <!ENTITY options.help.title.link "鏈接">
 <!ENTITY options.help.title.operation "操作說明">
-<!ENTITY options.help.title.statusbutton "狀態爛按鈕">
+<!ENTITY options.help.title.statusbutton "狀態列按鈕">
 <!ENTITY options.help.translator.1 "Backword使用的詞典及語音資源分別由以下網站提供：">
 <!ENTITY options.help.translator.link.google "http://www.google.com">
 <!ENTITY options.help.translator.2 "（Google詞典）">

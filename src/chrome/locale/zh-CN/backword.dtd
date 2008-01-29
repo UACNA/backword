@@ -45,7 +45,7 @@
 <!ENTITY options.help.title.link "链接">
 <!ENTITY options.help.title.layout "界面">
 <!ENTITY options.help.title.operation "操作说明">
-<!ENTITY options.help.title.statusbutton "状态烂按钮">
+<!ENTITY options.help.title.statusbutton "状态栏按钮">
 <!ENTITY options.help.translator.1 "Backword使用的词典及语音资源分别由以下网站提供：">
 <!ENTITY options.help.translator.link.google "http://www.google.com">
 <!ENTITY options.help.translator.2 "（Google词典）">
