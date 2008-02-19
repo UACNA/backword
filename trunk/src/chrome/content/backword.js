@@ -455,7 +455,7 @@ function BW_Layout(observe) {
 	this._nameBackWord = "BW_backWordButton";
 	this._nameParaphrase = "BW_paraphraseSpan";
 	this._nameTranslate = "BW_translateSpan";
-	this._namePronunciationFrame = "BW_Pronunciation_Frame";
+	this._namepronunciationElement = "BW_Pronunciation_Span";
 	this._namePronunciationButton = "BW_Pronunciation_Button";
 	this._nameQuotesDiv = "BW_showQuotesDiv";
 	this._nameQuoteDetailDiv = "BW_showQuoteDetailDiv";
@@ -1400,9 +1400,10 @@ BW_Layout.prototype.pronunciationButton = function () {
 	button.setAttribute("src", "chrome://backword/skin/speaker.gif");
 	button.addEventListener("click", pronuonce, false);
 	function pronuonce() {
-		var IFrameObj = backword.pronunciationFrame();
-		IFrameObj.src = "about:blank";
-		IFrameObj.src = backword.pronunciationUrl();
+		if (BW_getPage().navigator.userAgent.toLowerCase().indexOf("windows")!=-1)
+			backword.pronunciationElement().innerHTML = "<embed id=\"mplay\" type=\"application/x-mplayer2\" src=\""+backword.pronunciationUrl()+"\" width=1 height=1 autostart=true loop=false volume=0></embed>";
+		else
+			backword.pronunciationElement().innerHTML = "<embed id=\"mplay\" type=\"audio/mpeg\" src=\""+backword.pronunciationUrl()+"\" width=0 height=0 autostart=true loop=false volume=0></embed>";
 	}
 	this.getDiv().appendChild(button);
 };
@@ -1411,28 +1412,16 @@ BW_Layout.prototype.pronunciationUrl = function () {
 		return "about:blank";
 	}
 	var word = this._currentWord;
-	var url = "http://www.godict.com/voice/"+word.charCodeAt(0).toString(16)+"/";
-	if (word.length > 1){
-		url += word.charCodeAt(1).toString(16) +"/";
-	}
-	for(var index=0; index<word.length; index++) {
-		url += word.charCodeAt(index).toString(16);
-	}
-	url += ".wav";
-	return url;
+	return "http://www.dreye.com.cn/dict/audio/"+word.substr(0,1).toUpperCase()+"/"+word+".mp3";
 };
-BW_Layout.prototype.pronunciationFrame = function () {
-	var frame = BW_getDoc().getElementById(this._namePronunciationFrame);
-	if (!frame){
-		frame = BW_getDoc().createElement('IFRAME');
-		frame.id = this._namePronunciationFrame;
-		frame.frameborder = "0";
-		frame.style.position = "absolute";
-		frame.style.height = "0";
-		frame.style.width = "0";
-		BW_getDoc().body.appendChild(frame);
+BW_Layout.prototype.pronunciationElement = function () {
+	var span = BW_getDoc().getElementById(this._namepronunciationElement);
+	if (!span){
+		span = BW_getDoc().createElement('SPAN');
+		span.id = this._namepronunciationElement;
+		BW_getDoc().body.appendChild(span);
 	}
-	return frame;
+	return span;
 };
 BW_Layout.prototype.searchWebButton = function () {
 	function openPage() {
