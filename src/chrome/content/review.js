@@ -22,6 +22,14 @@ function checkReload(){
 	}
 }
 
+function pronuonce(word) {
+	var pronunciationUrl = "http://www.dreye.com.cn/dict/audio/"+word.substr(0,1).toUpperCase()+"/"+word+".mp3";
+	if (navigator.userAgent.toLowerCase().indexOf("windows")!=-1)
+		$('pronunciation').innerHTML = "<embed id=\"mplay\" type=\"application/x-mplayer2\" src=\""+pronunciationUrl+"\" width=1 height=1 autostart=true loop=false volume=0></embed>";
+	else
+		$('pronunciation').innerHTML = "<embed id=\"mplay\" type=\"audio/mpeg\" src=\""+pronunciationUrl+"\" width=0 height=0 autostart=true loop=false volume=0></embed>";
+}
+
 function BW_ReviewPage(dict){
 	this.dictionary = null;
 	this.currentTranslator = "";
@@ -256,6 +264,9 @@ function attachParaphrase(page){
 	    }
 	    el.onmouseout = function(){
 		    $('translation-'+this.id).innerHTML = "";
+	    }
+	    el.onclick = function(){
+	    	pronuonce(this.id);
 	    }
 	}
 }
