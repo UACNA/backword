@@ -1,0 +1,12 @@
+#include "nsISupports.idl"
+#include "domstubs.idl"
+
+[scriptable, uuid(a97ddcb0-f68a-11dc-95ff-0800200c9a66)]
+interface nsIbwQuote: nsISupports
+{
+	attribute string word;
+	attribute string url;
+	attribute string title;
+	attribute string paragraph;
+	attribute nsIDOMElement element;
+};
