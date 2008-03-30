@@ -1,5 +1,5 @@
 var backword = new BW_Layout(false);
-var api = new BW_LocalAPI('backword/');
+var api = new BW_LocalStorage();
 api.observe = function(aSubject, aTopic, aData){
 	if (aTopic == "bw_load_storage"){
 		this.toReload = true;
@@ -15,8 +15,6 @@ function checkReload(){
 	setTimeout(function(){checkReload()}, 1000, false);
 	if (api.toReload){
 		api.toReload = false;
-		BW_ddump('api.load');
-		api.load();
 		buildMatchPattern();
 		showWords(currentPage);
 	}
@@ -80,15 +78,15 @@ function showWords(page){
 	if (page < 0){
 		page = 0
 	}
-	var total = Math.ceil(api._words.length/perPage);
+	var total = Math.ceil(api.getWords().length/perPage);
 	if (total > 0 && page > total-1){
 		page = total-1;
 	}
 	currentPage = page;
 	var panel = $('panel');
 	var html = "";
-	for (i=api._words.length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
-		html += formatWord(api._words[i]);
+	for (i=api.getWords().length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		html += formatWord(api.getWords()[i]);
 	}
 	if (html.length == 0){
 		html = "<div class='innerword' align=center><h3>How to use Backword</h3><p>Interface & Operations:<br/>" +
@@ -113,7 +111,7 @@ function showWords(page){
 }
 
 function showNavigator(page){
-	var total = Math.ceil(api._words.length/perPage);
+	var total = Math.ceil(api.getWords().length/perPage);
 	if (total > 1){
 		var html = "";
 		if (currentPage > 0){
@@ -153,10 +151,11 @@ function registerObserve(){
 	observerService.addObserver(reviewPage, "bw_dictionary_changed", false);	
 	Components.classes['@mozilla.org/observer-service;1'].getService(Components.interfaces.nsIObserverService).notifyObservers(window, 'bw_review_page_opened', '');
 }
-
+var regHighLights = {};
+var regLinks = {};
 function buildMatchPattern(){
-	for (var i=api._words.length-1; i>=0; i--){
-		var word = api._words[i];
+	for (var i=api.getWords().length-1; i>=0; i--){
+		var word = api.getWords()[i];
 		if (/f$/.test(word.id)){
 			re = "("+word.id.replace(/f$/, "") + "[fv](s|es|ies|d|ed|ied|ing){0,2})";
 		}
@@ -171,8 +170,8 @@ function buildMatchPattern(){
 				}
 			}
 		}
-		word.regHighLight = new RegExp(re, "gi");
-		word.regLink = new RegExp("([^a-z])"+re+"(?!<\\/span>|[a-z])", "gi");
+		regHighLights[word.id] = new RegExp(re, "gi");
+		regLinks[word.id] = new RegExp("([^a-z])"+re+"(?!<\\/span>|[a-z])", "gi");
 	}
 }
 
@@ -180,8 +179,8 @@ function formatWord(word){
 	var html = '<a name="word-'+word.id+'"><div id="word-'+word.id+'" class="word '+listModel+'"><div class="innerword"><img src="chrome://backword/skin/backWordED.gif" class="delete" id="todelete-word-'+word.id
 	+'"/><img src="chrome://backword/skin/backWordOK.gif" class="delete" style="display:none;" id="delete-word-'+word.id+'"/><span class="wordid" id="'+word.id+'">'+
 		word.id+'</span><span class="wordparaphrase" id="paraphrase-'+word.id+'">'+word.paraphrase+'</span><span class="wordparaphrase" id="translation-'+word.id+'"></span>';
-	for (var i=0; i<word.quotes.length; i++){
-		html += formatQuote(word.quotes[i], word);
+	for (var i=0; i<word.getQuotes({}).length; i++){
+		html += formatQuote(word.getQuotes({})[i], word);
 	}
 	html+='</div></div></a>';
 	return html;
@@ -195,9 +194,9 @@ function formatQuote(quote, word){
 }
 
 function formatQuoteParagraph(quote, word){
-    var html = quote.paragraph.replace(word.regHighLight,  "<span class='theword'>$1</span>");
-	for (var i=api._words.length-1; i>=0; i--){
-		html = html.replace(api._words[i].regLink, "$1<a href='javascript:displayWord(\""+api._words[i].id+"\","+(Math.ceil((api._words.length-i)/perPage)-1)+");' class='innerlink'>$2</a>");
+    var html = quote.paragraph.replace(regHighLights[word.id],  "<span class='theword'>$1</span>");
+	for (var i=api.getWords().length-1; i>=0; i--){
+		html = html.replace(regLinks[api.getWords()[i].id], "$1<a href='javascript:displayWord(\""+api.getWords()[i].id+"\","+(Math.ceil((api.getWords().length-i)/perPage)-1)+");' class='innerlink'>$2</a>");
 	}
 	return html;
 }
@@ -211,30 +210,30 @@ function displayWord(word, page){
 }
 function attachButtons(){
 	$('HideTrans').onclick = function(){
-		for (i=api._words.length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
-		    $('translation-'+api._words[i].id).innerHTML = "";
+		for (i=api.getWords().length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		    $('translation-'+api.getWords()[i].id).innerHTML = "";
 		}
 	}
 	$('ShowTrans').onclick = function(){
-		for (i=api._words.length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
-		    $('translation-'+api._words[i].id).innerHTML = "|" + reviewPage.dictionary.getTranslate(api._words[i].id);
+		for (i=api.getWords().length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		    $('translation-'+api.getWords()[i].id).innerHTML = "|" + reviewPage.dictionary.getTranslate(api.getWords()[i].id);
 		}
 	}
 	$('OneColumn').onclick = function(){
-		for (i=api._words.length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
-		    $('word-'+api._words[i].id).className = "word onecolumn";
+		for (i=api.getWords().length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		    $('word-'+api.getWords()[i].id).className = "word onecolumn";
 		}
 	    listModel = "onecolumn";
 	}
 	$('TwoColumn').onclick = function(){
-		for (i=api._words.length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
-		    $('word-'+api._words[i].id).className = "word twocolumn";
+		for (i=api.getWords().length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		    $('word-'+api.getWords()[i].id).className = "word twocolumn";
 		}
 	    listModel = "twocolumn";
 	}
 	$('ThreeColumn').onclick = function(){
-		for (i=api._words.length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
-		    $('word-'+api._words[i].id).className = "word threecolumn";
+		for (i=api.getWords().length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		    $('word-'+api.getWords()[i].id).className = "word threecolumn";
 		}
 	    listModel = "threecolumn";
 	}
@@ -257,8 +256,8 @@ function attachButtons(){
 }
 
 function attachParaphrase(page){
-	for (i=api._words.length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
-	    var el = $(api._words[i].id);
+	for (i=api.getWords().length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
+	    var el = $(api.getWords()[i].id);
 	    el.onmouseover = function(){
 		    $('translation-'+this.id).innerHTML = "|" + reviewPage.dictionary.getTranslate(this.id);
 	    }
