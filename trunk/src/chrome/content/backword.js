@@ -602,7 +602,7 @@ BW_Layout.prototype.loadPref = function () {
 	if (!this._api || usingLocalAPI != this._usingLocalAPI) {
 		this._usingLocalAPI = usingLocalAPI;
 		if (usingLocalAPI) {
-			this._api = new BW_LocalAPI();
+			this._api = new BW_LocalStorage();
 			this._apiError = false;
 			this._apiCalling = false;
 		} else {
@@ -1021,9 +1021,6 @@ BW_Layout.prototype.doPageLoadImpl = function (event) {
 		}
 	}
 	if (this._version != this.getString("version")) {
-		if (!this._version) {
-//			alert(this.getString("alert.firsttime"));
-		}
 		this._version = this.getString("version");
 		this._pref.setCharPref(this._namePrefVersion, this._version);
 	}
@@ -3098,6 +3095,76 @@ BW_LocalAPI.prototype.getFile = function (path) {
 	}
 	return null;
 };
+////////////////////////////////////////////////////////////////////////////
+// start of local storage component api definition function
+////////////////////////////////////////////////////////////////////////////
+
+function BW_LocalStorage() {
+	this._localStorage = Components.classes["@backword.gneheix.com/localstorage;1"].createInstance(Components.interfaces.nsIbwLocalStorage);
+	this.getWord = function (aWordid) {
+		backword.callbackGetWord(this._localStorage.getWord(aWordid));
+	};
+	this.backWord = function (aWordid, aParaphrase) {
+		var word = this._localStorage.getWord(aWordid);
+		if (word){
+			word.paraphrase = aParaphrase;
+		}
+		else{
+			word = this._localStorage.newWord();
+			word.id = aWordid;
+			word.paraphrase = aParaphrase;
+			this._localStorage.addWord(word)
+		}
+		this._localStorage.save();
+		backword.callbackBackWord(aWordid);
+	};
+	this.backQuote = function (aWordid, aUrl, aTitle, aParagraph) {
+		var word = this._localStorage.getWord(aWordid);
+		if (word){
+			var quote = this._localStorage.newQuote();
+			quote.url = aUrl;
+			quote.title = aTitle;
+			quote.paragraph = aParagraph;
+			word.addQuote(quote);
+			this._localStorage.save();
+			backword.callbackModifyQuotes(word);
+		}
+	};
+	this.deleteWord = function (aWordid) {
+		var word = this._localStorage.getWord(aWordid);
+		if (word){
+			this._localStorage.removeWord(word);
+			this._localStorage.save();
+		}
+	};
+	this.deleteQuote = function (aWordid, aQuoteid) {
+		var word = this._localStorage.getWord(aWordid);
+		if (word){
+			word.removeQuote(word.getQuotes({})[aQuoteid]);
+			this._localStorage.save();
+			backword.callbackModifyQuotes(word);
+		}
+	};
+	this.getQuotes = function (aWordid) {
+		var word = this._localStorage.getWord(aWordid);
+		if (word){
+			var quotes = word.getQuotes({});
+			backword.callbackGetQuotes(quotes);
+		}
+	};
+	this.getWords = function (numberofwords, offset) {
+		if (numberofwords == null) {
+			numberofwords = 50;
+		}
+		if (offset == null) {
+			offset = 0;
+		}
+		var words = this._localStorage.getWords({});
+		return words.slice(offset, offset+numberofwords);
+	};
+	this.close = function(){};
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // start of api definition function
 ////////////////////////////////////////////////////////////////////////////

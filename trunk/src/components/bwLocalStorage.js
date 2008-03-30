@@ -2,50 +2,62 @@ const nsIbwLocalStorage = Components.interfaces.nsIbwLocalStorage;
 const nsISupports = Components.interfaces.nsISupports;
 const CLASS_ID = Components.ID("{6b99e600-f68a-11dc-95ff-0800200c9a66}");
 const CLASS_NAME = "Local Storage of Backword";
-const CONTRACT_ID = "@backword.gneheix.com/LocalStorage;1";
+const CONTRACT_ID = "@backword.gneheix.com/localstorage;1";
 const CC = Components.classes;
 const CI = Components.interfaces;
 const ROOT = 'backword';
 const VERSION = "0.1"
-const ROOT_INIT = '<'+ROOT+' version="'+VERSION+'"></'+ROOT+'>';
+const ROOT_INIT = '<?xml version="1.0" encoding="utf-8"?><'+ROOT+' version="'+VERSION+'"></'+ROOT+'>';
 const NODENAME_WORD = "word";
 const NODENAME_QUOTE = "quote";
 
-function LocalStorage() {
-	this._uniConv = CC['@mozilla.org/intl/scriptableunicodeconverter'].createInstance(CI.nsIScriptableUnicodeConverter);
+function BWLocalStorage() {
+	this._uniConv = CC['@mozilla.org/intl/scriptableunicodeconverter'].getService(CI.nsIScriptableUnicodeConverter);
 	this._uniConv.charset = 'UTF-8';
 	this._initFile();
 	this._load();
 };
 
-LocalStorage.prototype = {
+BWLocalStorage.prototype = {
 	_doc: null,
-	_serializer: new XMLSerializer(),
-	_parser: new DOMParser(),
+	_file: null,
+	_serializer: CC['@mozilla.org/xmlextras/xmlserializer;1'].createInstance(CI.nsIDOMSerializer),
+	_parser: CC["@mozilla.org/xmlextras/domparser;1"].createInstance(CI.nsIDOMParser),
 	_words: [],
+	_map: {},
 	
 	newWord: function(){
-		var word = CC["@backword.gneheix.com/Word;1"].createInstance(CI.nsIbwWord);
-		word.element = this._doc.CreateElement(NODENAME_WORD);
+		var word = CC["@backword.gneheix.com/word;1"].createInstance(CI.nsIbwWord);
+		word.element = this._doc.createElement(NODENAME_WORD);
 		return word;
 	},
 	newQuote: function(){
-		var quote = CC["@backword.gneheix.com/Quote;1"].createInstance(CI.nsIbwQuote);
-		quote.element = this._doc.CreateElement(NODENAME_QUOTE);
+		var quote = CC["@backword.gneheix.com/quote;1"].createInstance(CI.nsIbwQuote);
+		quote.element = this._doc.createElement(NODENAME_QUOTE);
 		return quote;
 	},
-	getWords: function(){
+	getWords: function(count){
+		count.value = this._words.length;
 		return this._words;
 	},
+	getWord: function(id){
+		var word = this._map[id];
+		if (word){
+			return word;
+		}
+		return null;
+	},
 	addWord: function(word){
-		this._doc.appendChild(word.element);
+		this._doc.documentElement.appendChild(word.element);
 		this._words[this._words.length] = word;
+		this._map[word.id] = word;
 		return this._words.length;
 	},
 	removeWord: function(word){
 		var index = this._words.indexOf(word);
 		if (index != -1){
 			this._words.splice(index, 1);
+			this._map[word.id] = null;
 		}
 		this._doc.removeChild(word.element);
 		return this._words.length;
@@ -57,10 +69,14 @@ LocalStorage.prototype = {
 		if (!this._file.exists()){
 			this._createDic();
 		}
+//		this._doc  = this._parser.parseFromString(ROOT_INIT, "text/xml");
+//		var el = this._doc.createElement("test");
+//		el.setAttribute("id", this._uniConv.ConvertToUnicode("中文"));
+//		this._doc.documentElement.appendChild(el);
 		var foStream = CC["@mozilla.org/network/file-output-stream;1"]
                .createInstance(CI.nsIFileOutputStream);
 		foStream.init(this._file, 0x02 | 0x08 | 0x20, 0664, 0);
-		this._serializer.serializeToStream(this._doc, foStream, "UTF-8");
+		this._serializer.serializeToStream(this._doc, foStream, "utf-8");
 	},
 	
 	_createDic: function(){
@@ -90,27 +106,23 @@ LocalStorage.prototype = {
 			var siStream = CC["@mozilla.org/scriptableinputstream;1"]
 								.createInstance(CI.nsIScriptableInputStream);
 			fiStream.init(this._file, 1, 0, false);
-			siStream.init(fiStream);
-			data += siStream.read(-1);
-			siStream.close();
-			data = this._uniConv.ConvertToUnicode(data);
-			
-			this._doc = _parser.parseFromString(data, "text/xml");
+			this._doc = this._parser.parseFromStream(fiStream, "UTF-8", -1, "text/xml");
 		}
 		if (this._doc == null || this._doc.documentElement.nodeName == "parsererror"){
-			this._doc = _parser.parseFromString(ROOT_INIT, "text/xml");
+			this._doc = this._parser.parseFromString(ROOT_INIT, "text/xml");
 		}
-		var words = this._doc.getElementsByTagName(NODENAME_WORD);
-		for(var index=0; index<words.length; index++) {
-			var word = CC["@backword.gneheix.com/Word;1"].createInstance(CI.nsIbwWord);
-			word.element = words[i];
-			this._words[i] = word;
+		var elements = this._doc.getElementsByTagName(NODENAME_WORD);
+		for(var index=0; index<elements.length; index++) {
+			var word = CC["@backword.gneheix.com/word;1"].createInstance(CI.nsIbwWord);
+			word.element = elements[index];
+			this._words[index] = word;
+			this._map[word.id] = word;
 		}
 	},
 	_initFile: function(){
 		var profileDir = CC["@mozilla.org/file/directory_service;1"].getService(CI.nsIProperties).get("ProfD", CI.nsIFile);
-		_file = CC["@mozilla.org/file/local;1"].createInstance(CI.nsILocalFile);
-		_file.setRelativeDescriptor(profileDir, "backword/data.xml");
+		this._file = CC["@mozilla.org/file/local;1"].createInstance(CI.nsILocalFile);
+		this._file.setRelativeDescriptor(profileDir, "backword/data.xml");
 	},
 	QueryInterface: function(aIID)
 	{
@@ -121,16 +133,16 @@ LocalStorage.prototype = {
 		return this;
 	}
 };
-var LocalStorageFactory = {
+var BWLocalStorageFactory = {
   createInstance: function (aOuter, aIID)
   {
     if (aOuter != null)
       throw Components.results.NS_ERROR_NO_AGGREGATION;
-    return (new LocalStorage()).QueryInterface(aIID);
+    return (new BWLocalStorage()).QueryInterface(aIID);
   }
 };
 
-var LocalStorageModule = {
+var BWLocalStorageModule = {
   registerSelf: function(aCompMgr, aFileSpec, aLocation, aType)
   {
     aCompMgr = aCompMgr.
@@ -152,11 +164,11 @@ var LocalStorageModule = {
       throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
 
     if (aCID.equals(CLASS_ID))
-      return LocalStorageFactory;
+      return BWLocalStorageFactory;
 
     throw Components.results.NS_ERROR_NO_INTERFACE;
   },
 
   canUnload: function(aCompMgr) { return true; }
 };
-function NSGetModule(aCompMgr, aFileSpec) { return LocalStorageModule; }
+function NSGetModule(aCompMgr, aFileSpec) { return BWLocalStorageModule; }
