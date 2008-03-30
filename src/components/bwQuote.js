@@ -2,16 +2,25 @@ const nsIbwQuote = Components.interfaces.nsIbwQuote;
 const nsISupports = Components.interfaces.nsISupports;
 const CLASS_ID = Components.ID("{a97ddcb0-f68a-11dc-95ff-0800200c9a66}");
 const CLASS_NAME = "Local Storage of Backword";
-const CONTRACT_ID = "@backword.gneheix.com/Quote;1";
+const CONTRACT_ID = "@backword.gneheix.com/quote;1";
 const CC = Components.classes;
 const CI = Components.interfaces;
 
-function Quote() {
+function BWQuote() {
+	this._uniConv = CC['@mozilla.org/intl/scriptableunicodeconverter'].getService(CI.nsIScriptableUnicodeConverter);
+	this._uniConv.charset = 'UTF-8';	
 };
 
-Quote.prototype = {
+BWQuote.prototype = {
 	_element: null,
+	_id:null,
 	
+	get id(){
+		return this._id;
+	},
+	set id(aId){
+		this._id = aId;
+	},
 	get word(){
 		return this._getAttribute('word');
 	},
@@ -30,6 +39,7 @@ Quote.prototype = {
 		return this._getAttribute('title');
 	},
 	set title(atitle){
+		dump(atitle);
 		this._setAttribute('title', atitle);
 	},
 	
@@ -67,16 +77,16 @@ Quote.prototype = {
 		return this;
 	}
 };
-var QuoteFactory = {
+var BWQuoteFactory = {
   createInstance: function (aOuter, aIID)
   {
     if (aOuter != null)
       throw Components.results.NS_ERROR_NO_AGGREGATION;
-    return (new Quote()).QueryInterface(aIID);
+    return (new BWQuote()).QueryInterface(aIID);
   }
 };
 
-var QuoteModule = {
+var BWQuoteModule = {
   registerSelf: function(aCompMgr, aFileSpec, aLocation, aType)
   {
     aCompMgr = aCompMgr.
@@ -98,11 +108,11 @@ var QuoteModule = {
       throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
 
     if (aCID.equals(CLASS_ID))
-      return QuoteFactory;
+      return BWQuoteFactory;
 
     throw Components.results.NS_ERROR_NO_INTERFACE;
   },
 
   canUnload: function(aCompMgr) { return true; }
 };
-function NSGetModule(aCompMgr, aFileSpec) { return QuoteModule; }
+function NSGetModule(aCompMgr, aFileSpec) { return BWQuoteModule; }

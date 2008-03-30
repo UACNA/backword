@@ -2,15 +2,17 @@ const nsIbwWord = Components.interfaces.nsIbwWord;
 const nsISupports = Components.interfaces.nsISupports;
 const CLASS_ID = Components.ID("{b0615200-f68a-11dc-95ff-0800200c9a66}");
 const CLASS_NAME = "Local Storage of Backword";
-const CONTRACT_ID = "@backword.gneheix.com/Word;1";
+const CONTRACT_ID = "@backword.gneheix.com/word;1";
 const CC = Components.classes;
 const CI = Components.interfaces;
 const NODENAME_QUOTE = "quote";
 
-function Word() {
+function BWWord() {
+	this._uniConv = CC['@mozilla.org/intl/scriptableunicodeconverter'].getService(CI.nsIScriptableUnicodeConverter);
+	this._uniConv.charset = 'UTF-8';
 };
 
-Word.prototype = {
+BWWord.prototype = {
 	_element: null,
 	_quotes: null,
 	
@@ -28,21 +30,13 @@ Word.prototype = {
 		this._setAttribute('paraphrase', aparaphrase);
 	},
 
-	getQuotes: function(){
-		if (this._quotes == null){
-			this._quotes = [];
-			var children = this._element.getElementByTagName(NODENAME_QUOTE);
-			for (var i = 0; i < children.length; i++) 
-			{
-				var quote = CC["@backword.gneheix.com/Quote;1"].createInstance(CI.nsIbwQuote);
-				quote.element = children[i];
-				this._quotes[i] = quote;
-			};
-		}
+	getQuotes: function(count){
+		count.value = this._quotes.length;
 		return this._quotes;
 	},
 	addQuote: function(quote){
 		this._element.appendChild(quote.element);
+		quote.id = this._quotes.length;
 		this._quotes[this._quotes.length] = quote;
 		return this._quotes.length;
 	},
@@ -50,6 +44,9 @@ Word.prototype = {
 		var index = this._quotes.indexOf(quote);
 		if (index != -1){
 			this._quotes.splice(index, 1);
+			for(var index=index; index<this._quotes.length; index++) {
+				this._quotes[index].id = index;
+			}
 		}
 		this._element.removeChild(quote.element);
 		return this._quotes.length;
@@ -74,7 +71,15 @@ Word.prototype = {
 	},
 	set element(aelement){
 		this._element = aelement;
-		this._quotes = null;
+		this._quotes = [];
+		var children = this._element.getElementsByTagName(NODENAME_QUOTE);
+		for (var i = 0; i < children.length; i++) 
+		{
+			var quote = CC["@backword.gneheix.com/quote;1"].createInstance(CI.nsIbwQuote);
+			quote.element = children[i];
+			this._quotes[i] = quote;
+			quote.id = i;
+		};
 	},
 		
 	QueryInterface: function(aIID)
@@ -86,16 +91,16 @@ Word.prototype = {
 		return this;
 	}
 };
-var WordFactory = {
+var BWWordFactory = {
   createInstance: function (aOuter, aIID)
   {
     if (aOuter != null)
       throw Components.results.NS_ERROR_NO_AGGREGATION;
-    return (new Word()).QueryInterface(aIID);
+    return (new BWWord()).QueryInterface(aIID);
   }
 };
 
-var WordModule = {
+var BWWordModule = {
   registerSelf: function(aCompMgr, aFileSpec, aLocation, aType)
   {
     aCompMgr = aCompMgr.
@@ -117,11 +122,11 @@ var WordModule = {
       throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
 
     if (aCID.equals(CLASS_ID))
-      return WordFactory;
+      return BWWordFactory;
 
     throw Components.results.NS_ERROR_NO_INTERFACE;
   },
 
   canUnload: function(aCompMgr) { return true; }
 };
-function NSGetModule(aCompMgr, aFileSpec) { return WordModule; }
+function NSGetModule(aCompMgr, aFileSpec) { return BWWordModule; }

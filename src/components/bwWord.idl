@@ -6,10 +6,10 @@
 [scriptable, uuid(b0615200-f68a-11dc-95ff-0800200c9a66)]
 interface nsIbwWord : nsISupports
 {
-	attribute string id;
-	attribute string paraphrase;
+	attribute wstring id;
+	attribute wstring paraphrase;
 	attribute nsIDOMElement element;
-	void getQuotes(out PRUint32 cnto, [array, size_is (cnto), retval] out nsIbwQuote datao);
+	void getQuotes(out PRUint32 count, [retval, array, size_is (count)] out nsIbwQuote quotes);
 	short addQuote(in nsIbwQuote quote);
 	short removeQuote(in nsIbwQuote quote);
 	short getCountQuotes();
