@@ -58,8 +58,8 @@ BWLocalStorage.prototype = {
 		if (index != -1){
 			this._words.splice(index, 1);
 			this._map[word.id] = null;
+			this._doc.documentElement.removeChild(word.element);
 		}
-		this._doc.removeChild(word.element);
 		return this._words.length;
 	},
 	getCountWords: function(){
@@ -77,6 +77,7 @@ BWLocalStorage.prototype = {
                .createInstance(CI.nsIFileOutputStream);
 		foStream.init(this._file, 0x02 | 0x08 | 0x20, 0664, 0);
 		this._serializer.serializeToStream(this._doc, foStream, "utf-8");
+		CC['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService).notifyObservers(this, 'bw_load_storage', '');
 	},
 	
 	_createDic: function(){
