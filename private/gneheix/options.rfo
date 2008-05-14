@@ -62,6 +62,7 @@ PassGenCopyClipboardAuto=1
 AutoUpdateWelcome=0
 AutoFillDialogStealFocus=0
 ConfirmAutoFillEnable=0
+PassGenCharNumber=24
 [CHECKED RUN MESSAGES]
 MsgBoxFillTheSameValues=1
 MsgBoxLowerToolbarHide_max.exe=1
