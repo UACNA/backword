@@ -6,6 +6,8 @@ api.observe = function(aSubject, aTopic, aData){
 	}
 };
 api.toReload = false;
+var observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
+observerService.addObserver(api, "bw_load_storage", false);
 
 var currentPage = 0;
 var perPage = 10;
@@ -85,7 +87,7 @@ function showWords(page){
 	currentPage = page;
 	var panel = $('panel');
 	var html = "";
-	for (i=api.getWords().length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
+	for (var i=api.getWords().length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
 		html += formatWord(api.getWords()[i]);
 	}
 	if (html.length == 0){
@@ -156,6 +158,7 @@ var regLinks = {};
 function buildMatchPattern(){
 	for (var i=api.getWords().length-1; i>=0; i--){
 		var word = api.getWords()[i];
+		var re;
 		if (/f$/.test(word.id)){
 			re = "("+word.id.replace(/f$/, "") + "[fv](s|es|ies|d|ed|ied|ing){0,2})";
 		}
@@ -256,7 +259,7 @@ function attachButtons(){
 }
 
 function attachParaphrase(page){
-	for (i=api.getWords().length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
+	for (var i=api.getWords().length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
 	    var el = $(api.getWords()[i].id);
 	    el.onmouseover = function(){
 		    $('translation-'+this.id).innerHTML = "|" + reviewPage.dictionary.getTranslate(this.id);
@@ -271,7 +274,7 @@ function attachParaphrase(page){
 }
 
 function attachDeleteButton(){
-	imgs = document.getElementsByTagName("img");
+	var imgs = document.getElementsByTagName("img");
 	for(var index=0; index<imgs.length; index++) {
 		var img = imgs[index];
 		if (img.id.indexOf('todelete') == 0){
