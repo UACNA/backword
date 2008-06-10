@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<project name="Backword Firefox Extention" default="xpi">
+
+<!-- properies -->
+<property name="src.dir" value="src" />
+<property name="src.chrome.dir" value="src/chrome" />
+<property name="bin.dir" value="bin" />
+<property name="chrome.dir" value="bin/chrome" />
+
+<target name="init">
+	<mkdir dir="${bin.dir}" />
+	<mkdir dir="${chrome.dir}" />
+	  <copy todir="${bin.dir}">
+	    <fileset dir="${src.dir}">
+			<exclude name="**/*.idl" />
+	    </fileset>
+	  </copy>
+	<!-- copydir src="${src.dir}" dest="${bin.dir}" includes="*.*"/ -->
+</target>
+<!--
+<target name="jar" depends="init" description="make .jar file">
+<zip destfile="${chrome.dir}/backword.jar" basedir="${src.chrome.dir}">
+	<exclude name="**/test*.*" />
+	<exclude name="**/*.bak" />
+</zip>
+</target>
+-->
+<target name="xpi" depends="jar"  description="make .xpi file">
+<zip destfile="d:/deploy/backword.xpi" basedir="${bin.dir}">
+	<exclude name="**/test*.*" />
+	<exclude name="**/*.bak" />
+</zip>
+</target>
+
+</project>

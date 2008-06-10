@@ -1,0 +1,16 @@
+#include "nsISupports.idl"
+#include "bwQuote.idl"
+#include "domstubs.idl"
+
+
+[scriptable, uuid(b0615200-f68a-11dc-95ff-0800200c9a66)]
+interface nsIbwWord : nsISupports
+{
+	attribute wstring id;
+	attribute wstring paraphrase;
+	attribute nsIDOMElement element;
+	void getQuotes(out PRUint32 count, [retval, array, size_is (count)] out nsIbwQuote quotes);
+	short addQuote(in nsIbwQuote quote);
+	short removeQuote(in nsIbwQuote quote);
+	short getCountQuotes();
+};
