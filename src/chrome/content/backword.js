@@ -282,28 +282,28 @@ function BW_createElement(type, father) {
 	return BW_setElementStyle(obj);
 }
 function BW_setElementStyle(obj) {
-	obj.style.fontSize = (backword._size - 4) + "px";
-	obj.style.fontWeight = "normal";
-	obj.style.fontStyle = "normal";
+	obj.style.fontSize = (backword._size - 4) + "px!important";
+	obj.style.fontWeight = "normal!important";
+	obj.style.fontStyle = "normal!important";
 	obj.style.fontFamily = "tahoma,宋体,arial,verdana,sans-serif";
-	obj.style.fontSizeAdjust = "none";
-	obj.style.fontStretch = "normal";
-	obj.style.fontVariant = "normal";
-	obj.style["float"] = "none"; 
-	obj.style.margin = "0px";
-	obj.style.padding = "0px";
+	obj.style.fontSizeAdjust = "none!important";
+	obj.style.fontStretch = "normal!important";
+	obj.style.fontVariant = "normal!important";
+	obj.style["float"] = "none!important"; 
+	obj.style.margin = "0px 0px 0px 0px!important";
+	obj.style.padding = "0px 0px 0px 0px!important";
 //	obj.style.wordWrap = "break-word";
-	obj.style.border = "0px";
-	obj.style.lineHeight = backword._size + "px";
-//	obj.style.verticalAlign = "middle";
+	obj.style.border = "0px !important";
+	obj.style.lineHeight = backword._size + "px!important";
+//	obj.style.verticalAlign = "middle!important";
 //	if (obj.tagName.toUpperCase() != "SPAN") {
 //	}
 	if (obj.tagName.toUpperCase() == "DIV") {
-		obj.style.overflow = "hidden ";
-		obj.style.whiteSpace = "nowrap ";
+		obj.style.overflow = "hidden !important";
+		obj.style.whiteSpace = "nowrap !important";
 	}
 	else{
-		obj.style.display = "inline";
+		obj.style.display = "inline!important";
 	}
 	if (obj.tagName.toUpperCase() == "IMG") {
 		obj.style.maxWidth = "15px";
@@ -312,21 +312,21 @@ function BW_setElementStyle(obj) {
 	return obj;
 }
 function BW_defaultStyle() {
-	var style = "font-size: " + (backword._size - 4) + "px;";
-	style += "font-weight: normal;";
-	style += "font-style: normal;";
+	var style = "font-size: " + (backword._size - 4) + "px!important;";
+	style += "font-weight: normal!important;";
+	style += "font-style: normal!important;";
 	style += "font-family: tahoma,宋体,arial,verdana,sans-serif";
 	style += "font-size-adjust: none;";
 	style += "font-variant: normal;";
 	style += "font-stretch: normal;";
-	style += "overflow: hidden;";
-	style += "margin: 0px;";
-	style += "padding: 0px;";
+	style += "overflow: hidden!important;";
+	style += "margin: 0px 0px 0px 0px!important;";
+	style += "padding: 0px 0px 0px 0px!important;";
 	style += "float: none;";
-	style += "border: 0px;";
-//	style += "vertical-align: middle;";
-	style += "line-height: " + (backword._size) + "px;";
-	style += "display: inline;";
+	style += "border: 0px!important;";
+//	style += "vertical-align: middle!important;";
+	style += "line-height: " + (backword._size) + "px!important;";
+	style += "display: inline!important;";
 	return style;
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -602,7 +602,7 @@ BW_Layout.prototype.loadPref = function () {
 	if (!this._api || usingLocalAPI != this._usingLocalAPI) {
 		this._usingLocalAPI = usingLocalAPI;
 		if (usingLocalAPI) {
-			this._api = new BW_LocalStorage();
+			this._api = new BW_LocalAPI();
 			this._apiError = false;
 			this._apiCalling = false;
 		} else {
@@ -676,7 +676,7 @@ BW_Layout.prototype.appendDiv = function () {
 		div.style.borderBottomStyle = "outset";
 		div.style.borderRightStyle = "outset";
 		div.style.display = "none";
-		div.style.color = "#002864";
+		div.style.color = "#002864!important";
 		div.style.backgroundColor = "#D5E6FF";
 		div.style.verticalAlign = "middle";
 //		div.setAttribute('valign', 'middle');
@@ -1021,6 +1021,9 @@ BW_Layout.prototype.doPageLoadImpl = function (event) {
 		}
 	}
 	if (this._version != this.getString("version")) {
+		if (!this._version) {
+//			alert(this.getString("alert.firsttime"));
+		}
 		this._version = this.getString("version");
 		this._pref.setCharPref(this._namePrefVersion, this._version);
 	}
@@ -1480,7 +1483,7 @@ BW_Layout.prototype.clickParaphrase = function () {
 		titleWidth = backword.maxLengthInput();
 	}
 	var input = BW_getDoc().createElement("INPUT");
-//	obj.style.verticalAlign = "middle";
+//	obj.style.verticalAlign = "middle!important";
 	input.setAttribute("type", "text");
 	input.setAttribute("maxlength", "80");
 	input.setAttribute("value", backword._paraphrase);
@@ -1580,7 +1583,7 @@ BW_Layout.prototype.showQuotes = function () {
 		div = BW_createElement("DIV");
 		div.style.backgroundColor = "#e5f0ff";
 		div.style.position = "absolute";
-		div.style.display = "block";
+		div.style.display = "block!important";
 		div.style.left = this.getDiv().style.left;
 		div.style.top = (BW_getTop(this.getDiv()) + this._size + 1) + "px";
 		var divWidth = this.getDiv().clientWidth;
@@ -1589,8 +1592,8 @@ BW_Layout.prototype.showQuotes = function () {
 		div.style.width = divWidth + "px";
 		div.style.zIndex = "32714";
 		div.style.border = "1px solid #517abf";
-		div.style.lineHeight = this._size + "px";
-//		div.style.overflow = "hidden";
+		div.style.lineHeight = this._size + "px!important";
+//		div.style.overflow = "hidden!important";
 		div.setAttribute("align", "left");
 		div.id = this._nameQuotesDiv;
 		BW_getDoc().body.appendChild(div);
@@ -1690,8 +1693,8 @@ BW_Layout.prototype.showQuote = function (index) {
 			detail.style.border = "1px solid #517abf";
 			detail.style.display = "block";
 			detail.style.color = "#002864";
-			detail.style.overflow = "visible ";
-			detail.style.whiteSpace = "normal ";
+			detail.style.overflow = "visible !important";
+			detail.style.whiteSpace = "normal !important";
 			detail.style.wordBreak = "break-all";
 			detail.style.wordWrap = "break-word";
 			detail.style.backgroundColor = "#f1f7ff";
@@ -1848,7 +1851,7 @@ BW_Layout.prototype.getTranslate = function (word) {
 //BW_Layout.prototype.cibaFlash = function () {
 //	var word = this._currentWord;
 //	var span = BW_createElement("span");
-//	span.style.marginTop = "2px";
+//	span.style.marginTop = "2px!important";
 //	span.setAttribute("title", this.getString("tooltip.pronounce"));
 //	var flash = "http://www.iciba.com/resource/a/en/" + word.substr(0, 1) + "/" + word + ".swf";
 //	var html = "<object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0\" width=\"10\" height=\"12\">";
@@ -3095,76 +3098,6 @@ BW_LocalAPI.prototype.getFile = function (path) {
 	}
 	return null;
 };
-////////////////////////////////////////////////////////////////////////////
-// start of local storage component api definition function
-////////////////////////////////////////////////////////////////////////////
-
-function BW_LocalStorage() {
-	this._localStorage = Components.classes["@backword.gneheix.com/localstorage;1"].createInstance(Components.interfaces.nsIbwLocalStorage);
-	this.getWord = function (aWordid) {
-		backword.callbackGetWord(this._localStorage.getWord(aWordid));
-	};
-	this.backWord = function (aWordid, aParaphrase) {
-		var word = this._localStorage.getWord(aWordid);
-		if (word){
-			word.paraphrase = aParaphrase;
-		}
-		else{
-			word = this._localStorage.newWord();
-			word.id = aWordid;
-			word.paraphrase = aParaphrase;
-			this._localStorage.addWord(word)
-		}
-		this._localStorage.save();
-		backword.callbackBackWord(aWordid);
-	};
-	this.backQuote = function (aWordid, aUrl, aTitle, aParagraph) {
-		var word = this._localStorage.getWord(aWordid);
-		if (word){
-			var quote = this._localStorage.newQuote();
-			quote.url = aUrl;
-			quote.title = aTitle;
-			quote.paragraph = aParagraph;
-			word.addQuote(quote);
-			this._localStorage.save();
-			backword.callbackModifyQuotes(word);
-		}
-	};
-	this.deleteWord = function (aWordid) {
-		var word = this._localStorage.getWord(aWordid);
-		if (word){
-			this._localStorage.removeWord(word);
-			this._localStorage.save();
-		}
-	};
-	this.deleteQuote = function (aWordid, aQuoteid) {
-		var word = this._localStorage.getWord(aWordid);
-		if (word){
-			word.removeQuote(word.getQuotes({})[aQuoteid]);
-			this._localStorage.save();
-			backword.callbackModifyQuotes(word);
-		}
-	};
-	this.getQuotes = function (aWordid) {
-		var word = this._localStorage.getWord(aWordid);
-		if (word){
-			var quotes = word.getQuotes({});
-			backword.callbackGetQuotes(quotes);
-		}
-	};
-	this.getWords = function (numberofwords, offset) {
-		if (numberofwords == null) {
-			numberofwords = 50;
-		}
-		if (offset == null) {
-			offset = 0;
-		}
-		var words = this._localStorage.getWords({});
-		return words.slice(offset, offset+numberofwords);
-	};
-	this.close = function(){};
-}
-
 ////////////////////////////////////////////////////////////////////////////
 // start of api definition function
 ////////////////////////////////////////////////////////////////////////////
