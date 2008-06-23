@@ -1,5 +1,5 @@
 # XUL Overlays
-content	backword	jar:chrome/backword.jar!/content/
+content	backword	jar:chrome/backword.jar!/content/  contentaccessible=yes
 overlay	chrome://browser/content/browser.xul	chrome://backword/content/backword.xul
 overlay 	chrome://messenger/content/messenger.xul chrome://backword/content/backword.xul
 overlay 	chrome://messenger/content/messengercompose/messengercompose.xul chrome://backword/content/backword.xul
