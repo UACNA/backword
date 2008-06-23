@@ -87,7 +87,7 @@ function showWords(page){
 	currentPage = page;
 	var panel = $('panel');
 	var html = "";
-	for (i=api._words.length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
+	for (var i=api._words.length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
 		html += formatWord(api._words[i]);
 	}
 	if (html.length == 0){
