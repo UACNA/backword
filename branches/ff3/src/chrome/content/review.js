@@ -157,6 +157,7 @@ function registerObserve(){
 function buildMatchPattern(){
 	for (var i=api._words.length-1; i>=0; i--){
 		var word = api._words[i];
+		var re = "";
 		if (/f$/.test(word.id)){
 			re = "("+word.id.replace(/f$/, "") + "[fv](s|es|ies|d|ed|ied|ing){0,2})";
 		}
@@ -257,7 +258,7 @@ function attachButtons(){
 }
 
 function attachParaphrase(page){
-	for (i=api._words.length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
+	for (var i=api._words.length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
 	    var el = $(api._words[i].id);
 	    el.onmouseover = function(){
 		    $('translation-'+this.id).innerHTML = "|" + reviewPage.dictionary.getTranslate(this.id);
@@ -272,7 +273,7 @@ function attachParaphrase(page){
 }
 
 function attachDeleteButton(){
-	imgs = document.getElementsByTagName("img");
+	var imgs = document.getElementsByTagName("img");
 	for(var index=0; index<imgs.length; index++) {
 		var img = imgs[index];
 		if (img.id.indexOf('todelete') == 0){
