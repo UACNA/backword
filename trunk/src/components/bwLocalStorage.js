@@ -25,7 +25,6 @@ BWLocalStorage.prototype = {
 	_parser: CC["@mozilla.org/xmlextras/domparser;1"].createInstance(CI.nsIDOMParser),
 	_words: [],
 	_map: {},
-	
 	newWord: function(){
 		var word = CC["@backword.gneheix.com/word;1"].createInstance(CI.nsIbwWord);
 		word.element = this._doc.createElement(NODENAME_WORD);

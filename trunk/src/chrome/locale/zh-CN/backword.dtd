@@ -1,4 +1,4 @@
-<!ENTITY version "1.3.6.2">
+<!ENTITY version "2.0.0">
 <!ENTITY status.tooltip "关闭 Backword">
 <!ENTITY options.windowtitle "设置">
 <!ENTITY options.settingstab "选项">
@@ -54,7 +54,7 @@
 <!ENTITY options.help.translator.link.iciba "http://www.dreye.com.cn/">
 <!ENTITY options.help.translator.4 "（读音）。">
 <!ENTITY options.help.searchweb "搜索详细解释时，单词将追加到此地址的后面。有一个维基页面列举了一些可以使用的地址:">
-<!ENTITY options.help.api "您可以选择使用本地文件存储Backword收录的数据(文件被存放在用户数据目录下的Backword子目录)或者自行搭建Web后台，搭建方法参见">
+<!ENTITY options.help.api "您可以选择使用本地文件存储Backword收录的数据(新版的本地文件存储使用用户数据目录下的backword/data.xml文件)或者自行搭建Web后台，搭建方法参见">
 <!ENTITY options.help.api.tutorial "此教程。">
 <!ENTITY options.help.link.lable.homepage "主页:">
 <!ENTITY options.help.link.lable.group "讨论组：">
