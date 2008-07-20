@@ -20,3 +20,4 @@ pref("backword.apipassword", "demouser");
 pref("backword.localapi.path", "backword/");
 pref("backword.currentinstancelist", "");
 pref("backword.ctrl", false);
+pref("backword.upgrade", false);

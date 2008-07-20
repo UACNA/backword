@@ -1,5 +1,6 @@
 var backword = new BW_Layout(false);
 var api = new BW_LocalStorage();
+var words=[];
 api.observe = function(aSubject, aTopic, aData){
 	if (aTopic == "bw_load_storage"){
 		this.toReload = true;
@@ -74,21 +75,22 @@ function doLoad(){
 }
 
 function showWords(page){
+	words = api._localStorage.getWords({});
 	if (typeof(page) == "undefined"){
 		page = 0;
 	}
 	if (page < 0){
 		page = 0
 	}
-	var total = Math.ceil(api.getWords().length/perPage);
+	var total = Math.ceil(words.length/perPage);
 	if (total > 0 && page > total-1){
 		page = total-1;
 	}
 	currentPage = page;
 	var panel = $('panel');
 	var html = "";
-	for (var i=api.getWords().length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
-		html += formatWord(api.getWords()[i]);
+	for (var i=words.length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		html += formatWord(words[i]);
 	}
 	if (html.length == 0){
 		html = "<div class='innerword' align=center><h3>How to use Backword</h3><p>Interface & Operations:<br/>" +
@@ -113,13 +115,13 @@ function showWords(page){
 }
 
 function showNavigator(page){
-	var total = Math.ceil(api.getWords().length/perPage);
+	var total = Math.ceil(words.length/perPage);
 	if (total > 1){
 		var html = "";
 		if (currentPage > 0){
 			html += "<a href='javascript:showWords("+(currentPage-1)+");'>&lt;Prev</a> ";
 		}
-		for (i=1; i<=total; i++){
+		for (var i=1; i<=total; i++){
 			if (currentPage == i -1){
 				html += i+" ";	
 			}
@@ -156,8 +158,8 @@ function registerObserve(){
 var regHighLights = {};
 var regLinks = {};
 function buildMatchPattern(){
-	for (var i=api.getWords().length-1; i>=0; i--){
-		var word = api.getWords()[i];
+	for (var i=words.length-1; i>=0; i--){
+		var word = words[i];
 		var re;
 		if (/f$/.test(word.id)){
 			re = "("+word.id.replace(/f$/, "") + "[fv](s|es|ies|d|ed|ied|ing){0,2})";
@@ -198,8 +200,8 @@ function formatQuote(quote, word){
 
 function formatQuoteParagraph(quote, word){
     var html = quote.paragraph.replace(regHighLights[word.id],  "<span class='theword'>$1</span>");
-	for (var i=api.getWords().length-1; i>=0; i--){
-		html = html.replace(regLinks[api.getWords()[i].id], "$1<a href='javascript:displayWord(\""+api.getWords()[i].id+"\","+(Math.ceil((api.getWords().length-i)/perPage)-1)+");' class='innerlink'>$2</a>");
+	for (var i=words.length-1; i>=0; i--){
+		html = html.replace(regLinks[words[i].id], "$1<a href='javascript:displayWord(\""+words[i].id+"\","+(Math.ceil((words.length-i)/perPage)-1)+");' class='innerlink'>$2</a>");
 	}
 	return html;
 }
@@ -213,30 +215,30 @@ function displayWord(word, page){
 }
 function attachButtons(){
 	$('HideTrans').onclick = function(){
-		for (i=api.getWords().length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
-		    $('translation-'+api.getWords()[i].id).innerHTML = "";
+		for (i=words.length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		    $('translation-'+words[i].id).innerHTML = "";
 		}
 	}
 	$('ShowTrans').onclick = function(){
-		for (i=api.getWords().length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
-		    $('translation-'+api.getWords()[i].id).innerHTML = "|" + reviewPage.dictionary.getTranslate(api.getWords()[i].id);
+		for (i=words.length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		    $('translation-'+words[i].id).innerHTML = "|" + reviewPage.dictionary.getTranslate(words[i].id);
 		}
 	}
 	$('OneColumn').onclick = function(){
-		for (i=api.getWords().length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
-		    $('word-'+api.getWords()[i].id).className = "word onecolumn";
+		for (i=words.length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		    $('word-'+words[i].id).className = "word onecolumn";
 		}
 	    listModel = "onecolumn";
 	}
 	$('TwoColumn').onclick = function(){
-		for (i=api.getWords().length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
-		    $('word-'+api.getWords()[i].id).className = "word twocolumn";
+		for (i=words.length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		    $('word-'+words[i].id).className = "word twocolumn";
 		}
 	    listModel = "twocolumn";
 	}
 	$('ThreeColumn').onclick = function(){
-		for (i=api.getWords().length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
-		    $('word-'+api.getWords()[i].id).className = "word threecolumn";
+		for (i=words.length-1-currentPage*perPage, j=0; i>=0&&j<perPage; i--, j++){
+		    $('word-'+words[i].id).className = "word threecolumn";
 		}
 	    listModel = "threecolumn";
 	}
@@ -259,8 +261,8 @@ function attachButtons(){
 }
 
 function attachParaphrase(page){
-	for (var i=api.getWords().length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
-	    var el = $(api.getWords()[i].id);
+	for (var i=words.length-1-page*perPage, j=0; i>=0&&j<perPage; i--, j++){
+	    var el = $(words[i].id);
 	    el.onmouseover = function(){
 		    $('translation-'+this.id).innerHTML = "|" + reviewPage.dictionary.getTranslate(this.id);
 	    }

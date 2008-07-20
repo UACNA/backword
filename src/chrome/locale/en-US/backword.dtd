@@ -1,4 +1,4 @@
-<!ENTITY version "1.3.6.2">
+<!ENTITY version "2.0.0">
 <!ENTITY status.tooltip "Backword Enabled">
 <!ENTITY options.windowtitle "Options">
 <!ENTITY options.settingstab "Settings">
@@ -55,7 +55,7 @@
 <!ENTITY options.help.translator.4 "(Pronuncation Files).">
 <!ENTITY options.help.searchweb "Current word will be appended to this URL when Search Web button was clicked. Find some ones or publish your own ones in page: ">
 <!ENTITY options.help.searchweb.wiki "This page">
-<!ENTITY options.help.api "You could use Backword Local Storage to store your data. All files are located in /backword subfolder of your profile folder. But you could use it with a remote website too, just need to build one to support Backword API with a little job. Here is a ">
+<!ENTITY options.help.api "You could use Backword Local Storage to store your data. New version Local Storage uses /backword/data.xml under your profile folder. But you could use it with a remote website too, just need to build one to support Backword API with a little job. Here is a ">
 <!ENTITY options.help.api.tutorial "tutorial.">
 <!ENTITY options.help.link.lable.homepage "HomePage:">
 <!ENTITY options.help.link.lable.group "Forum:">

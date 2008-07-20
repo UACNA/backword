@@ -603,6 +603,33 @@ BW_Layout.prototype.loadPref = function () {
 		this._usingLocalAPI = usingLocalAPI;
 		if (usingLocalAPI) {
 			this._api = new BW_LocalStorage();
+			if (!this._pref.getBoolPref("backword.upgrade")){
+				var old = new BW_LocalAPI();
+				dump(old._words.length);
+				if (old._words.length > 0){
+					for(var i=0; i<old._words.length; i++) {
+						var word = old._words[i];
+						var nword = this._api._localStorage.getWord(word.id)
+						if (!nword){
+							nword =  this._api._localStorage.newWord();
+							nword.id = word.id;
+							nword.paraphrase = word.paraphrase;
+							this._api._localStorage.addWord(nword)
+						}
+						for(var j=0; j<word.quotes.length; j++) {
+							var quote = word.quotes[j];
+							var nquote = this._api._localStorage.newQuote();
+							nquote.url = quote.url;
+							nquote.title = quote.title;
+							nquote.paragraph = quote.paragraph;
+							nword.addQuote(nquote);
+						}
+						this._api._localStorage.save();
+					}
+					alert(this.getString("alert.upgrade"));
+				}
+				this._pref.setBoolPref("backword.upgrade", true);
+			}
 			this._apiError = false;
 			this._apiCalling = false;
 		} else {
