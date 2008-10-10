@@ -1,0 +1,44 @@
+[STDBAR ITEMS]
+ComEditPass=0
+ComLogoff=0
+ComEditNote=0
+ComClearFields=0
+ComOptions=0
+ComPasswordGenerator=0
+ComSavePass=1
+ComTaskBarIcon=0
+ComSetFields=0
+ComShowToolbar=1
+ComCustomizeIEMenu=0
+ComEditIdent=0
+ComResetFields=0
+ComFillForms=1
+[LANGUAGE]
+LocalizationFile=cn-Chinese
+[CONTEXT MENU ITEMS]
+ComEditPass=0
+ComLogoff=0
+ComEditNote=0
+ComClearFields=0
+ComOptions=0
+ComPasswordGenerator=0
+ComSavePass=1
+ComTaskBarIcon=0
+ComSetFields=0
+ComShowToolbar=1
+ComCustomizeIEMenu=1
+ComEditIdent=0
+ComResetFields=0
+ComFillForms=1
+[OPTIONS]
+AutoFillDialogPosition=0
+AutoFillEnable=1
+AutoSaveHeight=296
+AutoSaveWidthL=263
+AutoFillDialogAutoHideOn=1
+AutoFillFromIdentityOrPasscard=1
+AutoForgetTime=999
+ConfirmAutoFillEnable=0
+[CHECKED RUN MESSAGES]
+MsgBoxDupPasswdWarn=1
+MsgBoxLowerToolbarHide_firefox.exe=1
