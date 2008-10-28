@@ -1,58 +1,79 @@
 [STDBAR ITEMS]
+<<<<<<< .mine
+=======
 ComLogoff=0
 ComEditPass=0
+>>>>>>> .r157
 ComClearFields=0
-ComEditNote=0
+ComEditPass=0
 ComPasswordGenerator=0
-ComOptions=0
+ComEditNote=0
 ComSetFields=0
 ComTaskBarIcon=0
+<<<<<<< .mine
+ComOptions=0
+ComSetFields=0
+=======
 ComSavePass=0
+>>>>>>> .r157
+ComTaskBarIcon=0
+ComSavePass=1
 ComShowToolbar=1
 ComCustomizeIEMenu=0
 ComEditIdent=0
 ComResetFields=0
-ComFillForms=0
-[BAR STATES]
-ToolBandData=262153;1380926031;1397900104;1346589490;1346587988;0;1229213012;0;1396790853;1347634764;
-[USER REGISTRATION DATA]
-Referr=
-UserName=LionLee
-EmailAddress=
-[LANGUAGE]
-LocalizationFile=cn-chinese
+ComFillForms=1
 [CONTEXT MENU ITEMS]
+<<<<<<< .mine
+=======
 ComLogoff=0
 ComEditPass=0
+>>>>>>> .r157
 ComClearFields=0
-ComEditNote=0
+ComEditPass=0
 ComPasswordGenerator=0
-ComOptions=0
+ComEditNote=0
 ComSetFields=0
 ComTaskBarIcon=0
+<<<<<<< .mine
+ComOptions=0
+ComSetFields=0
+=======
 ComSavePass=0
+>>>>>>> .r157
+ComTaskBarIcon=0
+ComSavePass=1
 ComShowToolbar=1
-ComCustomizeIEMenu=0
+ComCustomizeIEMenu=1
 ComEditIdent=0
 ComResetFields=0
-ComFillForms=0
-[HELP MESSAGES]
-Search_HelpMsg=255
-NewId_HelpMsg=0
+ComFillForms=1
 [OPTIONS]
+<<<<<<< .mine
+AutoFillShowDisableCmd=1
+=======
 TaskbarIconOpenBrowser=0
 AutoFillSubmitDefaultID=0
 AutoFillShowDisableCmd=1
 CreateInVisible=1
 AutoFillDialogPosition=0
 AutoSaveHeight=312
+>>>>>>> .r157
 AutoFillEnable=1
+<<<<<<< .mine
+AutoSaveHeight=295
+AutoSaveWidthL=263
+=======
 AutoSaveWidthL=262
 AutoFillEmptyOnlyPC=0
 AutoFillThreshold=4
 AutoFillDialogAutoHideOn=1
+>>>>>>> .r157
 DisableShortcuts=1
 AutoFillFromIdentityOrPasscard=1
+<<<<<<< .mine
+AutoForgetTime=5000
+=======
 ShowLowerToolbarIE=0
 AutoForgetTime=3600
 AutoFillSubmitDefaultPC=0
@@ -63,15 +84,26 @@ AutoUpdateWelcome=0
 PassGenCharNumber=8
 ConfirmAutoFillEnable=0
 AutoFillDialogStealFocus=0
+>>>>>>> .r157
+<<<<<<< .mine
+ConfirmAutoFillEnable=0
+=======
+>>>>>>> .r157
 [CHECKED RUN MESSAGES]
+<<<<<<< .mine
+=======
 MsgSwitchUserOptions=1
 MsgBoxLowerToolbarHide_max.exe=1
 MsgBoxFillTheSameValues=1
 MsgBoxLowerToolbarHide_wmplayer.exe=1
+>>>>>>> .r157
 MsgBoxDupPasswdWarn=1
+<<<<<<< .mine
+=======
 MsgBoxLowerToolbarHide_iexplore.exe=1
 MsgBoxLowerToolbarHide_gameclient.exe=1
 MsgBoxFillNoMatchingFields=1
 MsgBoxAutoSaveFewFieldsWarn=1
+>>>>>>> .r157
 MsgBoxLowerToolbarHide_maxthon.exe=1
 MsgBoxLowerToolbarHide_firefox.exe=1
