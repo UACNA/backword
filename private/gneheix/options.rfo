@@ -31,7 +31,10 @@ ComFillForms=1
 [OPTIONS]
 AutoFillShowDisableCmd=1
 AutoFillEnable=1
+AutoSaveHeight=291
+AutoSaveWidthL=263
 AutoFillFromIdentityOrPasscard=1
 ConfirmAutoFillEnable=0
 [CHECKED RUN MESSAGES]
+MsgBoxDupPasswdWarn=1
 MsgBoxLowerToolbarHide_firefox.exe=1
