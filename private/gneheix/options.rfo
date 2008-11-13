@@ -34,6 +34,7 @@ AutoFillEnable=1
 AutoSaveHeight=291
 AutoSaveWidthL=263
 AutoFillFromIdentityOrPasscard=1
+AutoForgetTime=999
 ConfirmAutoFillEnable=0
 [CHECKED RUN MESSAGES]
 MsgBoxDupPasswdWarn=1
