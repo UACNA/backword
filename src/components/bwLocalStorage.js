@@ -64,6 +64,9 @@ BWLocalStorage.prototype = {
 	getCountWords: function(){
 		return this._words.length;
 	},
+	getXmlText: function(){
+		return this._serializer.serializeToString(this._doc);
+	},
 	save: function(){
 		if (!this._file.exists()){
 			this._createDic();

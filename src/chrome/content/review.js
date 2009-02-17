@@ -1,6 +1,8 @@
 var backword = new BW_Layout(false);
 var api = new BW_LocalStorage();
 var words=[];
+var lineBreak = null;
+var indent = "\t";
 api.observe = function(aSubject, aTopic, aData){
 	if (aTopic == "bw_load_storage"){
 		this.toReload = true;
@@ -10,6 +12,11 @@ api.toReload = false;
 var observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
 observerService.addObserver(api, "bw_load_storage", false);
 
+var unicodeConverter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+unicodeConverter.charset = "UTF-8";
+
+var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(Components.interfaces.nsIFilePicker);
+
 var currentPage = 0;
 var perPage = 10;
 var listModel = "twocolumn";
@@ -17,6 +24,7 @@ var listModel = "twocolumn";
 function checkReload(){
 	setTimeout(function(){checkReload()}, 1000, false);
 	if (api.toReload){
+		loadWords();
 		api.toReload = false;
 		buildMatchPattern();
 		showWords(currentPage);
@@ -66,6 +74,8 @@ BW_ReviewPage.prototype.setDictionary = function(translator){
 var reviewPage = new BW_ReviewPage();
 
 function doLoad(){
+	getLineBreak();
+	loadWords();
 	buildMatchPattern();
     attachButtons();
 	registerObserve();
@@ -74,8 +84,11 @@ function doLoad(){
 	checkReload();
 }
 
-function showWords(page){
+function loadWords(){
 	words = api._localStorage.getWords({});
+}
+
+function showWords(page){
 	if (typeof(page) == "undefined"){
 		page = 0;
 	}
@@ -258,6 +271,97 @@ function attachButtons(){
 		perPage = 100;
 		showWords();
 	}
+	$('Xml').onclick = function(){
+		exportToXml();
+	}
+	$('Txt').onclick = function(){
+		exportToTxt(false);
+	}
+	$('Txt2').onclick = function(){
+		exportToTxt(true);
+	}
+}
+
+function exportToXml(){
+	var stream = selectFile(".xml", fp.filterXML);
+	if (stream != null){
+		var out = unicodeConverter.ConvertFromUnicode(api._localStorage.getXmlText().replace(/&lt;BR \/&gt;/g, lineBreak).replace(/&amp;#146;/g, "'").replace(/&amp;quot;/g, "&quot;").replace(/&amp;lt;/g, "&lt;").replace(/&amp;gt;/g, "&gt;"));
+		stream.write(out, out.length);
+		stream.close();
+	}
+}
+function HTMLDecode(text) {
+	text = text.replace(/&amp;/g, "&");
+	text = text.replace(/&quot;/g, "\"");
+	text = text.replace(/&lt;/g, "<");
+	text = text.replace(/&gt;/g, ">");
+	text = text.replace(/&#146;/g, "'");
+	text = text.replace(/<BR \/>/g, " ");
+	return text;
+}
+
+function exportToTxt(trans){
+	var stream = selectFile(".txt", fp.filterText);
+	if (stream != null){
+		var out = "export from backword (version 1.0)"+lineBreak;
+		out += "words count: "+words.length+lineBreak+lineBreak;
+		out = unicodeConverter.ConvertFromUnicode(out);
+		stream.write(out, out.length);
+		for(var i=0; i<words.length; i++) {
+			out = words[i].id+
+			(trans?lineBreak+reviewPage.dictionary.getTranslate(words[i].id):'')+lineBreak;
+			var quotes = words[i].getQuotes({});
+			for (var j=0; j<quotes.length; j++){
+				out += indent+HTMLDecode(quotes[j].paragraph)+lineBreak;
+			}
+			out += lineBreak;
+			out = unicodeConverter.ConvertFromUnicode(out);
+			stream.write(out, out.length);
+		}
+		stream.close();
+	}
+}
+
+function getLineBreak() {
+	if (lineBreak == null) {
+	// HACKHACK: Gecko doesn't expose NS_LINEBREAK, try to determine
+	// plattform's line breaks by reading prefs.js
+		lineBreak = "\n";
+		try {
+			var prefFile = dirService.get("PrefF", Components.interfaces.nsIFile);
+			var inputStream = Components.classes["@mozilla.org/network/file-input-stream;1"].createInstance(Components.interfaces.nsIFileInputStream);
+			inputStream.init(prefFile, 1, 292, 0);
+			var scriptableStream = Components.classes["@mozilla.org/scriptableinputstream;1"].createInstance(Components.interfaces.nsIScriptableInputStream);
+			scriptableStream.init(inputStream);
+			var data = scriptableStream.read(1024);
+			scriptableStream.close();
+			if (/(\r\n?|\n\r?)/.test(data)) {
+				lineBreak = RegExp.$1;
+			}
+		}
+		catch (e) {
+		}
+	}
+	return lineBreak;
+}
+
+function selectFile(extension, filter){
+	var stream = Components.classes["@mozilla.org/network/file-output-stream;1"].createInstance(Components.interfaces.nsIFileOutputStream);
+	var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(Components.interfaces.nsIFilePicker);
+
+	fp.init(window, "Export to", fp.modeSave);
+	fp.defaultExtension = extension;
+	fp.appendFilters(filter);
+
+	if (fp.show() != fp.returnCancel) {
+		if (fp.file.exists())
+			fp.file.remove(true);
+		fp.file.create(fp.file.NORMAL_FILE_TYPE, 0666);
+
+		stream.init(fp.file, 2 | 8 | 16 | 64, 420, 0);
+		return stream;
+	}
+	return null;	
 }
 
 function attachParaphrase(page){

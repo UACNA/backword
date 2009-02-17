@@ -13,4 +13,5 @@ interface nsIbwLocalStorage : nsISupports
 	short removeWord(in nsIbwWord Word);
 	short getCountWords();
 	void save();
+	wstring getXmlText();
 };
