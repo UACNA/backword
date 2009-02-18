@@ -1,4 +1,4 @@
-<!ENTITY version "2.0.1">
+<!ENTITY version "2.0.1.1">
 <!ENTITY status.tooltip "关闭 Backword">
 <!ENTITY options.windowtitle "设置">
 <!ENTITY options.settingstab "选项">
@@ -73,6 +73,7 @@
 <!ENTITY options.page.blog "Just s.t. (作者博客)">
 <!ENTITY options.page.homepage "Backword 主页">
 <!ENTITY options.page.wiki "Search Web 地址维基页面">
+<!ENTITY options.page.game "推荐网页游戏">
 <!ENTITY menu.options.label "选项">
 <!ENTITY menu.options.accesskey "O">
 <!ENTITY menu.pages.label "网页">

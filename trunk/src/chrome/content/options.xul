@@ -165,7 +165,7 @@
 				<description value="&options.help.title.api;" class="h3" />
 				<description>
 					&options.help.api;
-					<description value="&options.help.api.tutorial;" onclick="BW_options.openPage('http://my.donews.com/gneheix/2006/07/20/support-backword-api-on-your-own/');" class="link"/>
+					<description value="&options.help.api.tutorial;" onclick="BW_options.openPage('http://gneheix.googlepages.com/support-backword-api-on-your-own');" class="link"/>
 				</description>
 				<separator class="thin"/>
 				<description value="&options.help.title.layout;" class="h3" />

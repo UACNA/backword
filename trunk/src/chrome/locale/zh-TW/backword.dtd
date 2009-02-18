@@ -1,4 +1,4 @@
-<!ENTITY version "2.0.1">
+<!ENTITY version "2.0.1.1">
 <!ENTITY status.tooltip "關閉 Backword">
 <!ENTITY options.windowtitle "設置">
 <!ENTITY options.settingstab "選項">
@@ -73,6 +73,7 @@
 <!ENTITY options.page.blog "Just s.t. (作者博客)">
 <!ENTITY options.page.homepage "Backword 主頁">
 <!ENTITY options.page.wiki "Search Web 位址維基頁面">
+<!ENTITY options.page.game "推薦Web Games">
 <!ENTITY menu.options.label "選項(O)">
 <!ENTITY menu.options.accesskey "O">
 <!ENTITY menu.pages.label "網頁(P)">
