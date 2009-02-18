@@ -60,6 +60,8 @@
 	          <menuitem label="&options.page.blog;"  id="page.blog" oncommand="backword.openPage('&options.help.link.blog;')" />
 	          <menuitem label="&options.page.homepage;"  id="page.homepage" oncommand="backword.openPage('&options.help.link.homepage;')" />
 	          <menuitem label="&options.page.wiki;"  id="page.wiki" oncommand="backword.openPage('&options.help.link.wiki;')" />
+	        <menuseparator />
+	          <menuitem label="&options.page.game;"  id="page.game" oncommand="backword.openPage('http://game.gneheix.com/?code=ffext')" />
           </menupopup>
         </menu>
         <menuseparator />
