@@ -1436,7 +1436,7 @@ BW_Layout.prototype.pronunciationUrl = function () {
 		return "about:blank";
 	}
 	var word = this._currentWord;
-	return "http://www.dreye.com.cn/dict/audio/"+word.substr(0,1).toUpperCase()+"/"+word+".mp3";
+	return "http://www.dreye.com.cn/ews/dict/audio/"+word.substr(0,1).toUpperCase()+"/"+word+".mp3";
 };
 BW_Layout.prototype.pronunciationElement = function () {
 	var span = BW_getDoc().getElementById(this._namepronunciationElement);
