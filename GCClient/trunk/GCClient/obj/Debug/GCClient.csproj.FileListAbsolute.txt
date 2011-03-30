@@ -1,8 +1,0 @@
-D:\Dev\VS\GCClient\GCClient\bin\Debug\GCClient.exe
-D:\Dev\VS\GCClient\GCClient\bin\Debug\GCClient.pdb
-D:\Dev\VS\GCClient\GCClient\obj\Debug\ResolveAssemblyReference.cache
-D:\Dev\VS\GCClient\GCClient\obj\Debug\GCClient.MainForm.resources
-D:\Dev\VS\GCClient\GCClient\obj\Debug\GCClient.Properties.Resources.resources
-D:\Dev\VS\GCClient\GCClient\obj\Debug\GCClient.csproj.GenerateResource.Cache
-D:\Dev\VS\GCClient\GCClient\obj\Debug\GCClient.exe
-D:\Dev\VS\GCClient\GCClient\obj\Debug\GCClient.pdb
