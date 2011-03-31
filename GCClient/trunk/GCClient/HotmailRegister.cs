@@ -107,7 +107,7 @@ namespace GCClient
         public HotmailRegister(TabControl tabs)
         {
             this.reg = new TabPage();
-            this.browser = new WebBrowser();
+            this.browser = new GCWebBrowser();
             this.groupBox1 = new GroupBox();
             this.label2 = new Label();
             this.label1 = new Label();
@@ -243,10 +243,11 @@ namespace GCClient
             this.groupBox1.PerformLayout();
 
             this.statusChangedHandler += this.changeStatus;
+            this.browser.UserAgent = "Mozilla/4.0 (compatible; MSIE 8.0; Win32)";
         }
 
         private TabPage reg;
-        private WebBrowser browser;
+        private GCWebBrowser browser;
         private GroupBox groupBox1;
         private Label label2;
         private Label label1;

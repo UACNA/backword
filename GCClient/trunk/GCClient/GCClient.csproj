@@ -53,6 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GcBrowser.cs" />
+    <Compile Include="GCWebBrowser.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="HotmailRegister.cs" />
     <Compile Include="IJobEvent.cs" />
     <Compile Include="IOperationWaiter.cs" />
